@@ -1,0 +1,10 @@
+{
+  "_comment": "DEMO / SAMPLE DATA — Demonstration data only. Not real battery measurements or training data.",
+  "voltage": 3.70,
+  "current": 5.00,
+  "temperature": 32.5,
+  "soc": 70,
+  "soh": 95,
+  "c_rate": 1.0,
+  "ambient_temperature": 25.0
+}

@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BRAIN — Battery Risk & Analytics Intelligence Network</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <!-- HEADER -->
+  <header class="dashboard-header">
+    <div class="header-container">
+      <div class="brand-group">
+        <div class="brand-logo-badge">
+          <span class="logo-icon">⚡</span>
+        </div>
+        <div class="brand-titles">
+          <h1 class="main-title">BRAIN</h1>
+          <p class="sub-title">Battery Risk & Analytics Intelligence Network</p>
+        </div>
+      </div>
+      <div class="header-status">
+        <span class="status-indicator offline">
+          <span class="status-dot"></span>
+          <span class="status-text">SYSTEM OFFLINE</span>
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN DASHBOARD CONTENT -->
+  <main class="dashboard-main">
+    <div class="dashboard-container">
+
+      <!-- SECTION 1: BATTERY OVERVIEW -->
+      <section class="section-overview">
+        <div class="section-header">
+          <h2 class="section-title">BATTERY OVERVIEW</h2>
+          <span id="dataSourceBadge" class="section-badge data-source-badge">DATA SOURCE: JSON INPUT</span>
+        </div>
+        <div class="overview-grid">
+          <div class="metric-card">
+            <div class="metric-header">
+              <span class="metric-label">Voltage</span>
+              <span class="metric-unit">V</span>
+            </div>
+            <div id="overviewVoltage" class="metric-value">--</div>
+            <div class="metric-footer">Nominal Cell / Pack</div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-header">
+              <span class="metric-label">Current</span>
+              <span class="metric-unit">A</span>
+            </div>
+            <div id="overviewCurrent" class="metric-value">--</div>
+            <div class="metric-footer">Discharge / Charge</div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-header">
+              <span class="metric-label">Temperature</span>
+              <span class="metric-unit">°C</span>
+            </div>
+            <div id="overviewTemperature" class="metric-value">--</div>
+            <div class="metric-footer">Core Surface Sensor</div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-header">
+              <span class="metric-label">SOC</span>
+              <span class="metric-unit">%</span>
+            </div>
+            <div id="overviewSoc" class="metric-value">--</div>
+            <div class="metric-footer">State of Charge</div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-header">
+              <span class="metric-label">SOH</span>
+              <span class="metric-unit">%</span>
+            </div>
+            <div id="overviewSoh" class="metric-value">--</div>
+            <div class="metric-footer">State of Health</div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-header">
+              <span class="metric-label">C-Rate</span>
+              <span class="metric-unit">C</span>
+            </div>
+            <div id="overviewCrate" class="metric-value">--</div>
+            <div class="metric-footer">Effective Rate</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- DASHBOARD MAIN WORKSPACE (2-COLUMN GRID) -->
+      <div class="dashboard-workspace">
+
+        <!-- LEFT COLUMN: THERMAL MONITORING, CHART, JSON INPUT, RECEIVED DATA PREVIEW -->
+        <div class="workspace-col col-primary">
+
+          <!-- SECTION 2: THERMAL MONITORING -->
+          <section class="panel-card thermal-monitoring-panel">
+            <div class="panel-header">
+              <h2 class="panel-title">THERMAL MONITORING</h2>
+              <span class="panel-tag">Physics-Informed Domain</span>
+            </div>
+            <div class="thermal-grid">
+              <div class="thermal-stat-box">
+                <span class="stat-label">Current Temperature</span>
+                <div id="thermalCurrentTemp" class="stat-value">--</div>
+                <span id="thermalCurrentSub" class="stat-sub">Sensor Ingestion Pending</span>
+              </div>
+              <div class="thermal-stat-box highlight">
+                <span class="stat-label">Predicted Temperature</span>
+                <div class="stat-status-badge">MODEL NOT CONNECTED</div>
+                <span class="stat-sub">PINN / ML Inference Engine</span>
+              </div>
+              <div class="thermal-stat-box">
+                <span class="stat-label">Temperature Trend</span>
+                <div class="stat-status-badge neutral">WAITING FOR MODEL/DATA</div>
+                <span class="stat-sub">Thermal Gradient Analysis</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- SECTION 9: TEMPERATURE TREND (CHART PLACEHOLDER) -->
+          <section class="panel-card chart-panel">
+            <div class="panel-header">
+              <h2 class="panel-title">TEMPERATURE TREND</h2>
+              <span class="panel-tag">Time-Series Visualization</span>
+            </div>
+            <div class="chart-placeholder-container">
+              <div class="chart-placeholder-grid"></div>
+              <div class="chart-placeholder-message">
+                <svg class="chart-icon" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 3v18h18"/>
+                  <path d="m19 9-5 5-4-4-3 3"/>
+                </svg>
+                <p class="chart-placeholder-text">Waiting for battery data...</p>
+                <span class="chart-subtext">Real-time thermal curve will render upon telemetry input</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- SECTION 6: BATTERY DATA INPUT -->
+          <section class="panel-card input-panel">
+            <div class="panel-header">
+              <h2 class="panel-title">BATTERY DATA INPUT</h2>
+              <span class="panel-tag">Pipeline Gateway</span>
+            </div>
+            <div class="input-content">
+              <!-- Meta status & timestamp bar -->
+              <div class="input-meta-bar">
+                <div class="meta-item">
+                  <span class="meta-label">DATA STATUS:</span>
+                  <span id="dataStatusBadge" class="data-status-badge pending">WAITING FOR INPUT</span>
+                </div>
+                <div class="meta-item">
+                  <span class="meta-label">LAST DATA UPDATE:</span>
+                  <span id="lastDataUpdate" class="meta-timestamp">--</span>
+                </div>
+              </div>
+
+              <p class="input-disclaimer">
+                Example JSON format for demonstration and testing purposes. Final schema will be structured based on future model specifications.
+              </p>
+
+              <div class="textarea-wrapper">
+                <textarea 
+                  id="batteryJsonInput" 
+                  class="json-textarea" 
+                  spellcheck="false"
+                  placeholder='{
+  "voltage": 3.70,
+  "current": 5.00,
+  "temperature": 32.5,
+  "soc": 70,
+  "soh": 95,
+  "c_rate": 1.0,
+  "ambient_temperature": 25.0
+}'></textarea>
+              </div>
+
+              <!-- Validation Feedback Notification Area -->
+              <div id="validationFeedback" class="validation-feedback" style="display: none;"></div>
+
+              <!-- Additional Data (for unmodeled/unexpected fields) -->
+              <div id="additionalDataContainer" class="additional-data-container" style="display: none;">
+                <div class="additional-data-title">ADDITIONAL DATA (Unmodeled Fields):</div>
+                <pre id="additionalDataContent" class="additional-data-content"></pre>
+              </div>
+
+              <div class="input-actions">
+                <button type="button" id="loadJsonBtn" class="btn btn-primary">LOAD JSON</button>
+                <button type="button" id="validateJsonBtn" class="btn btn-secondary">VALIDATE JSON</button>
+                <button type="button" id="sampleJsonBtn" class="btn btn-secondary" title="Demonstration data only. Not model training data.">LOAD SAMPLE JSON</button>
+                <button type="button" id="clearBtn" class="btn btn-tertiary">CLEAR</button>
+              </div>
+            </div>
+          </section>
+
+          <!-- SECTION 15: RECEIVED DATA (DATA PREVIEW SECTION) -->
+          <section id="receivedDataPanel" class="panel-card received-data-panel">
+            <div class="panel-header">
+              <h2 class="panel-title">RECEIVED DATA</h2>
+              <span class="panel-tag">Backend Pipeline Inspection</span>
+            </div>
+            <div class="received-data-body">
+              <div class="received-data-grid">
+                <div class="received-item">
+                  <span class="received-item-label">Voltage:</span>
+                  <span id="recvVoltage" class="received-item-val">--</span>
+                </div>
+                <div class="received-item">
+                  <span class="received-item-label">Current:</span>
+                  <span id="recvCurrent" class="received-item-val">--</span>
+                </div>
+                <div class="received-item">
+                  <span class="received-item-label">Temperature:</span>
+                  <span id="recvTemperature" class="received-item-val">--</span>
+                </div>
+                <div class="received-item">
+                  <span class="received-item-label">SOC:</span>
+                  <span id="recvSoc" class="received-item-val">--</span>
+                </div>
+                <div class="received-item">
+                  <span class="received-item-label">SOH:</span>
+                  <span id="recvSoh" class="received-item-val">--</span>
+                </div>
+                <div class="received-item">
+                  <span class="received-item-label">C-Rate:</span>
+                  <span id="recvCrate" class="received-item-val">--</span>
+                </div>
+                <div class="received-item">
+                  <span class="received-item-label">Source:</span>
+                  <span id="recvSource" class="received-item-tag">JSON INPUT</span>
+                </div>
+                <div class="received-item wide">
+                  <span class="received-item-label">Received:</span>
+                  <span id="recvServerTime" class="received-item-time">SERVER TIME: --</span>
+                </div>
+              </div>
+              <p class="inspection-note">This is data inspection only. Model inference and predictive risk analysis remain disabled.</p>
+            </div>
+          </section>
+
+        </div>
+
+        <!-- RIGHT COLUMN: RISK ASSESSMENT, EARLY WARNING, BATTERY HEALTH, MODEL STATUS, SYSTEM LOG -->
+        <div class="workspace-col col-secondary">
+
+          <!-- SECTION 4: RISK ASSESSMENT -->
+          <section class="panel-card risk-panel">
+            <div class="panel-header">
+              <h2 class="panel-title">RISK ASSESSMENT</h2>
+              <span class="status-pill status-pill-inactive">Safety Logic</span>
+            </div>
+            <div class="risk-card-body">
+              <div class="risk-status-display">
+                <span class="risk-main-text">SYSTEM NOT CONNECTED</span>
+              </div>
+              <p class="risk-description">
+                Autonomous risk indexing and runaway hazard classification are disabled until backend validation.
+              </p>
+            </div>
+          </section>
+
+          <!-- SECTION 5: EARLY WARNING -->
+          <section class="panel-card warning-panel">
+            <div class="panel-header">
+              <h2 class="panel-title">EARLY WARNING</h2>
+              <span class="status-pill status-pill-warning">Pre-Hazard Detection</span>
+            </div>
+            <div class="warning-card-body">
+              <div class="warning-status-display">
+                <span class="warning-main-text">WAITING FOR MODEL</span>
+              </div>
+              <p class="warning-description">
+                "Prediction and safety assessment will become available after model integration."
+              </p>
+            </div>
+          </section>
+
+          <!-- SECTION 3: BATTERY HEALTH -->
+          <section class="panel-card health-panel">
+            <div class="panel-header">
+              <h2 class="panel-title">BATTERY HEALTH</h2>
+              <span class="panel-tag">State Analytics</span>
+            </div>
+            <div class="health-grid">
+              <div class="health-stat-box">
+                <span class="stat-label">SOC</span>
+                <div id="healthSoc" class="stat-value">--</div>
+                <span class="stat-unit-sub">% Available</span>
+              </div>
+              <div class="health-stat-box">
+                <span class="stat-label">SOH</span>
+                <div id="healthSoh" class="stat-value">--</div>
+                <span class="stat-unit-sub">% Capacity Retention</span>
+              </div>
+            </div>
+            <div class="battery-state-row">
+              <span class="state-label">Battery State:</span>
+              <span id="healthBatteryState" class="state-badge">WAITING FOR DATA</span>
+            </div>
+          </section>
+
+          <!-- SECTION 7: MODEL STATUS -->
+          <section class="panel-card model-status-panel">
+            <div class="panel-header">
+              <h2 class="panel-title">MODEL STATUS</h2>
+              <span class="panel-tag">Inference Environment</span>
+            </div>
+            <div class="model-status-list">
+              <div class="status-row">
+                <span class="status-property">Model:</span>
+                <span class="status-value-tag muted">NOT CONNECTED</span>
+              </div>
+              <div class="status-row">
+                <span class="status-property">Model Type:</span>
+                <span class="status-value-tag muted">NOT VERIFIED</span>
+              </div>
+              <div class="status-row">
+                <span class="status-property">Prediction:</span>
+                <span class="status-value-tag muted">UNAVAILABLE</span>
+              </div>
+              <div class="status-row">
+                <span class="status-property">Status:</span>
+                <span class="status-value-tag pending">Waiting for Integration</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- SECTION 8: SYSTEM LOG -->
+          <section class="panel-card system-log-panel">
+            <div class="panel-header">
+              <h2 class="panel-title">SYSTEM LOG</h2>
+              <span class="log-indicator-dot"></span>
+            </div>
+            <div id="systemLogTerminal" class="system-log-terminal">
+              <div class="log-entry"><span class="log-prefix">[SYS]</span> System initialized.</div>
+              <div class="log-entry"><span class="log-prefix">[APP]</span> BRAIN dashboard loaded.</div>
+              <div class="log-entry log-entry-waiting"><span class="log-prefix">[NET]</span> Waiting for battery data...</div>
+            </div>
+          </section>
+
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- DASHBOARD FOOTER -->
+  <footer class="dashboard-footer">
+    <div class="footer-container">
+      <div class="footer-left">
+        <span class="footer-brand">BRAIN</span> &mdash; Battery Risk & Analytics Intelligence Network
+      </div>
+      <div class="footer-right">
+        <span>Phase 3: Backend Data Pipeline Active</span> &bull; <span>Physics-Informed Safety Architecture</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
