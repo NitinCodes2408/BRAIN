@@ -9,14 +9,18 @@ for lithium-ion EV battery safety and state estimation.
 import os
 import json
 import logging
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, send_from_directory
 
 from utils.json_validator import validate_incoming_battery_data
 from utils.data_processor import process_battery_data
 from utils.model_service import ModelService
 
 # Initialize Flask application with explicit template and static paths
-app = Flask(__name__, template_folder="templates", static_folder="static")
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+STATIC_DIR = os.path.join(BASE_DIR, "static")
+TEMPLATES_DIR = os.path.join(BASE_DIR, "templates")
+
+app = Flask(__name__, template_folder=TEMPLATES_DIR, static_folder=STATIC_DIR)
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
@@ -39,6 +43,26 @@ def add_cors_headers(response):
 def index():
     """Serves the main BRAIN research dashboard."""
     return render_template("index.html")
+
+
+@app.route("/static/<path:filename>")
+def serve_static_files(filename):
+    """Serves static assets explicitly."""
+    return send_from_directory(STATIC_DIR, filename)
+
+
+@app.route("/css/<path:filename>")
+def serve_css_files(filename):
+    """Fallback route to serve CSS files if requested directly from /css/."""
+    css_dir = os.path.join(STATIC_DIR, "css")
+    return send_from_directory(css_dir, filename)
+
+
+@app.route("/js/<path:filename>")
+def serve_js_files(filename):
+    """Fallback route to serve JS files if requested directly from /js/."""
+    js_dir = os.path.join(STATIC_DIR, "js")
+    return send_from_directory(js_dir, filename)
 
 
 @app.route("/health", methods=["GET", "OPTIONS"])

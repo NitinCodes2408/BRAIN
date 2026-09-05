@@ -10,6 +10,7 @@ import os
 import sys
 import types
 import pickle
+import io
 import logging
 from typing import Tuple, Optional, Any, Dict
 
@@ -80,6 +81,19 @@ def setup_model_shims() -> None:
             mod_xgb_core.Booster = Booster
 
 
+class SafeUnpickler(pickle.Unpickler):
+    """Custom unpickler that safely resolves shimmed and missing classes."""
+    def find_class(self, module, name):
+        try:
+            return super().find_class(module, name)
+        except Exception:
+            mod = _ensure_module(module)
+            if not hasattr(mod, name):
+                cls = type(name, (), {})
+                setattr(mod, name, cls)
+            return getattr(mod, name)
+
+
 # --------------------------------------------------------------------------
 # Model Loading Function
 # --------------------------------------------------------------------------
@@ -93,9 +107,12 @@ def load_battery_model(model_path: Optional[str] = None) -> Tuple[bool, str, Opt
     """
     # 1. Determine model file location
     if model_path is None:
+        base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         candidates = [
-            os.path.join(os.path.dirname(os.path.dirname(__file__)), "models", "battery_intelligence.pkl"),
-            os.path.join(os.path.dirname(os.path.dirname(__file__)), "battery_intelligence.pkl"),
+            os.path.join(base_dir, "models", "battery_intelligence.pkl"),
+            os.path.join(base_dir, "battery_intelligence.pkl"),
+            os.path.abspath("models/battery_intelligence.pkl"),
+            os.path.abspath("battery_intelligence.pkl"),
             "models/battery_intelligence.pkl",
             "battery_intelligence.pkl"
         ]
@@ -105,7 +122,7 @@ def load_battery_model(model_path: Optional[str] = None) -> Tuple[bool, str, Opt
                 break
 
     if not model_path or not os.path.exists(model_path):
-        logger.error(f"Model file not found. Checked default paths.")
+        logger.error("Model file not found. Checked default paths.")
         return False, "MODEL_NOT_FOUND", None, None
 
     # 2. Set up namespace shims before unpickling
@@ -119,26 +136,29 @@ def load_battery_model(model_path: Optional[str] = None) -> Tuple[bool, str, Opt
         logger.error(f"Failed to read model file: {read_err}")
         return False, "FILE_READ_ERROR", None, None
 
-    # 4. Attempt unpickling (with automatic 11-byte closing sequence patch if truncated)
+    # 4. Attempt unpickling
     root_obj = None
-    try:
-        # Try direct unpickling first
-        root_obj = pickle.loads(raw_bytes)
-    except (EOFError, pickle.UnpicklingError):
+    bytes_to_try = [
+        raw_bytes + b"sbubububub." if not raw_bytes.endswith(b".") else raw_bytes,
+        raw_bytes,
+        raw_bytes + b"sbubububub."
+    ]
+
+    for b in bytes_to_try:
         try:
-            # Apply 11-byte closing bytecode sequence: b'sbubububub.'
-            patched_bytes = raw_bytes + b"sbubububub."
-            root_obj = pickle.loads(patched_bytes)
-            logger.info("Successfully loaded model using 11-byte closing patch.")
-        except Exception as patch_err:
-            logger.error(f"Unpickling failed even with closing patch: {patch_err}")
-            return False, "CORRUPTED_PICKLE", None, None
-    except Exception as unpick_err:
-        logger.error(f"Unexpected unpickling error: {unpick_err}")
-        return False, "UNPICKLE_ERROR", None, None
+            root_obj = SafeUnpickler(io.BytesIO(b)).load()
+            if root_obj is not None:
+                break
+        except Exception as err:
+            logger.debug(f"Attempt unpickling step: {err}")
+            continue
 
     if root_obj is None:
-        return False, "NULL_MODEL_OBJECT", None, None
+        try:
+            root_obj = pickle.loads(raw_bytes + b"sbubububub.")
+        except Exception as final_err:
+            logger.error(f"Unpickling failed: {final_err}")
+            return False, "UNPICKLE_ERROR", None, None
 
     # 5. Extract CALCE submodel container
     calce = getattr(root_obj, "_calce", None)
