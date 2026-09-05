@@ -22,6 +22,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const sampleJsonBtn = document.getElementById('sampleJsonBtn');
   const clearBtn = document.getElementById('clearBtn');
 
+  // Header Status Elements
+  const systemStatusBadge = document.getElementById('systemStatusBadge') || document.querySelector('.status-indicator');
+  const systemStatusText = document.getElementById('systemStatusText') || document.querySelector('.status-text');
+
   // Status & Feedback Elements
   const dataStatusBadge = document.getElementById('dataStatusBadge');
   const lastDataUpdate = document.getElementById('lastDataUpdate');
@@ -69,6 +73,39 @@ document.addEventListener('DOMContentLoaded', () => {
   "c_rate": 1.0,
   "ambient_temperature": 25.0
 }`;
+
+  // --------------------------------------------------------------------------
+  // Backend Health & System Status
+  // --------------------------------------------------------------------------
+
+  function setSystemStatus(isOnline) {
+    if (!systemStatusBadge || !systemStatusText) return;
+    if (isOnline) {
+      systemStatusBadge.className = 'status-indicator online';
+      systemStatusText.textContent = 'SYSTEM ONLINE';
+    } else {
+      systemStatusBadge.className = 'status-indicator offline';
+      systemStatusText.textContent = 'SYSTEM OFFLINE';
+    }
+  }
+
+  async function checkHealth() {
+    try {
+      const response = await fetch('/health');
+      if (response.ok) {
+        const data = await response.json();
+        if (data && data.status === 'ok') {
+          setSystemStatus(true);
+          return true;
+        }
+      }
+      setSystemStatus(false);
+      return false;
+    } catch (err) {
+      setSystemStatus(false);
+      return false;
+    }
+  }
 
   // --------------------------------------------------------------------------
   // UI Helper Functions
@@ -278,10 +315,8 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
-      // Dispatch to Flask Backend (supports both Flask :5000 and Live Server :5500)
-      const apiEndpoint = (window.location.port === '5000')
-        ? '/api/battery-data'
-        : 'http://127.0.0.1:5000/api/battery-data';
+      // Dispatch to Flask Backend
+      const apiEndpoint = '/api/battery-data';
 
       try {
         const response = await fetch(apiEndpoint, {
@@ -367,8 +402,12 @@ document.addEventListener('DOMContentLoaded', () => {
           { prefix: 'APP', message: 'Battery data accepted.' }
         ]);
 
+        // Ensure system status reflects online backend
+        setSystemStatus(true);
+
       } catch (netErr) {
         console.error('[BRAIN Phase 3] Network / Endpoint error:', netErr);
+        setSystemStatus(false);
         setDataStatus('SERVER_ERROR', 'invalid');
         showFeedback('Unable to reach backend API endpoint. Ensure Flask server is running.', false);
         appendLog('NET', 'Backend connection error: Server unreachable.', true);
@@ -438,6 +477,13 @@ document.addEventListener('DOMContentLoaded', () => {
       ]);
     });
   }
+
+  // --- Initialize Health Check & Connectivity ---
+  // Initial health check against Flask backend
+  checkHealth();
+
+  // Periodic health check every 5 seconds to keep system status reactive
+  setInterval(checkHealth, 5000);
 
   console.log('[BRAIN Phase 3] Flask backend pipeline initialized.');
 });
