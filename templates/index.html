@@ -5,6 +5,1399 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>BRAIN — Battery Risk & Analytics Intelligence Network</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <style id="brain-styles">
+/* ==========================================================================
+   BRAIN — Battery Risk & Analytics Intelligence Network
+   Phase 3: Flask Backend Pipeline Stylesheet
+   Theme: Professional Research & Engineering Dark Mode
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. CSS Custom Properties / Design Tokens
+   -------------------------------------------------------------------------- */
+:root {
+  /* Color Palette - Deep Slate / Engineering Dark */
+  --bg-base: #0a0e17;
+  --bg-surface: #111827;
+  --bg-surface-elevated: #162032;
+  --bg-surface-hover: #1c283f;
+  --bg-terminal: #070a10;
+
+  /* Borders & Dividers */
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-medium: rgba(255, 255, 255, 0.14);
+  --border-highlight: rgba(79, 142, 247, 0.3);
+
+  /* Typography Colors */
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --text-dim: #475569;
+
+  /* Functional Status Colors (Muted & Engineering-Grade) */
+  --status-offline-bg: rgba(239, 68, 68, 0.12);
+  --status-offline-border: rgba(239, 68, 68, 0.3);
+  --status-offline-text: #f87171;
+
+  --status-warning-bg: rgba(245, 158, 11, 0.12);
+  --status-warning-border: rgba(245, 158, 11, 0.3);
+  --status-warning-text: #fbbf24;
+
+  --status-neutral-bg: rgba(148, 163, 184, 0.1);
+  --status-neutral-border: rgba(148, 163, 184, 0.2);
+  --status-neutral-text: #94a3b8;
+
+  --status-accent-blue: #38bdf8;
+  --status-accent-blue-bg: rgba(56, 189, 248, 0.1);
+  --status-accent-blue-border: rgba(56, 189, 248, 0.25);
+
+  /* Typography */
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+
+  /* Layout Spacing */
+  --container-max-width: 1440px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+
+  /* Transitions */
+  --transition-fast: 150ms ease;
+}
+
+/* --------------------------------------------------------------------------
+   2. Reset & Global Styles
+   -------------------------------------------------------------------------- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--bg-base);
+  color: var(--text-primary);
+  line-height: 1.5;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* --------------------------------------------------------------------------
+   3. Header
+   -------------------------------------------------------------------------- */
+.dashboard-header {
+  background-color: var(--bg-surface);
+  border-bottom: 1px solid var(--border-medium);
+  padding: 1rem 1.5rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-container {
+  max-width: var(--container-max-width);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.brand-group {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+}
+
+.brand-logo-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  background-color: var(--bg-surface-elevated);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-md);
+  font-size: 1.25rem;
+}
+
+.brand-titles {
+  display: flex;
+  flex-direction: column;
+}
+
+.main-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--text-primary);
+  line-height: 1.1;
+}
+
+.sub-title {
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+}
+
+.header-status {
+  display: flex;
+  align-items: center;
+}
+
+.status-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.875rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.status-indicator.offline {
+  background-color: var(--status-offline-bg);
+  border: 1px solid var(--status-offline-border);
+  color: var(--status-offline-text);
+}
+
+.status-indicator.offline .status-dot {
+  background-color: var(--status-offline-text);
+}
+
+.status-indicator.online {
+  background-color: rgba(34, 197, 94, 0.12);
+  border: 1px solid rgba(34, 197, 94, 0.35);
+  color: #4ade80;
+}
+
+.status-indicator.online .status-dot {
+  background-color: #4ade80;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--status-offline-text);
+  display: inline-block;
+  transition: background-color var(--transition-fast);
+}
+
+/* --------------------------------------------------------------------------
+   4. Main Dashboard Layout
+   -------------------------------------------------------------------------- */
+.dashboard-main {
+  flex: 1;
+  padding: 1.75rem 1.5rem 2.5rem;
+}
+
+.dashboard-container {
+  max-width: var(--container-max-width);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+/* --------------------------------------------------------------------------
+   5. Section 1: Battery Overview
+   -------------------------------------------------------------------------- */
+.section-overview {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem 1.5rem;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.section-title {
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+}
+
+.section-badge {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  background-color: var(--bg-surface-elevated);
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-subtle);
+  font-weight: 500;
+}
+
+/* Phase 3: Data Source Badge */
+.data-source-badge {
+  color: var(--status-accent-blue);
+  background-color: var(--status-accent-blue-bg);
+  border-color: var(--status-accent-blue-border);
+  letter-spacing: 0.05em;
+  font-weight: 600;
+  font-family: var(--font-mono);
+}
+
+.overview-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 1rem;
+}
+
+.metric-card {
+  background-color: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 1rem 1.125rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 110px;
+  transition: border-color var(--transition-fast);
+}
+
+.metric-card:hover {
+  border-color: var(--border-medium);
+}
+
+.metric-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.metric-label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.metric-unit {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-weight: 500;
+}
+
+.metric-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  line-height: 1;
+  margin: 0.5rem 0;
+  letter-spacing: -0.02em;
+}
+
+.metric-footer {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* --------------------------------------------------------------------------
+   6. Workspace Grid (Primary & Secondary Columns)
+   -------------------------------------------------------------------------- */
+.dashboard-workspace {
+  display: grid;
+  grid-template-columns: 1.55fr 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.workspace-col {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Reusable Panel Card */
+.panel-card {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem 1.5rem;
+  position: relative;
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.125rem;
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: 0.75rem;
+}
+
+.panel-title {
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+}
+
+.panel-tag {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  background-color: var(--bg-surface-elevated);
+  padding: 0.2rem 0.55rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-subtle);
+  font-family: var(--font-mono);
+}
+
+/* --------------------------------------------------------------------------
+   7. Section 2: Thermal Monitoring
+   -------------------------------------------------------------------------- */
+.thermal-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.thermal-stat-box {
+  background-color: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 1.125rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 125px;
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-secondary);
+}
+
+.stat-value {
+  font-size: 2.125rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  line-height: 1.1;
+  margin: 0.5rem 0 0.35rem;
+}
+
+.stat-sub {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+.stat-status-badge {
+  display: inline-block;
+  margin: 0.65rem 0 0.4rem;
+  padding: 0.35rem 0.65rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-family: var(--font-mono);
+  letter-spacing: 0.04em;
+  text-align: center;
+  background-color: var(--status-warning-bg);
+  border: 1px solid var(--status-warning-border);
+  color: var(--status-warning-text);
+  word-break: break-word;
+}
+
+.stat-status-badge.neutral {
+  background-color: var(--status-neutral-bg);
+  border: 1px solid var(--status-neutral-border);
+  color: var(--status-neutral-text);
+}
+
+/* --------------------------------------------------------------------------
+   8. Section 9: Temperature Trend Chart Placeholder
+   -------------------------------------------------------------------------- */
+.chart-placeholder-container {
+  background-color: var(--bg-surface-elevated);
+  border: 1px dashed var(--border-medium);
+  border-radius: var(--radius-md);
+  min-height: 250px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 1.5rem;
+}
+
+.chart-placeholder-grid {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-size: 32px 32px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  pointer-events: none;
+}
+
+.chart-placeholder-message {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.chart-icon {
+  color: var(--text-muted);
+  opacity: 0.6;
+}
+
+.chart-placeholder-text {
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+}
+
+.chart-subtext {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* --------------------------------------------------------------------------
+   9. Section 6: Battery Data Input
+   -------------------------------------------------------------------------- */
+.input-meta-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  padding: 0.65rem 0.875rem;
+  background-color: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  margin-bottom: 0.875rem;
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.meta-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--text-secondary);
+}
+
+.meta-timestamp {
+  font-size: 0.75rem;
+  font-family: var(--font-mono);
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.data-status-badge {
+  font-size: 0.75rem;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--radius-sm);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  display: inline-block;
+}
+
+.data-status-badge.pending {
+  background-color: var(--status-warning-bg);
+  border: 1px solid var(--status-warning-border);
+  color: var(--status-warning-text);
+}
+
+.data-status-badge.valid {
+  background-color: rgba(34, 197, 94, 0.12);
+  border: 1px solid rgba(34, 197, 94, 0.35);
+  color: #4ade80;
+}
+
+.data-status-badge.invalid {
+  background-color: var(--status-offline-bg);
+  border: 1px solid var(--status-offline-border);
+  color: var(--status-offline-text);
+}
+
+.data-status-badge.loaded,
+.data-status-badge.received {
+  background-color: rgba(56, 189, 248, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  color: #38bdf8;
+}
+
+.validation-feedback {
+  margin-bottom: 0.875rem;
+  padding: 0.65rem 0.875rem;
+  border-radius: var(--radius-md);
+  font-size: 0.8125rem;
+  font-family: var(--font-mono);
+  line-height: 1.45;
+}
+
+.validation-feedback.success {
+  background-color: rgba(34, 197, 94, 0.1);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  color: #4ade80;
+}
+
+.validation-feedback.error {
+  background-color: var(--status-offline-bg);
+  border: 1px solid var(--status-offline-border);
+  color: var(--status-offline-text);
+}
+
+.additional-data-container {
+  margin-bottom: 0.875rem;
+  padding: 0.75rem 1rem;
+  background-color: var(--bg-terminal);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-md);
+}
+
+.additional-data-title {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-bottom: 0.35rem;
+}
+
+.additional-data-content {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin: 0;
+}
+
+.input-disclaimer {
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.875rem;
+  line-height: 1.4;
+}
+
+.textarea-wrapper {
+  margin-bottom: 1rem;
+}
+
+.json-textarea {
+  width: 100%;
+  height: 160px;
+  background-color: var(--bg-terminal);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-md);
+  padding: 0.875rem 1rem;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  line-height: 1.5;
+  resize: vertical;
+  outline: none;
+  transition: border-color var(--transition-fast);
+}
+
+.json-textarea:focus {
+  border-color: var(--border-highlight);
+}
+
+.json-textarea::placeholder {
+  color: var(--text-muted);
+  opacity: 0.7;
+}
+
+.input-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+
+.btn {
+  padding: 0.55rem 1.15rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: background-color var(--transition-fast), border-color var(--transition-fast), opacity var(--transition-fast);
+  font-family: var(--font-sans);
+}
+
+.btn-primary {
+  background-color: var(--bg-surface-hover);
+  border-color: var(--border-medium);
+  color: var(--text-primary);
+}
+
+.btn-primary:hover {
+  background-color: var(--border-subtle);
+  border-color: var(--border-highlight);
+}
+
+.btn-secondary {
+  background-color: transparent;
+  border-color: var(--border-subtle);
+  color: var(--text-secondary);
+}
+
+.btn-secondary:hover {
+  background-color: var(--bg-surface-elevated);
+  color: var(--text-primary);
+  border-color: var(--border-medium);
+}
+
+.btn-tertiary {
+  background-color: transparent;
+  border-color: rgba(239, 68, 68, 0.25);
+  color: #f87171;
+}
+
+.btn-tertiary:hover {
+  background-color: var(--status-offline-bg);
+  border-color: var(--status-offline-border);
+}
+
+/* --------------------------------------------------------------------------
+   9b. Section 15: Received Data (Data Preview Panel)
+   -------------------------------------------------------------------------- */
+.received-data-panel {
+  border-color: var(--border-subtle);
+}
+
+.received-data-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+}
+
+.received-data-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+}
+
+.received-item {
+  background-color: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 0.6rem 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.received-item.wide {
+  grid-column: span 2;
+}
+
+.received-item-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+}
+
+.received-item-val {
+  font-size: 0.875rem;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.received-item-tag {
+  font-size: 0.7rem;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  background-color: var(--status-accent-blue-bg);
+  border: 1px solid var(--status-accent-blue-border);
+  color: var(--status-accent-blue);
+  padding: 0.15rem 0.45rem;
+  border-radius: var(--radius-sm);
+}
+
+.received-item-time {
+  font-size: 0.75rem;
+  font-family: var(--font-mono);
+  color: var(--text-secondary);
+  word-break: break-all;
+}
+
+.inspection-note {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-style: italic;
+  line-height: 1.4;
+}
+
+/* --------------------------------------------------------------------------
+   10. Section 4: Risk Assessment
+   -------------------------------------------------------------------------- */
+.status-pill {
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.2rem 0.55rem;
+  border-radius: var(--radius-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.status-pill-inactive {
+  background-color: var(--status-offline-bg);
+  border: 1px solid var(--status-offline-border);
+  color: var(--status-offline-text);
+}
+
+.status-pill-warning {
+  background-color: var(--status-warning-bg);
+  border: 1px solid var(--status-warning-border);
+  color: var(--status-warning-text);
+}
+
+.risk-status-display {
+  background-color: var(--status-offline-bg);
+  border: 1px solid var(--status-offline-border);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  text-align: center;
+  margin-bottom: 0.75rem;
+}
+
+.risk-main-text {
+  font-size: 1.05rem;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  color: var(--status-offline-text);
+  letter-spacing: 0.05em;
+}
+
+.risk-description {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  line-height: 1.45;
+}
+
+/* --------------------------------------------------------------------------
+   11. Section 5: Early Warning
+   -------------------------------------------------------------------------- */
+.warning-status-display {
+  background-color: var(--status-warning-bg);
+  border: 1px solid var(--status-warning-border);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  text-align: center;
+  margin-bottom: 0.75rem;
+}
+
+.warning-main-text {
+  font-size: 1.05rem;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  color: var(--status-warning-text);
+  letter-spacing: 0.05em;
+}
+
+.warning-description {
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+  line-height: 1.45;
+  font-style: italic;
+}
+
+/* --------------------------------------------------------------------------
+   12. Section 3: Battery Health
+   -------------------------------------------------------------------------- */
+.health-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.health-stat-box {
+  background-color: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 0.875rem 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-unit-sub {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+.battery-state-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 0.75rem 1rem;
+}
+
+.state-label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.state-badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-family: var(--font-mono);
+  background-color: var(--status-neutral-bg);
+  border: 1px solid var(--status-neutral-border);
+  color: var(--status-neutral-text);
+  padding: 0.25rem 0.6rem;
+  border-radius: var(--radius-sm);
+  letter-spacing: 0.04em;
+}
+
+/* --------------------------------------------------------------------------
+   13. Section 7: Model Status
+   -------------------------------------------------------------------------- */
+.model-status-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.status-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0.75rem;
+  background-color: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+}
+
+.status-property {
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.status-value-tag {
+  font-size: 0.75rem;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--radius-sm);
+}
+
+.status-value-tag.muted {
+  color: var(--text-secondary);
+  background-color: var(--border-subtle);
+}
+
+.status-value-tag.pending {
+  color: var(--status-warning-text);
+  background-color: var(--status-warning-bg);
+  border: 1px solid var(--status-warning-border);
+}
+
+/* --------------------------------------------------------------------------
+   14. Section 8: System Log
+   -------------------------------------------------------------------------- */
+.log-indicator-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--status-accent-blue);
+  box-shadow: 0 0 6px var(--status-accent-blue);
+}
+
+.system-log-terminal {
+  background-color: var(--bg-terminal);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-md);
+  padding: 0.875rem 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  line-height: 1.6;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.log-entry {
+  color: var(--text-secondary);
+}
+
+.log-entry-waiting {
+  color: var(--status-warning-text);
+}
+
+.log-prefix {
+  color: var(--text-muted);
+  font-weight: 600;
+  margin-right: 0.35rem;
+}
+
+/* --------------------------------------------------------------------------
+   14b. Phase 4: Mode Switcher & Dataset Demo Controls
+   -------------------------------------------------------------------------- */
+.mode-toggle-group {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  background-color: var(--bg-terminal);
+  padding: 0.35rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+}
+
+.btn-mode {
+  flex: 1;
+  padding: 0.45rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  background-color: transparent;
+  color: var(--text-muted);
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.btn-mode.active {
+  background-color: var(--bg-surface-elevated);
+  color: var(--status-accent-blue);
+  border-color: var(--border-medium);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.demo-controls-box {
+  background-color: var(--bg-surface-elevated);
+  border: 1px solid var(--border-highlight);
+  border-radius: var(--radius-md);
+  padding: 0.875rem 1rem;
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.demo-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.demo-sample-badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  background-color: var(--status-accent-blue-bg);
+  border: 1px solid var(--status-accent-blue-border);
+  color: var(--status-accent-blue);
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--radius-sm);
+}
+
+.demo-sample-id {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  color: var(--text-primary);
+}
+
+.demo-sample-desc {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  margin: 0;
+}
+
+.demo-actions-row {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.btn-sm {
+  padding: 0.35rem 0.75rem;
+  font-size: 0.72rem;
+}
+
+/* --------------------------------------------------------------------------
+   14c. Phase 4: Model Prediction Result Panel
+   -------------------------------------------------------------------------- */
+.prediction-result-panel {
+  border-color: var(--border-highlight);
+  background: linear-gradient(180deg, var(--bg-surface) 0%, rgba(22, 32, 50, 0.4) 100%);
+}
+
+.prediction-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.prediction-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.75rem;
+}
+
+.pred-item {
+  background-color: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 0.75rem 0.875rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 85px;
+}
+
+.pred-item.highlight {
+  border-color: rgba(56, 189, 248, 0.3);
+  background-color: rgba(56, 189, 248, 0.04);
+}
+
+.pred-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.pred-value {
+  font-size: 1.1rem;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  color: var(--text-primary);
+  margin: 0.25rem 0;
+}
+
+.pred-value.large {
+  font-size: 1.6rem;
+  color: var(--status-accent-blue);
+  line-height: 1;
+}
+
+.pred-sub {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pred-badge {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  padding: 0.2rem 0.5rem;
+  border-radius: var(--radius-sm);
+  margin: 0.25rem 0;
+  text-transform: uppercase;
+}
+
+.pred-badge.pending {
+  background-color: var(--status-warning-bg);
+  border: 1px solid var(--status-warning-border);
+  color: var(--status-warning-text);
+}
+
+.pred-badge.valid,
+.pred-badge.normal {
+  background-color: rgba(34, 197, 94, 0.12);
+  border: 1px solid rgba(34, 197, 94, 0.35);
+  color: #4ade80;
+}
+
+.pred-badge.anomaly,
+.pred-badge.violation {
+  background-color: var(--status-offline-bg);
+  border: 1px solid var(--status-offline-border);
+  color: var(--status-offline-text);
+}
+
+.pred-badge.muted {
+  background-color: var(--status-neutral-bg);
+  border: 1px solid var(--status-neutral-border);
+  color: var(--status-neutral-text);
+}
+
+.pred-badge.neutral {
+  background-color: var(--status-neutral-bg);
+  border: 1px solid var(--status-neutral-border);
+  color: var(--status-neutral-text);
+}
+
+.pred-features-box {
+  background-color: var(--bg-terminal);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 0.65rem 0.875rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.pred-features-title {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+}
+
+.pred-features-text {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--status-accent-blue);
+  word-break: break-all;
+}
+
+/* --------------------------------------------------------------------------
+   14d. Phase 4: Dynamic Risk & Warning States
+   -------------------------------------------------------------------------- */
+.risk-status-display.normal,
+.warning-status-display.normal {
+  background-color: rgba(34, 197, 94, 0.08);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+.risk-status-display.normal .risk-main-text,
+.warning-status-display.normal .warning-main-text {
+  color: #4ade80;
+}
+
+.risk-status-display.warning,
+.warning-status-display.warning {
+  background-color: var(--status-warning-bg);
+  border: 1px solid var(--status-warning-border);
+}
+
+.risk-status-display.warning .risk-main-text,
+.warning-status-display.warning .warning-main-text {
+  color: var(--status-warning-text);
+}
+
+.risk-status-display.critical,
+.warning-status-display.critical {
+  background-color: var(--status-offline-bg);
+  border: 1px solid var(--status-offline-border);
+}
+
+.risk-status-display.critical .risk-main-text,
+.warning-status-display.critical .warning-main-text {
+  color: var(--status-offline-text);
+}
+
+.status-pill-success {
+  background-color: rgba(34, 197, 94, 0.12);
+  border: 1px solid rgba(34, 197, 94, 0.35);
+  color: #4ade80;
+}
+
+.status-pill-critical {
+  background-color: var(--status-offline-bg);
+  border: 1px solid var(--status-offline-border);
+  color: var(--status-offline-text);
+}
+
+.status-value-tag.valid {
+  background-color: rgba(34, 197, 94, 0.12);
+  border: 1px solid rgba(34, 197, 94, 0.35);
+  color: #4ade80;
+}
+
+/* --------------------------------------------------------------------------
+   15. Footer
+   -------------------------------------------------------------------------- */
+.dashboard-footer {
+  background-color: var(--bg-surface);
+  border-top: 1px solid var(--border-subtle);
+  padding: 1rem 1.5rem;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: auto;
+}
+
+.footer-container {
+  max-width: var(--container-max-width);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.footer-brand {
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+/* --------------------------------------------------------------------------
+   16. Responsive Layout Breakpoints
+   -------------------------------------------------------------------------- */
+
+/* Laptop / Medium Desktops (max-width: 1200px) */
+@media (max-width: 1200px) {
+  .overview-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .dashboard-workspace {
+    grid-template-columns: 1.25fr 1fr;
+  }
+}
+
+/* Tablets (max-width: 900px) */
+@media (max-width: 900px) {
+  .dashboard-workspace {
+    grid-template-columns: 1fr;
+  }
+
+  .overview-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .thermal-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .received-data-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .received-item.wide {
+    grid-column: span 2;
+  }
+}
+
+/* Mobile Devices (max-width: 640px) */
+@media (max-width: 640px) {
+  .dashboard-header {
+    padding: 0.875rem 1rem;
+  }
+
+  .header-container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .main-title {
+    font-size: 1.25rem;
+  }
+
+  .sub-title {
+    font-size: 0.75rem;
+  }
+
+  .dashboard-main {
+    padding: 1rem 0.75rem 1.75rem;
+  }
+
+  .section-overview,
+  .panel-card {
+    padding: 1rem;
+  }
+
+  .overview-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+
+  .metric-card {
+    min-height: 95px;
+    padding: 0.875rem;
+  }
+
+  .metric-value {
+    font-size: 1.65rem;
+  }
+
+  .health-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .input-actions {
+    flex-direction: column;
+  }
+
+  .btn {
+    width: 100%;
+    text-align: center;
+  }
+
+  .received-data-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .received-item.wide {
+    grid-column: span 1;
+  }
+
+  .footer-container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+}
+
+/* Extra small mobile (max-width: 400px) */
+@media (max-width: 400px) {
+  .overview-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+</style>
 </head>
 <body>
   <!-- HEADER -->
@@ -467,5 +1860,852 @@
   </footer>
 
   <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+  <script id="brain-script">
+/**
+ * BRAIN — Battery Risk & Analytics Intelligence Network
+ * Phase 4: Model & Dataset Integration Engine
+ * 
+ * Pipeline flow:
+ * 1. Telemetry Ingestion (Live JSON or Dataset Demo Sample)
+ * 2. Client-Side Validation
+ * 3. Server-Side Pipeline (`POST /api/battery-data`)
+ * 4. Multi-Model Inference (`POST /api/predict`)
+ * 5. Dynamic UI Updates (SOC, SOH, Isolation Forest Anomaly, Physics Rules, Risk & Early Warning)
+ */
+
+document.addEventListener('DOMContentLoaded', () => {
+  // --- DOM Elements ---
+  const jsonTextarea = document.getElementById('batteryJsonInput');
+  const loadJsonBtn = document.getElementById('loadJsonBtn');
+  const validateJsonBtn = document.getElementById('validateJsonBtn');
+  const runPredictBtn = document.getElementById('runPredictBtn');
+  const sampleJsonBtn = document.getElementById('sampleJsonBtn');
+  const clearBtn = document.getElementById('clearBtn');
+
+  // Mode Switcher Elements
+  const modeJsonBtn = document.getElementById('modeJsonBtn');
+  const modeDemoBtn = document.getElementById('modeDemoBtn');
+  const demoControlsContainer = document.getElementById('demoControlsContainer');
+  const demoSampleBadge = document.getElementById('demoSampleBadge');
+  const demoSampleId = document.getElementById('demoSampleId');
+  const demoSampleDesc = document.getElementById('demoSampleDesc');
+  const demoPrevBtn = document.getElementById('demoPrevBtn');
+  const demoNextBtn = document.getElementById('demoNextBtn');
+  const demoLoadBtn = document.getElementById('demoLoadBtn');
+
+  // Header & Source Elements
+  const systemStatusBadge = document.getElementById('systemStatusBadge') || document.querySelector('.status-indicator');
+  const systemStatusText = document.getElementById('systemStatusText') || document.querySelector('.status-text');
+  const dataSourceBadge = document.getElementById('dataSourceBadge');
+
+  // Status & Feedback Elements
+  const dataStatusBadge = document.getElementById('dataStatusBadge');
+  const lastDataUpdate = document.getElementById('lastDataUpdate');
+  const validationFeedback = document.getElementById('validationFeedback');
+  const additionalDataContainer = document.getElementById('additionalDataContainer');
+  const additionalDataContent = document.getElementById('additionalDataContent');
+
+  // Section 1: Battery Overview Cards
+  const overviewVoltage = document.getElementById('overviewVoltage');
+  const overviewCurrent = document.getElementById('overviewCurrent');
+  const overviewTemperature = document.getElementById('overviewTemperature');
+  const overviewSoc = document.getElementById('overviewSoc');
+  const overviewSoh = document.getElementById('overviewSoh');
+  const overviewCrate = document.getElementById('overviewCrate');
+
+  // Section 2: Thermal Monitoring Cards
+  const thermalCurrentTemp = document.getElementById('thermalCurrentTemp');
+  const thermalCurrentSub = document.getElementById('thermalCurrentSub');
+  const thermalPredictedBadge = document.getElementById('thermalPredictedBadge');
+  const thermalPredictedSub = document.getElementById('thermalPredictedSub');
+  const thermalTrendBadge = document.getElementById('thermalTrendBadge');
+
+  // Section 3: Battery Health Card
+  const healthSoc = document.getElementById('healthSoc');
+  const healthSoh = document.getElementById('healthSoh');
+  const healthBatteryState = document.getElementById('healthBatteryState');
+
+  // Section 4 & 5: Risk Assessment & Early Warning
+  const riskPill = document.getElementById('riskPill');
+  const riskStatusDisplay = document.getElementById('riskStatusDisplay');
+  const riskMainText = document.getElementById('riskMainText');
+  const riskDescText = document.getElementById('riskDescText');
+
+  const warningPill = document.getElementById('warningPill');
+  const warningStatusDisplay = document.getElementById('warningStatusDisplay');
+  const warningMainText = document.getElementById('warningMainText');
+  const warningDescText = document.getElementById('warningDescText');
+
+  // Section 7: Model Status Panel
+  const modelNameTag = document.getElementById('modelNameTag');
+  const modelTypeTag = document.getElementById('modelTypeTag');
+  const modelVerifyTag = document.getElementById('modelVerifyTag');
+  const modelPredTag = document.getElementById('modelPredTag');
+  const modelStatusTag = document.getElementById('modelStatusTag');
+
+  // Section 15: Received Data Preview Card
+  const recvVoltage = document.getElementById('recvVoltage');
+  const recvCurrent = document.getElementById('recvCurrent');
+  const recvTemperature = document.getElementById('recvTemperature');
+  const recvSoc = document.getElementById('recvSoc');
+  const recvSoh = document.getElementById('recvSoh');
+  const recvCrate = document.getElementById('recvCrate');
+  const recvCycle = document.getElementById('recvCycle');
+  const recvTime = document.getElementById('recvTime');
+  const recvSource = document.getElementById('recvSource');
+  const recvServerTime = document.getElementById('recvServerTime');
+
+  // Section 17: Model Prediction Panel
+  const predModelName = document.getElementById('predModelName');
+  const predStatusBadge = document.getElementById('predStatusBadge');
+  const predLatency = document.getElementById('predLatency');
+  const predSocVal = document.getElementById('predSocVal');
+  const predSocSub = document.getElementById('predSocSub');
+  const predSohVal = document.getElementById('predSohVal');
+  const predSohSub = document.getElementById('predSohSub');
+  const predAnomalyBadge = document.getElementById('predAnomalyBadge');
+  const predAnomalyScore = document.getElementById('predAnomalyScore');
+  const predPhysicsBadge = document.getElementById('predPhysicsBadge');
+  const predPhysicsSub = document.getElementById('predPhysicsSub');
+  const predConfidence = document.getElementById('predConfidence');
+  const predFeaturesList = document.getElementById('predFeaturesList');
+
+  // Section 8: System Log Terminal
+  const systemLogTerminal = document.getElementById('systemLogTerminal');
+
+  // State Variables
+  let datasetSamples = [];
+  let currentSampleIndex = 0;
+  let currentMode = 'json'; // 'json' or 'demo'
+
+  // Predefined Demonstration Sample JSON
+  const SAMPLE_JSON = `{
+  "voltage": 3.70,
+  "current": 1.10,
+  "temperature": 25.0,
+  "time_s": 120.0,
+  "cycle_number": 1,
+  "soc": 85.0,
+  "soh": 100.0,
+  "c_rate": 1.0,
+  "ambient_temperature": 25.0,
+  "cycle_stats": {
+    "mean_voltage": 3.75,
+    "min_voltage": 3.00,
+    "max_voltage": 4.20,
+    "voltage_std": 0.28,
+    "mean_current": 1.10,
+    "mean_temperature": 25.8
+  }
+}`;
+
+  // --------------------------------------------------------------------------
+  // Backend Health & System Status
+  // --------------------------------------------------------------------------
+
+  function setSystemStatus(isOnline) {
+    if (!systemStatusBadge || !systemStatusText) return;
+    if (isOnline) {
+      systemStatusBadge.className = 'status-indicator online';
+      systemStatusText.textContent = 'SYSTEM ONLINE';
+    } else {
+      systemStatusBadge.className = 'status-indicator offline';
+      systemStatusText.textContent = 'SYSTEM OFFLINE';
+    }
+  }
+
+  async function checkHealth() {
+    try {
+      const response = await fetch('/health');
+      if (response.ok) {
+        const data = await response.json();
+        if (data && data.status === 'ok') {
+          setSystemStatus(true);
+          return true;
+        }
+      }
+      setSystemStatus(false);
+      return false;
+    } catch (err) {
+      setSystemStatus(false);
+      return false;
+    }
+  }
+
+  // --------------------------------------------------------------------------
+  // Model Status & Dataset Status Fetching
+  // --------------------------------------------------------------------------
+
+  async function fetchModelStatus() {
+    try {
+      const response = await fetch('/api/model-status');
+      if (response.ok) {
+        const res = await response.json();
+        if (res.success && res.data) {
+          const m = res.data;
+          if (modelNameTag) modelNameTag.textContent = m.model_file;
+          if (modelTypeTag) modelTypeTag.textContent = 'Multi-Model Ensemble';
+          if (modelVerifyTag) {
+            modelVerifyTag.textContent = m.verified ? 'VERIFIED' : 'NOT VERIFIED';
+            modelVerifyTag.className = m.verified ? 'status-value-tag valid' : 'status-value-tag pending';
+          }
+          if (modelPredTag) {
+            modelPredTag.textContent = m.prediction_available ? 'AVAILABLE' : 'UNAVAILABLE';
+            modelPredTag.className = m.prediction_available ? 'status-value-tag valid' : 'status-value-tag muted';
+          }
+          if (modelStatusTag) {
+            modelStatusTag.textContent = m.status;
+            modelStatusTag.className = m.status === 'MODEL_READY' ? 'status-value-tag valid' : 'status-value-tag pending';
+          }
+
+          if (predModelName) predModelName.textContent = m.model_file;
+          if (m.status === 'MODEL_READY') {
+            appendLog('MODEL', `Model ensemble verified: ${m.model_file} (SOC, SOH, Anomaly, Physics Rules)`);
+          }
+        }
+      }
+    } catch (err) {
+      console.warn('[BRAIN Phase 4] Could not fetch model status:', err);
+    }
+  }
+
+  async function fetchDatasetStatus() {
+    try {
+      const response = await fetch('/api/dataset-status');
+      if (response.ok) {
+        const res = await response.json();
+        if (res.success && res.samples && res.samples.length > 0) {
+          datasetSamples = res.samples;
+          appendLog('DATA', `Dataset profile loaded: ${datasetSamples.length} CALCE sequential demonstration samples available.`);
+        }
+      }
+    } catch (err) {
+      console.warn('[BRAIN Phase 4] Could not fetch dataset status:', err);
+    }
+  }
+
+  // --------------------------------------------------------------------------
+  // UI Helper Functions
+  // --------------------------------------------------------------------------
+
+  function setDataStatus(statusText, stateClass) {
+    if (!dataStatusBadge) return;
+    dataStatusBadge.textContent = statusText;
+    dataStatusBadge.className = `data-status-badge ${stateClass}`;
+  }
+
+  function showFeedback(message, isSuccess = false) {
+    if (!validationFeedback) return;
+    validationFeedback.textContent = message;
+    validationFeedback.className = isSuccess 
+      ? 'validation-feedback success' 
+      : 'validation-feedback error';
+    validationFeedback.style.display = 'block';
+  }
+
+  function hideFeedback() {
+    if (!validationFeedback) return;
+    validationFeedback.style.display = 'none';
+    validationFeedback.textContent = '';
+  }
+
+  function appendLog(prefix, message, isWaiting = false) {
+    if (!systemLogTerminal) return;
+    const entry = document.createElement('div');
+    entry.className = isWaiting ? 'log-entry log-entry-waiting' : 'log-entry';
+    entry.innerHTML = `<span class="log-prefix">[${prefix}]</span> ${message}`;
+    systemLogTerminal.appendChild(entry);
+    systemLogTerminal.scrollTop = systemLogTerminal.scrollHeight;
+  }
+
+  function formatVoltage(val) {
+    if (val === undefined || val === null) return '--';
+    const s = val.toString();
+    const decimals = s.includes('.') ? s.split('.')[1].length : 0;
+    return (decimals > 2 ? val.toFixed(decimals) : val.toFixed(2)) + ' V';
+  }
+
+  function formatCurrent(val) {
+    if (val === undefined || val === null) return '--';
+    const s = val.toString();
+    const decimals = s.includes('.') ? s.split('.')[1].length : 0;
+    return (decimals > 2 ? val.toFixed(decimals) : val.toFixed(2)) + ' A';
+  }
+
+  function formatTemperature(val) {
+    if (val === undefined || val === null) return '--';
+    const s = val.toString();
+    const decimals = s.includes('.') ? s.split('.')[1].length : 0;
+    return (decimals > 1 ? val.toFixed(decimals) : val.toFixed(1)) + ' °C';
+  }
+
+  function formatPercentage(val) {
+    if (val === undefined || val === null) return 'N/A';
+    return `${val} %`;
+  }
+
+  function formatCrate(val) {
+    if (val === undefined || val === null) return 'N/A';
+    const s = val.toString();
+    const decimals = s.includes('.') ? s.split('.')[1].length : 0;
+    return (decimals > 1 ? val.toFixed(decimals) : val.toFixed(1)) + ' C';
+  }
+
+  function formatServerTimestamp(isoStr) {
+    if (!isoStr) return '--';
+    try {
+      const d = new Date(isoStr);
+      const day = String(d.getDate()).padStart(2, '0');
+      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      const month = months[d.getMonth()];
+      const year = d.getFullYear();
+      const hours = String(d.getHours()).padStart(2, '0');
+      const minutes = String(d.getMinutes()).padStart(2, '0');
+      const seconds = String(d.getSeconds()).padStart(2, '0');
+      return `${day} ${month} ${year}, ${hours}:${minutes}:${seconds}`;
+    } catch {
+      return isoStr;
+    }
+  }
+
+  // --------------------------------------------------------------------------
+  // Dataset Demo Controls
+  // --------------------------------------------------------------------------
+
+  function renderDemoSample(index) {
+    if (!datasetSamples || datasetSamples.length === 0) return;
+    const sample = datasetSamples[index];
+    if (!sample) return;
+
+    if (demoSampleBadge) demoSampleBadge.textContent = `SAMPLE ${index + 1} OF ${datasetSamples.length}`;
+    if (demoSampleId) demoSampleId.textContent = sample.sample_id || `Sample_${index + 1}`;
+    if (demoSampleDesc) demoSampleDesc.textContent = sample.description || 'CALCE telemetry demonstration sample.';
+
+    if (jsonTextarea) {
+      jsonTextarea.value = JSON.stringify(sample, null, 2);
+    }
+    setDataStatus('SAMPLE LOADED', 'pending');
+    showFeedback(`Dataset sample ${index + 1} (${sample.sample_id}) loaded into editor. Ready for pipeline ingestion or model inference.`, true);
+    appendLog('DATA', `Selected dataset sample ${index + 1}: ${sample.sample_id}`);
+  }
+
+  if (modeJsonBtn && modeDemoBtn) {
+    modeJsonBtn.addEventListener('click', () => {
+      currentMode = 'json';
+      modeJsonBtn.classList.add('active');
+      modeDemoBtn.classList.remove('active');
+      if (demoControlsContainer) demoControlsContainer.style.display = 'none';
+      if (dataSourceBadge) {
+        dataSourceBadge.textContent = 'DATA SOURCE: JSON INPUT';
+      }
+      appendLog('APP', 'Switched to LIVE JSON INPUT mode.');
+    });
+
+    modeDemoBtn.addEventListener('click', () => {
+      currentMode = 'demo';
+      modeDemoBtn.classList.add('active');
+      modeJsonBtn.classList.remove('active');
+      if (demoControlsContainer) demoControlsContainer.style.display = 'flex';
+      if (dataSourceBadge) {
+        dataSourceBadge.textContent = 'DATA SOURCE: DATASET DEMO (CALCE)';
+      }
+      appendLog('APP', 'Switched to DATASET DEMO mode.');
+      if (datasetSamples.length > 0) {
+        renderDemoSample(currentSampleIndex);
+      }
+    });
+  }
+
+  if (demoPrevBtn) {
+    demoPrevBtn.addEventListener('click', () => {
+      if (datasetSamples.length === 0) return;
+      currentSampleIndex = (currentSampleIndex - 1 + datasetSamples.length) % datasetSamples.length;
+      renderDemoSample(currentSampleIndex);
+    });
+  }
+
+  if (demoNextBtn) {
+    demoNextBtn.addEventListener('click', () => {
+      if (datasetSamples.length === 0) return;
+      currentSampleIndex = (currentSampleIndex + 1) % datasetSamples.length;
+      renderDemoSample(currentSampleIndex);
+    });
+  }
+
+  if (demoLoadBtn) {
+    demoLoadBtn.addEventListener('click', () => {
+      renderDemoSample(currentSampleIndex);
+    });
+  }
+
+  // --------------------------------------------------------------------------
+  // Client-Side Pre-validation
+  // --------------------------------------------------------------------------
+  function prevalidateClientJson(rawText) {
+    if (!rawText || rawText.trim() === '') {
+      return { isValid: false, status: 'JSON INVALID', message: 'Please enter battery JSON data.', parsed: null };
+    }
+
+    let parsed;
+    try {
+      parsed = JSON.parse(rawText);
+    } catch (err) {
+      return { isValid: false, status: 'JSON INVALID', message: 'Invalid JSON syntax formatting.', parsed: null };
+    }
+
+    if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed)) {
+      return { isValid: false, status: 'JSON INVALID', message: 'JSON root must be an object.', parsed: null };
+    }
+
+    const requiredFields = ['voltage', 'current', 'temperature'];
+    for (const f of requiredFields) {
+      if (parsed[f] === undefined && parsed[`${f}_V`] === undefined && parsed[`${f}_A`] === undefined && parsed[`${f}_C`] === undefined) {
+        return { isValid: false, status: 'INVALID_DATA', message: `Missing required telemetry field: ${f}.`, parsed: null };
+      }
+    }
+
+    return { isValid: true, status: 'VALID', message: 'JSON VALID', parsed };
+  }
+
+  // --------------------------------------------------------------------------
+  // Event Listeners
+  // --------------------------------------------------------------------------
+
+  // 1. VALIDATE JSON BUTTON
+  if (validateJsonBtn) {
+    validateJsonBtn.addEventListener('click', () => {
+      const rawText = jsonTextarea ? jsonTextarea.value : '';
+      const check = prevalidateClientJson(rawText);
+
+      if (check.isValid) {
+        setDataStatus('JSON VALID', 'valid');
+        showFeedback('JSON VALID — Schema verified. Ready for backend submission or model inference.', true);
+        appendLog('VAL', 'Client-side JSON validation successful.');
+      } else {
+        setDataStatus(check.status, 'invalid');
+        showFeedback(check.message, false);
+        appendLog('VAL', `Validation failed: ${check.message}`);
+        appendLog('NET', 'Waiting for valid battery data.', true);
+      }
+    });
+  }
+
+  // 2. LOAD JSON BUTTON (Sends to Flask Backend: POST /api/battery-data)
+  if (loadJsonBtn) {
+    loadJsonBtn.addEventListener('click', async () => {
+      const rawText = jsonTextarea ? jsonTextarea.value : '';
+      const check = prevalidateClientJson(rawText);
+
+      if (!check.isValid) {
+        setDataStatus(check.status, 'invalid');
+        showFeedback(check.message, false);
+        appendLog('VAL', `JSON validation failed: ${check.message}`);
+        return;
+      }
+
+      try {
+        const response = await fetch('/api/battery-data', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(check.parsed)
+        });
+
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+          setDataStatus(result.status || 'INVALID_DATA', 'invalid');
+          showFeedback(result.message || 'Backend validation rejected payload.', false);
+          appendLog('VAL', `Backend validation failed: ${result.message}`);
+          return;
+        }
+
+        // Successful Ingestion
+        const processed = result.data;
+        const structured = processed.structured;
+
+        setDataStatus('DATA INGESTED', 'received');
+        showFeedback('Battery telemetry successfully ingested into backend pipeline.', true);
+
+        // Update Overview Cards
+        if (overviewVoltage) overviewVoltage.textContent = formatVoltage(structured.voltage);
+        if (overviewCurrent) overviewCurrent.textContent = formatCurrent(structured.current);
+        if (overviewTemperature) overviewTemperature.textContent = formatTemperature(structured.temperature);
+        if (overviewSoc) overviewSoc.textContent = formatPercentage(structured.soc);
+        if (overviewSoh) overviewSoh.textContent = formatPercentage(structured.soh);
+        if (overviewCrate) overviewCrate.textContent = formatCrate(structured.c_rate);
+
+        // Update Thermal Monitoring
+        if (thermalCurrentTemp) thermalCurrentTemp.textContent = formatTemperature(structured.temperature);
+        if (thermalCurrentSub) thermalCurrentSub.textContent = 'Backend Data Ingested';
+
+        // Update Battery Health
+        if (healthSoc) healthSoc.textContent = formatPercentage(structured.soc);
+        if (healthSoh) healthSoh.textContent = formatPercentage(structured.soh);
+
+        // Update Received Data Preview
+        if (recvVoltage) recvVoltage.textContent = formatVoltage(structured.voltage);
+        if (recvCurrent) recvCurrent.textContent = formatCurrent(structured.current);
+        if (recvTemperature) recvTemperature.textContent = formatTemperature(structured.temperature);
+        if (recvSoc) recvSoc.textContent = formatPercentage(structured.soc);
+        if (recvSoh) recvSoh.textContent = formatPercentage(structured.soh);
+        if (recvCrate) recvCrate.textContent = formatCrate(structured.c_rate);
+        if (recvCycle) recvCycle.textContent = check.parsed.cycle_number !== undefined ? check.parsed.cycle_number : 'N/A';
+        if (recvTime) recvTime.textContent = check.parsed.time_s !== undefined ? check.parsed.time_s : 'N/A';
+        if (recvSource) recvSource.textContent = currentMode === 'demo' ? 'DATASET DEMO' : 'JSON INPUT';
+        if (recvServerTime) recvServerTime.textContent = `SERVER TIME: ${formatServerTimestamp(processed.received_at)}`;
+
+        if (lastDataUpdate) lastDataUpdate.textContent = formatServerTimestamp(processed.received_at);
+
+        // Display unmodeled/unexpected fields if present
+        if (processed.additional_fields && additionalDataContainer && additionalDataContent) {
+          additionalDataContent.textContent = JSON.stringify(processed.additional_fields, null, 2);
+          additionalDataContainer.style.display = 'block';
+        } else if (additionalDataContainer) {
+          additionalDataContainer.style.display = 'none';
+        }
+
+        appendLog('SYS', 'Battery telemetry accepted by backend.');
+        setSystemStatus(true);
+
+      } catch (netErr) {
+        console.error('[BRAIN Phase 4] Pipeline network error:', netErr);
+        setSystemStatus(false);
+        setDataStatus('SERVER_ERROR', 'invalid');
+        showFeedback('Unable to reach backend API endpoint. Ensure Flask server is running.', false);
+        appendLog('NET', 'Backend connection error: Server unreachable.', true);
+      }
+    });
+  }
+
+  // 3. RUN MODEL INFERENCE BUTTON (Sends to: POST /api/predict)
+  if (runPredictBtn) {
+    runPredictBtn.addEventListener('click', async () => {
+      const rawText = jsonTextarea ? jsonTextarea.value : '';
+      const check = prevalidateClientJson(rawText);
+
+      if (!check.isValid) {
+        setDataStatus(check.status, 'invalid');
+        showFeedback(check.message, false);
+        appendLog('VAL', `Inference request rejected: ${check.message}`);
+        return;
+      }
+
+      setDataStatus('RUNNING MODEL...', 'pending');
+      if (predStatusBadge) {
+        predStatusBadge.textContent = 'COMPUTING INFERENCE...';
+        predStatusBadge.className = 'pred-badge pending';
+      }
+
+      try {
+        const response = await fetch('/api/predict', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(check.parsed)
+        });
+
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+          setDataStatus('MODEL_ERROR', 'invalid');
+          showFeedback(result.message || 'Model prediction failed.', false);
+          if (predStatusBadge) {
+            predStatusBadge.textContent = 'INFERENCE FAILED';
+            predStatusBadge.className = 'pred-badge anomaly';
+          }
+          appendLog('ERR', `Inference error: ${result.message}`);
+          return;
+        }
+
+        const preds = result.prediction;
+        const latency = result.inference_time_ms;
+
+        // 1. Update Data Status Badge
+        setDataStatus('PREDICTION SUCCESS', 'received');
+        showFeedback(`Multi-model inference successfully executed in ${latency} ms.`, true);
+
+        // 2. Update Prediction Panel
+        if (predStatusBadge) {
+          predStatusBadge.textContent = 'PREDICTION SUCCESS';
+          predStatusBadge.className = 'pred-badge valid';
+        }
+        if (predLatency) {
+          predLatency.textContent = `Latency: ${latency} ms`;
+        }
+
+        // SOC Prediction (Random Forest)
+        if (preds.soc && preds.soc.status === 'PREDICTION_SUCCESS') {
+          if (predSocVal) predSocVal.textContent = `${preds.soc.value} %`;
+          if (predSocSub) predSocSub.textContent = `RandomForestRegressor (${preds.soc.features_used.length} features)`;
+          if (overviewSoc) overviewSoc.textContent = `${preds.soc.value} %`;
+          if (healthSoc) healthSoc.textContent = `${preds.soc.value} %`;
+        } else if (preds.soc && preds.soc.status === 'MODEL_INPUT_INCOMPLETE') {
+          if (predSocVal) predSocVal.textContent = 'N/A (Incomplete)';
+          if (predSocSub) predSocSub.textContent = `Missing: ${preds.soc.missing_features.join(', ')}`;
+        }
+
+        // SOH Prediction (Gradient Boosting)
+        if (preds.soh && preds.soh.status === 'PREDICTION_SUCCESS') {
+          if (predSohVal) predSohVal.textContent = `${preds.soh.value} %`;
+          if (predSohSub) predSohSub.textContent = `GradientBoostingRegressor (${preds.soh.features_used.length} features)`;
+          if (overviewSoh) overviewSoh.textContent = `${preds.soh.value} %`;
+          if (healthSoh) healthSoh.textContent = `${preds.soh.value} %`;
+        } else if (preds.soh && preds.soh.status === 'MODEL_INPUT_INCOMPLETE') {
+          if (predSohVal) predSohVal.textContent = 'N/A (Incomplete)';
+          if (predSohSub) predSohSub.textContent = `Missing: ${preds.soh.missing_features.join(', ')}`;
+        }
+
+        // Anomaly Model (Isolation Forest)
+        if (preds.anomaly && preds.anomaly.status === 'PREDICTION_SUCCESS') {
+          const isAnomaly = preds.anomaly.is_anomaly;
+          if (predAnomalyBadge) {
+            predAnomalyBadge.textContent = isAnomaly ? 'ANOMALOUS' : 'NORMAL';
+            predAnomalyBadge.className = isAnomaly ? 'pred-badge anomaly' : 'pred-badge valid';
+          }
+          if (predAnomalyScore) {
+            predAnomalyScore.textContent = `IsolationForest Score: ${preds.anomaly.score}`;
+          }
+        } else if (preds.anomaly && preds.anomaly.status === 'MODEL_INPUT_INCOMPLETE') {
+          if (predAnomalyBadge) {
+            predAnomalyBadge.textContent = 'N/A (Incomplete)';
+            predAnomalyBadge.className = 'pred-badge muted';
+          }
+          if (predAnomalyScore) {
+            predAnomalyScore.textContent = `Missing: ${preds.anomaly.missing_features.join(', ')}`;
+          }
+        }
+
+        // Physics Boundary Rules
+        if (preds.physics_rules) {
+          const pStatus = preds.physics_rules.status;
+          if (predPhysicsBadge) {
+            predPhysicsBadge.textContent = pStatus;
+            predPhysicsBadge.className = pStatus === 'NORMAL' ? 'pred-badge valid' : 'pred-badge violation';
+          }
+          if (predPhysicsSub) {
+            if (preds.physics_rules.violations.length > 0) {
+              predPhysicsSub.textContent = preds.physics_rules.violations[0];
+            } else if (preds.physics_rules.warnings.length > 0) {
+              predPhysicsSub.textContent = preds.physics_rules.warnings[0];
+            } else {
+              predPhysicsSub.textContent = 'All physical boundaries respected';
+            }
+          }
+        }
+
+        // Features Utilized List
+        if (predFeaturesList && result.input && result.input.features_used) {
+          predFeaturesList.textContent = result.input.features_used.join(', ') || 'None';
+        }
+
+        // 3. Update Thermal Monitoring
+        const rawTemp = check.parsed.temperature !== undefined ? check.parsed.temperature : check.parsed.temperature_C;
+        if (thermalCurrentTemp && rawTemp !== undefined) {
+          thermalCurrentTemp.textContent = formatTemperature(rawTemp);
+        }
+        if (thermalCurrentSub) {
+          thermalCurrentSub.textContent = 'Model Telemetry Ingested';
+        }
+        if (thermalTrendBadge) {
+          thermalTrendBadge.textContent = 'CALCE DYNAMICS ACTIVE';
+          thermalTrendBadge.className = 'stat-status-badge';
+        }
+
+        // 4. Update Battery Overview
+        const rawVolt = check.parsed.voltage !== undefined ? check.parsed.voltage : check.parsed.voltage_V;
+        const rawCurr = check.parsed.current !== undefined ? check.parsed.current : check.parsed.current_A;
+        if (overviewVoltage && rawVolt !== undefined) overviewVoltage.textContent = formatVoltage(rawVolt);
+        if (overviewCurrent && rawCurr !== undefined) overviewCurrent.textContent = formatCurrent(rawCurr);
+        if (overviewTemperature && rawTemp !== undefined) overviewTemperature.textContent = formatTemperature(rawTemp);
+        if (overviewCrate && check.parsed.c_rate !== undefined) overviewCrate.textContent = formatCrate(check.parsed.c_rate);
+
+        // 5. Update Risk Assessment Card
+        if (preds.risk_assessment) {
+          const risk = preds.risk_assessment;
+          if (riskMainText) riskMainText.textContent = risk.status.replace(/_/g, ' ');
+          if (riskDescText) riskDescText.textContent = risk.summary;
+          if (riskStatusDisplay) {
+            riskStatusDisplay.className = risk.risk_level === 'CRITICAL' 
+              ? 'risk-status-display critical'
+              : (risk.risk_level === 'HIGH' || risk.risk_level === 'MEDIUM' ? 'risk-status-display warning' : 'risk-status-display normal');
+          }
+          if (riskPill) {
+            riskPill.className = risk.risk_level === 'CRITICAL'
+              ? 'status-pill status-pill-critical'
+              : (risk.risk_level === 'HIGH' || risk.risk_level === 'MEDIUM' ? 'status-pill status-pill-warning' : 'status-pill status-pill-success');
+            riskPill.textContent = `${risk.risk_level} RISK`;
+          }
+        }
+
+        // 6. Update Early Warning Card
+        if (preds.early_warning) {
+          const warn = preds.early_warning;
+          if (warningMainText) {
+            warningMainText.textContent = warn.source === 'RULE_BASED' 
+              ? 'RULE-BASED ALARM' 
+              : (warn.source === 'MODEL_BASED' ? 'MODEL-BASED WARNING' : 'NO ACTIVE HAZARD');
+          }
+          if (warningDescText) warningDescText.textContent = warn.message;
+          if (warningStatusDisplay) {
+            warningStatusDisplay.className = warn.level === 'CRITICAL'
+              ? 'warning-status-display critical'
+              : (warn.level === 'WARNING' || warn.level === 'ADVISORY' ? 'warning-status-display warning' : 'warning-status-display normal');
+          }
+          if (warningPill) {
+            warningPill.className = warn.level === 'CRITICAL'
+              ? 'status-pill status-pill-critical'
+              : (warn.level === 'WARNING' || warn.level === 'ADVISORY' ? 'status-pill status-pill-warning' : 'status-pill status-pill-success');
+            warningPill.textContent = warn.level;
+          }
+        }
+
+        // 7. Update Battery State
+        if (healthBatteryState) {
+          if (preds.risk_assessment.risk_level === 'CRITICAL') {
+            healthBatteryState.textContent = 'CRITICAL LIMIT EXCEEDED';
+          } else if (preds.anomaly && preds.anomaly.is_anomaly) {
+            healthBatteryState.textContent = 'ANOMALY DETECTED';
+          } else if (preds.soh && preds.soh.value < 85.0) {
+            healthBatteryState.textContent = 'DEGRADED (AGED CELL)';
+          } else {
+            healthBatteryState.textContent = 'NOMINAL HEALTH';
+          }
+        }
+
+        // 8. Update Received Data Panel
+        if (recvVoltage && rawVolt !== undefined) recvVoltage.textContent = formatVoltage(rawVolt);
+        if (recvCurrent && rawCurr !== undefined) recvCurrent.textContent = formatCurrent(rawCurr);
+        if (recvTemperature && rawTemp !== undefined) recvTemperature.textContent = formatTemperature(rawTemp);
+        if (recvSoc) recvSoc.textContent = preds.soc && preds.soc.value ? `${preds.soc.value} %` : (check.parsed.soc ? `${check.parsed.soc} %` : 'N/A');
+        if (recvSoh) recvSoh.textContent = preds.soh && preds.soh.value ? `${preds.soh.value} %` : (check.parsed.soh ? `${check.parsed.soh} %` : 'N/A');
+        if (recvCrate) recvCrate.textContent = check.parsed.c_rate ? formatCrate(check.parsed.c_rate) : 'N/A';
+        if (recvCycle) recvCycle.textContent = check.parsed.cycle_number !== undefined ? check.parsed.cycle_number : 'N/A';
+        if (recvTime) recvTime.textContent = check.parsed.time_s !== undefined ? check.parsed.time_s : 'N/A';
+        if (recvSource) recvSource.textContent = currentMode === 'demo' ? 'DATASET DEMO' : 'JSON INPUT';
+        if (recvServerTime) recvServerTime.textContent = `SERVER TIME: ${formatServerTimestamp(result.timestamp)}`;
+
+        // Log to terminal
+        appendLog('INFER', `Multi-model prediction completed in ${latency} ms.`);
+        if (preds.soc && preds.soc.value) appendLog('SOC', `Estimated SOC: ${preds.soc.value}% (Random Forest)`);
+        if (preds.soh && preds.soh.value) appendLog('SOH', `Estimated SOH: ${preds.soh.value}% (Gradient Boosting)`);
+        if (preds.anomaly && preds.anomaly.classification) appendLog('ANOM', `Anomaly status: ${preds.anomaly.classification} (Isolation Forest score: ${preds.anomaly.score})`);
+
+        setSystemStatus(true);
+
+      } catch (inferErr) {
+        console.error('[BRAIN Phase 4] Inference network error:', inferErr);
+        setDataStatus('SERVER_ERROR', 'invalid');
+        showFeedback('Unable to reach prediction endpoint. Ensure Flask server is running.', false);
+        appendLog('NET', 'Prediction connection error: Server unreachable.', true);
+      }
+    });
+  }
+
+  // 4. LOAD SAMPLE JSON BUTTON
+  if (sampleJsonBtn) {
+    sampleJsonBtn.addEventListener('click', () => {
+      if (jsonTextarea) {
+        jsonTextarea.value = SAMPLE_JSON;
+      }
+      setDataStatus('SAMPLE LOADED', 'pending');
+      showFeedback('Demonstration sample JSON loaded. Click RUN MODEL INFERENCE or LOAD JSON.', true);
+      appendLog('SYS', 'Demonstration sample JSON loaded into editor.');
+    });
+  }
+
+  // 5. CLEAR BUTTON
+  if (clearBtn) {
+    clearBtn.addEventListener('click', () => {
+      if (jsonTextarea) jsonTextarea.value = '';
+
+      // Reset Battery Overview
+      if (overviewVoltage) overviewVoltage.textContent = '--';
+      if (overviewCurrent) overviewCurrent.textContent = '--';
+      if (overviewTemperature) overviewTemperature.textContent = '--';
+      if (overviewSoc) overviewSoc.textContent = '--';
+      if (overviewSoh) overviewSoh.textContent = '--';
+      if (overviewCrate) overviewCrate.textContent = '--';
+
+      // Reset Thermal Monitoring
+      if (thermalCurrentTemp) thermalCurrentTemp.textContent = '--';
+      if (thermalCurrentSub) thermalCurrentSub.textContent = 'Sensor Ingestion Pending';
+      if (thermalTrendBadge) {
+        thermalTrendBadge.textContent = 'WAITING FOR MODEL/DATA';
+        thermalTrendBadge.className = 'stat-status-badge neutral';
+      }
+
+      // Reset Battery Health
+      if (healthSoc) healthSoc.textContent = '--';
+      if (healthSoh) healthSoh.textContent = '--';
+      if (healthBatteryState) healthBatteryState.textContent = 'WAITING FOR DATA';
+
+      // Reset Prediction Panel
+      if (predStatusBadge) {
+        predStatusBadge.textContent = 'AWAITING INFERENCE';
+        predStatusBadge.className = 'pred-badge pending';
+      }
+      if (predLatency) predLatency.textContent = 'Latency: -- ms';
+      if (predSocVal) predSocVal.textContent = '--';
+      if (predSocSub) predSocSub.textContent = 'RandomForestRegressor (5 features)';
+      if (predSohVal) predSohVal.textContent = '--';
+      if (predSohSub) predSohSub.textContent = 'GradientBoostingRegressor (7 features)';
+      if (predAnomalyBadge) {
+        predAnomalyBadge.textContent = 'NOT RUN';
+        predAnomalyBadge.className = 'pred-badge muted';
+      }
+      if (predAnomalyScore) predAnomalyScore.textContent = 'IsolationForest Score: --';
+      if (predPhysicsBadge) {
+        predPhysicsBadge.textContent = 'NOT EVALUATED';
+        predPhysicsBadge.className = 'pred-badge muted';
+      }
+      if (predPhysicsSub) predPhysicsSub.textContent = 'Deterministic Rules';
+      if (predFeaturesList) predFeaturesList.textContent = 'None (Execute inference to inspect feature vectors)';
+
+      // Reset Risk & Early Warning
+      if (riskMainText) riskMainText.textContent = 'SYSTEM NOT CONNECTED';
+      if (riskDescText) riskDescText.textContent = 'Autonomous risk indexing and runaway hazard classification are disabled until backend validation.';
+      if (riskStatusDisplay) riskStatusDisplay.className = 'risk-status-display';
+      if (riskPill) {
+        riskPill.className = 'status-pill status-pill-inactive';
+        riskPill.textContent = 'Safety Logic';
+      }
+
+      if (warningMainText) warningMainText.textContent = 'WAITING FOR MODEL';
+      if (warningDescText) warningDescText.textContent = '"Prediction and safety assessment will become available after model integration."';
+      if (warningStatusDisplay) warningStatusDisplay.className = 'warning-status-display';
+      if (warningPill) {
+        warningPill.className = 'status-pill status-pill-warning';
+        warningPill.textContent = 'Pre-Hazard Detection';
+      }
+
+      // Reset RECEIVED DATA Inspection Preview
+      if (recvVoltage) recvVoltage.textContent = '--';
+      if (recvCurrent) recvCurrent.textContent = '--';
+      if (recvTemperature) recvTemperature.textContent = '--';
+      if (recvSoc) recvSoc.textContent = '--';
+      if (recvSoh) recvSoh.textContent = '--';
+      if (recvCrate) recvCrate.textContent = '--';
+      if (recvCycle) recvCycle.textContent = '--';
+      if (recvTime) recvTime.textContent = '--';
+      if (recvServerTime) recvServerTime.textContent = 'SERVER TIME: --';
+
+      setDataStatus('WAITING FOR INPUT', 'pending');
+      if (lastDataUpdate) lastDataUpdate.textContent = '--';
+      hideFeedback();
+      if (additionalDataContainer) additionalDataContainer.style.display = 'none';
+
+      appendLog('APP', 'Dashboard inputs and model prediction states cleared.');
+    });
+  }
+
+  // --- Initial System Boot Sequence ---
+  checkHealth();
+  fetchModelStatus();
+  fetchDatasetStatus();
+  setInterval(checkHealth, 5000);
+
+  console.log('[BRAIN Phase 4] Model & Dataset Integration active.');
+});
+
+</script>
 </body>
 </html>
