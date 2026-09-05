@@ -1,0 +1,107 @@
+{
+  "dataset_name": "sample_input.json",
+  "dataset_path": "data/sample_input.json",
+  "dataset_type": "telemetry_json",
+  "domain": "Lithium-ion EV Battery Telemetry",
+  "rows": 1,
+  "columns": 7,
+  "features": [
+    {
+      "name": "voltage",
+      "type": "float64",
+      "unit": "V",
+      "description": "Instantaneous cell/pack terminal voltage",
+      "category": "voltage"
+    },
+    {
+      "name": "current",
+      "type": "float64",
+      "unit": "A",
+      "description": "Instantaneous charge/discharge current",
+      "category": "current"
+    },
+    {
+      "name": "temperature",
+      "type": "float64",
+      "unit": "\u00b0C",
+      "description": "Core surface battery temperature",
+      "category": "temperature"
+    },
+    {
+      "name": "soc",
+      "type": "float64",
+      "unit": "%",
+      "description": "State of Charge percentage",
+      "category": "soc"
+    },
+    {
+      "name": "soh",
+      "type": "float64",
+      "unit": "%",
+      "description": "State of Health / Capacity retention percentage",
+      "category": "soh"
+    },
+    {
+      "name": "c_rate",
+      "type": "float64",
+      "unit": "C",
+      "description": "Normalized charge/discharge C-rate",
+      "category": "rate"
+    },
+    {
+      "name": "ambient_temperature",
+      "type": "float64",
+      "unit": "\u00b0C",
+      "description": "Ambient environmental temperature",
+      "category": "temperature"
+    }
+  ],
+  "extended_features_required_by_model": [
+    {
+      "name": "time_s",
+      "type": "float64",
+      "unit": "s",
+      "description": "Elapsed test duration in seconds (required by SOC Random Forest model)"
+    },
+    {
+      "name": "cycle_number",
+      "type": "int / float",
+      "unit": "cycles",
+      "description": "Charge-discharge cycle count (required by SOC, SOH, and Anomaly models)"
+    }
+  ],
+  "target_candidates": [
+    {
+      "target": "soc",
+      "description": "State of Charge (predictable via Random Forest model in battery_intelligence.pkl)",
+      "target_type": "continuous_percentage"
+    },
+    {
+      "target": "soh",
+      "description": "State of Health (predictable via Gradient Boosting model in battery_intelligence.pkl with cycle stats)",
+      "target_type": "continuous_percentage"
+    },
+    {
+      "target": "anomaly_status",
+      "description": "Cell abnormal operating condition (predictable via Isolation Forest in battery_intelligence.pkl)",
+      "target_type": "binary_classification"
+    }
+  ],
+  "temperature_features": ["temperature", "ambient_temperature"],
+  "voltage_features": ["voltage"],
+  "current_features": ["current"],
+  "soc_features": ["soc"],
+  "soh_features": ["soh"],
+  "time_features": ["time_s"],
+  "missing_value_summary": {
+    "voltage": 0,
+    "current": 0,
+    "temperature": 0,
+    "soc": 0,
+    "soh": 0,
+    "c_rate": 0,
+    "ambient_temperature": 0
+  },
+  "duplicate_rows": 0,
+  "notes": "Original sample JSON represents a single instantaneous telemetry reading. For comprehensive model inference, cycle-indexed sequential readings are supported through the Phase 4 Dataset Demo mode."
+}

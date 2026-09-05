@@ -972,6 +972,281 @@ body {
 }
 
 /* --------------------------------------------------------------------------
+   14b. Phase 4: Mode Switcher & Dataset Demo Controls
+   -------------------------------------------------------------------------- */
+.mode-toggle-group {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  background-color: var(--bg-terminal);
+  padding: 0.35rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+}
+
+.btn-mode {
+  flex: 1;
+  padding: 0.45rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  background-color: transparent;
+  color: var(--text-muted);
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.btn-mode.active {
+  background-color: var(--bg-surface-elevated);
+  color: var(--status-accent-blue);
+  border-color: var(--border-medium);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.demo-controls-box {
+  background-color: var(--bg-surface-elevated);
+  border: 1px solid var(--border-highlight);
+  border-radius: var(--radius-md);
+  padding: 0.875rem 1rem;
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.demo-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.demo-sample-badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  background-color: var(--status-accent-blue-bg);
+  border: 1px solid var(--status-accent-blue-border);
+  color: var(--status-accent-blue);
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--radius-sm);
+}
+
+.demo-sample-id {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  color: var(--text-primary);
+}
+
+.demo-sample-desc {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  margin: 0;
+}
+
+.demo-actions-row {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.btn-sm {
+  padding: 0.35rem 0.75rem;
+  font-size: 0.72rem;
+}
+
+/* --------------------------------------------------------------------------
+   14c. Phase 4: Model Prediction Result Panel
+   -------------------------------------------------------------------------- */
+.prediction-result-panel {
+  border-color: var(--border-highlight);
+  background: linear-gradient(180deg, var(--bg-surface) 0%, rgba(22, 32, 50, 0.4) 100%);
+}
+
+.prediction-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.prediction-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.75rem;
+}
+
+.pred-item {
+  background-color: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 0.75rem 0.875rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 85px;
+}
+
+.pred-item.highlight {
+  border-color: rgba(56, 189, 248, 0.3);
+  background-color: rgba(56, 189, 248, 0.04);
+}
+
+.pred-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.pred-value {
+  font-size: 1.1rem;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  color: var(--text-primary);
+  margin: 0.25rem 0;
+}
+
+.pred-value.large {
+  font-size: 1.6rem;
+  color: var(--status-accent-blue);
+  line-height: 1;
+}
+
+.pred-sub {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pred-badge {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  padding: 0.2rem 0.5rem;
+  border-radius: var(--radius-sm);
+  margin: 0.25rem 0;
+  text-transform: uppercase;
+}
+
+.pred-badge.pending {
+  background-color: var(--status-warning-bg);
+  border: 1px solid var(--status-warning-border);
+  color: var(--status-warning-text);
+}
+
+.pred-badge.valid,
+.pred-badge.normal {
+  background-color: rgba(34, 197, 94, 0.12);
+  border: 1px solid rgba(34, 197, 94, 0.35);
+  color: #4ade80;
+}
+
+.pred-badge.anomaly,
+.pred-badge.violation {
+  background-color: var(--status-offline-bg);
+  border: 1px solid var(--status-offline-border);
+  color: var(--status-offline-text);
+}
+
+.pred-badge.muted {
+  background-color: var(--status-neutral-bg);
+  border: 1px solid var(--status-neutral-border);
+  color: var(--status-neutral-text);
+}
+
+.pred-badge.neutral {
+  background-color: var(--status-neutral-bg);
+  border: 1px solid var(--status-neutral-border);
+  color: var(--status-neutral-text);
+}
+
+.pred-features-box {
+  background-color: var(--bg-terminal);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 0.65rem 0.875rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.pred-features-title {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+}
+
+.pred-features-text {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--status-accent-blue);
+  word-break: break-all;
+}
+
+/* --------------------------------------------------------------------------
+   14d. Phase 4: Dynamic Risk & Warning States
+   -------------------------------------------------------------------------- */
+.risk-status-display.normal,
+.warning-status-display.normal {
+  background-color: rgba(34, 197, 94, 0.08);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+.risk-status-display.normal .risk-main-text,
+.warning-status-display.normal .warning-main-text {
+  color: #4ade80;
+}
+
+.risk-status-display.warning,
+.warning-status-display.warning {
+  background-color: var(--status-warning-bg);
+  border: 1px solid var(--status-warning-border);
+}
+
+.risk-status-display.warning .risk-main-text,
+.warning-status-display.warning .warning-main-text {
+  color: var(--status-warning-text);
+}
+
+.risk-status-display.critical,
+.warning-status-display.critical {
+  background-color: var(--status-offline-bg);
+  border: 1px solid var(--status-offline-border);
+}
+
+.risk-status-display.critical .risk-main-text,
+.warning-status-display.critical .warning-main-text {
+  color: var(--status-offline-text);
+}
+
+.status-pill-success {
+  background-color: rgba(34, 197, 94, 0.12);
+  border: 1px solid rgba(34, 197, 94, 0.35);
+  color: #4ade80;
+}
+
+.status-pill-critical {
+  background-color: var(--status-offline-bg);
+  border: 1px solid var(--status-offline-border);
+  color: var(--status-offline-text);
+}
+
+.status-value-tag.valid {
+  background-color: rgba(34, 197, 94, 0.12);
+  border: 1px solid rgba(34, 197, 94, 0.35);
+  color: #4ade80;
+}
+
+/* --------------------------------------------------------------------------
    15. Footer
    -------------------------------------------------------------------------- */
 .dashboard-footer {

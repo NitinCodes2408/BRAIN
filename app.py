@@ -1,20 +1,19 @@
 """
 BRAIN — Battery Risk & Analytics Intelligence Network
-Phase 3: Flask Backend Pipeline Application
+Phase 4: Model & Dataset Integration Application
 
-A physics-informed AI system data pipeline for lithium-ion EV battery safety.
-IMPORTANT:
-- .pkl model is NOT loaded in this phase.
-- No machine learning prediction, PINN inference, or risk calculation is executed.
-- Serves the frontend dashboard and exposes POST /api/battery-data and GET /health.
-- Full CORS support to allow seamless requests from VS Code Live Server (port 5500) and localhost.
+A physics-informed AI system data pipeline and multi-model inference server
+for lithium-ion EV battery safety and state estimation.
 """
 
 import os
+import json
 import logging
 from flask import Flask, request, jsonify, render_template
+
 from utils.json_validator import validate_incoming_battery_data
 from utils.data_processor import process_battery_data
+from utils.model_service import ModelService
 
 # Initialize Flask application with explicit template and static paths
 app = Flask(__name__, template_folder="templates", static_folder="static")
@@ -22,6 +21,9 @@ app = Flask(__name__, template_folder="templates", static_folder="static")
 # Configure logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger("BRAIN_PIPELINE")
+
+# Initialize Model Service Singleton at server startup
+model_service = ModelService.get_instance()
 
 
 @app.after_request
@@ -42,25 +44,83 @@ def index():
 @app.route("/health", methods=["GET", "OPTIONS"])
 def health_check():
     """
-    Phase 3 Health check endpoint.
-    Confirms backend availability and pipeline readiness.
+    Health check endpoint.
+    Confirms backend availability, pipeline readiness, and model status.
     """
     if request.method == "OPTIONS":
         return "", 204
-    return jsonify({"status": "ok"}), 200
+
+    return jsonify({
+        "status": "ok",
+        "model_status": model_service.status,
+        "model_verified": model_service.verified
+    }), 200
+
+
+@app.route("/api/model-status", methods=["GET", "OPTIONS"])
+def get_model_status():
+    """
+    Returns the real-time operational status, submodels, features, and verification state
+    of the battery_intelligence.pkl model ensemble.
+    """
+    if request.method == "OPTIONS":
+        return "", 204
+
+    status_data = model_service.get_status()
+    return jsonify({
+        "success": True,
+        "data": status_data
+    }), 200
+
+
+@app.route("/api/dataset-status", methods=["GET", "OPTIONS"])
+def get_dataset_status():
+    """
+    Returns metadata about supplied datasets and available demonstration sample sequences.
+    """
+    if request.method == "OPTIONS":
+        return "", 204
+
+    base_dir = os.path.dirname(__file__)
+    profile_path = os.path.join(base_dir, "data", "dataset_profile.json")
+    samples_path = os.path.join(base_dir, "data", "dataset_samples.json")
+
+    profile_data = {}
+    if os.path.exists(profile_path):
+        try:
+            with open(profile_path, "r", encoding="utf-8") as f:
+                profile_data = json.load(f)
+        except Exception as err:
+            logger.warning(f"Failed to read dataset_profile.json: {err}")
+
+    samples_data = []
+    if os.path.exists(samples_path):
+        try:
+            with open(samples_path, "r", encoding="utf-8") as f:
+                samples_data = json.load(f)
+        except Exception as err:
+            logger.warning(f"Failed to read dataset_samples.json: {err}")
+
+    return jsonify({
+        "success": True,
+        "status": "ok",
+        "dataset_name": profile_data.get("dataset_name", "sample_input.json"),
+        "profile": profile_data,
+        "sample_count": len(samples_data),
+        "samples": samples_data
+    }), 200
 
 
 @app.route("/api/battery-data", methods=["POST", "OPTIONS"])
 def receive_battery_data():
     """
-    Phase 3 Primary API Endpoint: POST /api/battery-data
+    Primary Ingestion Endpoint: POST /api/battery-data
     
     1. Ingests raw JSON telemetry payload.
     2. Runs independent server-side validation.
     3. Transforms validated payload into standardized model-ready structure.
-    4. Returns structured confirmation without executing .pkl model.
+    4. Returns structured confirmation.
     """
-    # Handle preflight CORS request
     if request.method == "OPTIONS":
         return "", 204
 
@@ -101,7 +161,7 @@ def receive_battery_data():
             "message": validation_msg
         }), 400
 
-    # 3. Data Processing & Structuring (No model prediction executed)
+    # 3. Data Processing & Structuring
     try:
         processed_result = process_battery_data(validated_data)
         logger.info(f"Battery data accepted and structured. Voltage: {processed_result['structured']['voltage']}V, "
@@ -124,7 +184,49 @@ def receive_battery_data():
         }), 500
 
 
+@app.route("/api/predict", methods=["POST", "OPTIONS"])
+def predict():
+    """
+    Phase 4 Multi-Model Prediction Endpoint: POST /api/predict
+
+    Receives battery telemetry, validates features, executes submodel inference
+    (SOC, SOH, Isolation Forest Anomaly Detection, and Physics Boundary Rules),
+    and returns verified scientific predictions with latency metrics.
+    """
+    if request.method == "OPTIONS":
+        return "", 204
+
+    if not request.is_json:
+        return jsonify({
+            "success": False,
+            "status": "INVALID_DATA",
+            "message": "Prediction request payload must be valid JSON."
+        }), 400
+
+    try:
+        payload = request.get_json(silent=True)
+    except Exception as err:
+        return jsonify({
+            "success": False,
+            "status": "INVALID_DATA",
+            "message": "Invalid JSON syntax."
+        }), 400
+
+    if not payload or not isinstance(payload, dict):
+        return jsonify({
+            "success": False,
+            "status": "INVALID_DATA",
+            "message": "Prediction payload cannot be empty."
+        }), 400
+
+    # Execute inference through ModelService
+    prediction_result = model_service.predict(payload)
+
+    status_code = 200 if prediction_result.get("success") else 400
+    return jsonify(prediction_result), status_code
+
+
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
-    logger.info(f"Starting BRAIN Phase 3 Backend on http://127.0.0.1:{port}")
+    logger.info(f"Starting BRAIN Phase 4 Application on http://127.0.0.1:{port}")
     app.run(host="127.0.0.1", port=port, debug=True)

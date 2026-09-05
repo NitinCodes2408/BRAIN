@@ -1,0 +1,88 @@
+{
+  "model_file": "battery_intelligence.pkl",
+  "object_type": "battery_intelligence.model.BatteryIntelligenceModel",
+  "model_type": "Composite Multi-Model Ensemble (CALCE Battery Safety & State Estimation)",
+  "container_structure": {
+    "root_class": "BatteryIntelligenceModel",
+    "subcontainer_class": "_CALCEModels",
+    "subcontainer_attribute": "_calce"
+  },
+  "submodels": {
+    "soc_model": {
+      "framework": "scikit-learn",
+      "estimator": "RandomForestRegressor",
+      "n_estimators": 100,
+      "max_depth": 15,
+      "criterion": "squared_error",
+      "n_features_in": 5,
+      "input_features": ["voltage_V", "current_A", "temperature_C", "time_s", "cycle_number"],
+      "output_type": "continuous_regression",
+      "output_unit": "%",
+      "description": "Estimates instantaneous battery State of Charge percentage"
+    },
+    "soh_model": {
+      "framework": "scikit-learn",
+      "estimator": "GradientBoostingRegressor",
+      "n_estimators": 120,
+      "learning_rate": 0.08,
+      "loss": "squared_error",
+      "n_features_in": 7,
+      "input_features": ["cycle_number", "mean_voltage", "min_voltage", "max_voltage", "voltage_std", "mean_current", "mean_temperature"],
+      "output_type": "continuous_regression",
+      "output_unit": "%",
+      "description": "Estimates cell State of Health capacity retention from cycle statistics"
+    },
+    "anomaly_model": {
+      "framework": "scikit-learn",
+      "estimator": "IsolationForest",
+      "n_estimators": 100,
+      "contamination": 0.02,
+      "n_features_in": 4,
+      "input_features": ["voltage_V", "current_A", "temperature_C", "cycle_number"],
+      "output_type": "binary_classification_and_score",
+      "classes": ["+1 (Normal)", "-1 (Anomaly)"],
+      "prediction_methods": ["predict", "decision_function", "score_samples"],
+      "description": "Unsupervised cell abnormality detection and outlier scoring"
+    },
+    "anomaly_rules": {
+      "type": "physics_boundary_rules",
+      "rules": {
+        "v_max": 4.25,
+        "v_min": 2.50,
+        "i_max": 3.50,
+        "t_max": 45.0
+      },
+      "units": {
+        "v_max": "V",
+        "v_min": "V",
+        "i_max": "A",
+        "t_max": "\u00b0C"
+      },
+      "description": "Deterministic physics safety envelope limits for CALCE lithium-ion cells"
+    },
+    "rul_model": {
+      "framework": "BatteryML / XGBoost",
+      "estimator": "XGBoostRULPredictor (Booster)",
+      "num_features": 6,
+      "num_target": 1,
+      "description": "Remaining Useful Life cycle prediction"
+    }
+  },
+  "temperature_prediction": {
+    "supported": false,
+    "pinn_included": false,
+    "scientific_note": "Temperature is strictly an INPUT feature to the models, not an output. Model does NOT forecast future thermal curves."
+  },
+  "prediction_methods": [
+    "predict_soc",
+    "predict_soh",
+    "predict_anomaly",
+    "evaluate_anomaly_rules",
+    "predict_full_pipeline"
+  ],
+  "checksum_sha256": "525fd17dd0e02fdd6883e8155954edde4fe78372d2153452fe6d1f01015c45cd",
+  "pickle_patch_required": true,
+  "patch_bytes": "b'sbubububub.'",
+  "verified": true,
+  "verification_timestamp": "2026-09-05T22:30:00Z"
+}

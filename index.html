@@ -98,7 +98,7 @@
       <!-- DASHBOARD MAIN WORKSPACE (2-COLUMN GRID) -->
       <div class="dashboard-workspace">
 
-        <!-- LEFT COLUMN: THERMAL MONITORING, CHART, JSON INPUT, RECEIVED DATA PREVIEW -->
+        <!-- LEFT COLUMN: THERMAL MONITORING, CHART, JSON INPUT, RECEIVED DATA PREVIEW, MODEL PREDICTION -->
         <div class="workspace-col col-primary">
 
           <!-- SECTION 2: THERMAL MONITORING -->
@@ -115,13 +115,13 @@
               </div>
               <div class="thermal-stat-box highlight">
                 <span class="stat-label">Predicted Temperature</span>
-                <div class="stat-status-badge">MODEL NOT CONNECTED</div>
-                <span class="stat-sub">PINN / ML Inference Engine</span>
+                <div id="thermalPredictedBadge" class="stat-status-badge neutral">NOT INCLUDED IN MODEL</div>
+                <span id="thermalPredictedSub" class="stat-sub">Model uses temp as input, not output</span>
               </div>
               <div class="thermal-stat-box">
                 <span class="stat-label">Temperature Trend</span>
-                <div class="stat-status-badge neutral">WAITING FOR MODEL/DATA</div>
-                <span class="stat-sub">Thermal Gradient Analysis</span>
+                <div id="thermalTrendBadge" class="stat-status-badge neutral">WAITING FOR MODEL/DATA</div>
+                <span class="stat-sub">CALCE Thermal Dynamics</span>
               </div>
             </div>
           </section>
@@ -139,19 +139,39 @@
                   <path d="M3 3v18h18"/>
                   <path d="m19 9-5 5-4-4-3 3"/>
                 </svg>
-                <p class="chart-placeholder-text">Waiting for battery data...</p>
-                <span class="chart-subtext">Real-time thermal curve will render upon telemetry input</span>
+                <p id="chartPlaceholderText" class="chart-placeholder-text">Waiting for battery data...</p>
+                <span id="chartSubText" class="chart-subtext">Real-time thermal curve will render upon telemetry input</span>
               </div>
             </div>
           </section>
 
-          <!-- SECTION 6: BATTERY DATA INPUT -->
+          <!-- SECTION 6: BATTERY DATA INPUT & DATASET DEMO -->
           <section class="panel-card input-panel">
             <div class="panel-header">
-              <h2 class="panel-title">BATTERY DATA INPUT</h2>
+              <h2 class="panel-title">BATTERY DATA INPUT & DATASET DEMO</h2>
               <span class="panel-tag">Pipeline Gateway</span>
             </div>
             <div class="input-content">
+              <!-- Mode Switcher Toolbar -->
+              <div class="mode-toggle-group">
+                <button type="button" id="modeJsonBtn" class="btn btn-mode active">LIVE JSON INPUT</button>
+                <button type="button" id="modeDemoBtn" class="btn btn-mode">DATASET DEMO (CALCE)</button>
+              </div>
+
+              <!-- Dataset Demo Navigator Box (Visible in Dataset Demo Mode) -->
+              <div id="demoControlsContainer" class="demo-controls-box" style="display: none;">
+                <div class="demo-header-row">
+                  <span id="demoSampleBadge" class="demo-sample-badge">SAMPLE 1 OF 8</span>
+                  <span id="demoSampleId" class="demo-sample-id">CALCE_CS2_35_CYC001</span>
+                </div>
+                <p id="demoSampleDesc" class="demo-sample-desc">Nominal early-life discharge cycle at room ambient temperature.</p>
+                <div class="demo-actions-row">
+                  <button type="button" id="demoPrevBtn" class="btn btn-secondary btn-sm">◀ PREVIOUS SAMPLE</button>
+                  <button type="button" id="demoNextBtn" class="btn btn-secondary btn-sm">NEXT SAMPLE ▶</button>
+                  <button type="button" id="demoLoadBtn" class="btn btn-primary btn-sm">LOAD SAMPLE TO EDITOR</button>
+                </div>
+              </div>
+
               <!-- Meta status & timestamp bar -->
               <div class="input-meta-bar">
                 <div class="meta-item">
@@ -165,7 +185,7 @@
               </div>
 
               <p class="input-disclaimer">
-                Example JSON format for demonstration and testing purposes. Final schema will be structured based on future model specifications.
+                Telemetry schema supporting instantaneous sensor readings and multi-model feature estimation.
               </p>
 
               <div class="textarea-wrapper">
@@ -175,10 +195,12 @@
                   spellcheck="false"
                   placeholder='{
   "voltage": 3.70,
-  "current": 5.00,
-  "temperature": 32.5,
-  "soc": 70,
-  "soh": 95,
+  "current": 1.10,
+  "temperature": 25.0,
+  "time_s": 120.0,
+  "cycle_number": 1,
+  "soc": 85.0,
+  "soh": 100.0,
   "c_rate": 1.0,
   "ambient_temperature": 25.0
 }'></textarea>
@@ -194,8 +216,9 @@
               </div>
 
               <div class="input-actions">
-                <button type="button" id="loadJsonBtn" class="btn btn-primary">LOAD JSON</button>
+                <button type="button" id="loadJsonBtn" class="btn btn-secondary">LOAD JSON TO PIPELINE</button>
                 <button type="button" id="validateJsonBtn" class="btn btn-secondary">VALIDATE JSON</button>
+                <button type="button" id="runPredictBtn" class="btn btn-primary" title="Execute multi-model inference via battery_intelligence.pkl">⚡ RUN MODEL INFERENCE</button>
                 <button type="button" id="sampleJsonBtn" class="btn btn-secondary" title="Demonstration data only. Not model training data.">LOAD SAMPLE JSON</button>
                 <button type="button" id="clearBtn" class="btn btn-tertiary">CLEAR</button>
               </div>
@@ -235,6 +258,14 @@
                   <span id="recvCrate" class="received-item-val">--</span>
                 </div>
                 <div class="received-item">
+                  <span class="received-item-label">Cycle Number:</span>
+                  <span id="recvCycle" class="received-item-val">--</span>
+                </div>
+                <div class="received-item">
+                  <span class="received-item-label">Time (s):</span>
+                  <span id="recvTime" class="received-item-val">--</span>
+                </div>
+                <div class="received-item">
                   <span class="received-item-label">Source:</span>
                   <span id="recvSource" class="received-item-tag">JSON INPUT</span>
                 </div>
@@ -243,7 +274,72 @@
                   <span id="recvServerTime" class="received-item-time">SERVER TIME: --</span>
                 </div>
               </div>
-              <p class="inspection-note">This is data inspection only. Model inference and predictive risk analysis remain disabled.</p>
+              <p class="inspection-note">Raw telemetry received by backend. Click "RUN MODEL INFERENCE" to execute machine-learning predictions.</p>
+            </div>
+          </section>
+
+          <!-- SECTION 17: MODEL PREDICTION RESULT PANEL -->
+          <section id="predictionResultPanel" class="panel-card prediction-result-panel">
+            <div class="panel-header">
+              <h2 class="panel-title">MODEL PREDICTION</h2>
+              <span id="predHeaderBadge" class="panel-tag highlight">battery_intelligence.pkl</span>
+            </div>
+            <div class="prediction-body">
+              <div class="prediction-grid">
+                <div class="pred-item">
+                  <span class="pred-label">Model Ensemble:</span>
+                  <span id="predModelName" class="pred-value">battery_intelligence.pkl</span>
+                  <span class="pred-sub">CALCE Trained Ensemble</span>
+                </div>
+
+                <div class="pred-item">
+                  <span class="pred-label">Inference Status:</span>
+                  <span id="predStatusBadge" class="pred-badge pending">AWAITING INFERENCE</span>
+                  <span id="predLatency" class="pred-sub">Latency: -- ms</span>
+                </div>
+
+                <div class="pred-item highlight">
+                  <span class="pred-label">Estimated SOC (RF):</span>
+                  <span id="predSocVal" class="pred-value large">--</span>
+                  <span id="predSocSub" class="pred-sub">RandomForestRegressor (5 features)</span>
+                </div>
+
+                <div class="pred-item highlight">
+                  <span class="pred-label">Estimated SOH (GB):</span>
+                  <span id="predSohVal" class="pred-value large">--</span>
+                  <span id="predSohSub" class="pred-sub">GradientBoostingRegressor (7 features)</span>
+                </div>
+
+                <div class="pred-item">
+                  <span class="pred-label">Anomaly Model (IF):</span>
+                  <span id="predAnomalyBadge" class="pred-badge muted">NOT RUN</span>
+                  <span id="predAnomalyScore" class="pred-sub">IsolationForest Score: --</span>
+                </div>
+
+                <div class="pred-item">
+                  <span class="pred-label">Physics Boundary:</span>
+                  <span id="predPhysicsBadge" class="pred-badge muted">NOT EVALUATED</span>
+                  <span id="predPhysicsSub" class="pred-sub">Deterministic Rules</span>
+                </div>
+
+                <div class="pred-item">
+                  <span class="pred-label">Model Confidence:</span>
+                  <span id="predConfidence" class="pred-value">N/A</span>
+                  <span class="pred-sub">Non-probabilistic ensemble</span>
+                </div>
+
+                <div class="pred-item">
+                  <span class="pred-label">Thermal Prediction:</span>
+                  <span id="predTempNote" class="pred-badge neutral">NOT INCLUDED</span>
+                  <span class="pred-sub">Input feature only</span>
+                </div>
+              </div>
+
+              <!-- Input Features Used Box -->
+              <div class="pred-features-box">
+                <span class="pred-features-title">FEATURES UTILIZED BY ACTIVE SUBMODELS:</span>
+                <span id="predFeaturesList" class="pred-features-text">None (Execute inference to inspect feature vectors)</span>
+              </div>
             </div>
           </section>
 
@@ -256,13 +352,13 @@
           <section class="panel-card risk-panel">
             <div class="panel-header">
               <h2 class="panel-title">RISK ASSESSMENT</h2>
-              <span class="status-pill status-pill-inactive">Safety Logic</span>
+              <span id="riskPill" class="status-pill status-pill-inactive">Safety Logic</span>
             </div>
             <div class="risk-card-body">
-              <div class="risk-status-display">
-                <span class="risk-main-text">SYSTEM NOT CONNECTED</span>
+              <div id="riskStatusDisplay" class="risk-status-display">
+                <span id="riskMainText" class="risk-main-text">SYSTEM NOT CONNECTED</span>
               </div>
-              <p class="risk-description">
+              <p id="riskDescText" class="risk-description">
                 Autonomous risk indexing and runaway hazard classification are disabled until backend validation.
               </p>
             </div>
@@ -272,13 +368,13 @@
           <section class="panel-card warning-panel">
             <div class="panel-header">
               <h2 class="panel-title">EARLY WARNING</h2>
-              <span class="status-pill status-pill-warning">Pre-Hazard Detection</span>
+              <span id="warningPill" class="status-pill status-pill-warning">Pre-Hazard Detection</span>
             </div>
             <div class="warning-card-body">
-              <div class="warning-status-display">
-                <span class="warning-main-text">WAITING FOR MODEL</span>
+              <div id="warningStatusDisplay" class="warning-status-display">
+                <span id="warningMainText" class="warning-main-text">WAITING FOR MODEL</span>
               </div>
-              <p class="warning-description">
+              <p id="warningDescText" class="warning-description">
                 "Prediction and safety assessment will become available after model integration."
               </p>
             </div>
@@ -317,19 +413,23 @@
             <div class="model-status-list">
               <div class="status-row">
                 <span class="status-property">Model:</span>
-                <span class="status-value-tag muted">NOT CONNECTED</span>
+                <span id="modelNameTag" class="status-value-tag muted">battery_intelligence.pkl</span>
               </div>
               <div class="status-row">
                 <span class="status-property">Model Type:</span>
-                <span class="status-value-tag muted">NOT VERIFIED</span>
+                <span id="modelTypeTag" class="status-value-tag muted">Multi-Model Ensemble</span>
+              </div>
+              <div class="status-row">
+                <span class="status-property">Verification:</span>
+                <span id="modelVerifyTag" class="status-value-tag pending">VERIFYING...</span>
               </div>
               <div class="status-row">
                 <span class="status-property">Prediction:</span>
-                <span class="status-value-tag muted">UNAVAILABLE</span>
+                <span id="modelPredTag" class="status-value-tag muted">UNAVAILABLE</span>
               </div>
               <div class="status-row">
                 <span class="status-property">Status:</span>
-                <span class="status-value-tag pending">Waiting for Integration</span>
+                <span id="modelStatusTag" class="status-value-tag pending">INITIALIZING</span>
               </div>
             </div>
           </section>
@@ -361,7 +461,7 @@
         <span class="footer-brand">BRAIN</span> &mdash; Battery Risk & Analytics Intelligence Network
       </div>
       <div class="footer-right">
-        <span>Phase 3: Backend Data Pipeline Active</span> &bull; <span>Physics-Informed Safety Architecture</span>
+        <span>Phase 4: Model & Dataset Pipeline Active</span> &bull; <span>Physics-Informed Safety Architecture</span>
       </div>
     </div>
   </footer>
