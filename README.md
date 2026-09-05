@@ -139,18 +139,33 @@ BRAIN/
 
 ## How to Run the Application
 
-1. **Install Requirements**:
+1. **Navigate to Project Directory**:
+   ```bash
+   cd BRAIN
+   ```
+
+2. **Install Requirements**:
    ```bash
    pip install -r requirements.txt
    ```
 
-2. **Start the Flask Backend**:
+3. **Start the Flask Backend**:
    ```bash
    python app.py
    ```
+   *Flask backend starts locally on `http://127.0.0.1:5000`.*
 
-3. **Open the Dashboard**:
-   Navigate to `http://127.0.0.1:5000` in your web browser.
+4. **Open the Dashboard**:
+   Open your browser and navigate to:
+   ```
+   http://127.0.0.1:5000/
+   ```
+   *(Do NOT use VS Code Live Server `http://127.0.0.1:5500`)*
+
+5. **Verify Connection**:
+   - The top header will immediately query `GET /health` and display **`SYSTEM ONLINE`** with a green status indicator.
+   - Click **`LOAD SAMPLE JSON`** and then **`LOAD JSON`** to ingest telemetry data through `POST /api/battery-data`.
+   - The dashboard will display **`DATA RECEIVED`** and populate the Battery Overview and RECEIVED DATA preview panel.
 
 ---
 
