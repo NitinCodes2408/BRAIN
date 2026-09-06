@@ -1,6 +1,6 @@
 /* ==========================================================================
    BRAIN — Battery Risk & Analytics Intelligence Network
-   Phase 3: Flask Backend Pipeline Stylesheet
+   Phase 3.5: Advanced BMS Demonstration Dashboard Stylesheet
    Theme: Professional Research & Engineering Dark Mode
    ========================================================================== */
 
@@ -18,7 +18,7 @@
   /* Borders & Dividers */
   --border-subtle: rgba(255, 255, 255, 0.08);
   --border-medium: rgba(255, 255, 255, 0.14);
-  --border-highlight: rgba(79, 142, 247, 0.3);
+  --border-highlight: rgba(79, 142, 247, 0.35);
 
   /* Typography Colors */
   --text-primary: #f1f5f9;
@@ -26,35 +26,46 @@
   --text-muted: #64748b;
   --text-dim: #475569;
 
-  /* Functional Status Colors (Muted & Engineering-Grade) */
+  /* Functional Status Colors */
+  --status-online: #22c55e;
+  --status-online-bg: rgba(34, 197, 94, 0.12);
+  --status-online-border: rgba(34, 197, 94, 0.35);
+
+  --status-offline: #ef4444;
   --status-offline-bg: rgba(239, 68, 68, 0.12);
   --status-offline-border: rgba(239, 68, 68, 0.3);
   --status-offline-text: #f87171;
 
+  --status-warning: #f59e0b;
   --status-warning-bg: rgba(245, 158, 11, 0.12);
   --status-warning-border: rgba(245, 158, 11, 0.3);
   --status-warning-text: #fbbf24;
 
+  --status-accent-blue: #38bdf8;
+  --status-accent-blue-bg: rgba(56, 189, 248, 0.12);
+  --status-accent-blue-border: rgba(56, 189, 248, 0.3);
+
+  --status-purple: #a855f7;
+  --status-purple-bg: rgba(168, 85, 247, 0.12);
+  --status-purple-border: rgba(168, 85, 247, 0.3);
+
   --status-neutral-bg: rgba(148, 163, 184, 0.1);
   --status-neutral-border: rgba(148, 163, 184, 0.2);
   --status-neutral-text: #94a3b8;
-
-  --status-accent-blue: #38bdf8;
-  --status-accent-blue-bg: rgba(56, 189, 248, 0.1);
-  --status-accent-blue-border: rgba(56, 189, 248, 0.25);
 
   /* Typography */
   --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
 
   /* Layout Spacing */
-  --container-max-width: 1440px;
+  --container-max-width: 1480px;
   --radius-sm: 4px;
   --radius-md: 8px;
   --radius-lg: 12px;
 
   /* Transitions */
   --transition-fast: 150ms ease;
+  --transition-smooth: 300ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* --------------------------------------------------------------------------
@@ -84,15 +95,16 @@ body {
 }
 
 /* --------------------------------------------------------------------------
-   3. Header
+   3. Header & System Bar
    -------------------------------------------------------------------------- */
 .dashboard-header {
   background-color: var(--bg-surface);
   border-bottom: 1px solid var(--border-medium);
-  padding: 1rem 1.5rem;
+  padding: 0.875rem 1.5rem;
   position: sticky;
   top: 0;
   z-index: 100;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
 }
 
 .header-container {
@@ -101,6 +113,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
   gap: 1rem;
 }
 
@@ -114,12 +127,13 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 42px;
-  height: 42px;
+  width: 44px;
+  height: 44px;
   background-color: var(--bg-surface-elevated);
-  border: 1px solid var(--border-medium);
+  border: 1px solid var(--border-highlight);
   border-radius: var(--radius-md);
-  font-size: 1.25rem;
+  font-size: 1.35rem;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
 }
 
 .brand-titles {
@@ -129,10 +143,25 @@ body {
 
 .main-title {
   font-size: 1.5rem;
-  font-weight: 700;
+  font-weight: 800;
   letter-spacing: 0.08em;
   color: var(--text-primary);
   line-height: 1.1;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.phase-tag {
+  font-size: 0.65rem;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  background: rgba(56, 189, 248, 0.15);
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  color: var(--status-accent-blue);
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--radius-sm);
+  letter-spacing: 0.05em;
 }
 
 .sub-title {
@@ -142,58 +171,85 @@ body {
   letter-spacing: 0.02em;
 }
 
-.header-status {
+.header-badges-group {
   display: flex;
   align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
 }
 
-.status-indicator {
+.badge {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.4rem 0.875rem;
+  gap: 0.4rem;
+  padding: 0.35rem 0.75rem;
   border-radius: var(--radius-sm);
-  font-size: 0.8125rem;
-  font-weight: 600;
-  letter-spacing: 0.05em;
+  font-size: 0.75rem;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
 }
 
-.status-indicator.offline {
+.badge-online {
+  background-color: var(--status-online-bg);
+  border: 1px solid var(--status-online-border);
+  color: #4ade80;
+}
+
+.badge-offline {
   background-color: var(--status-offline-bg);
   border: 1px solid var(--status-offline-border);
   color: var(--status-offline-text);
 }
 
-.status-indicator.offline .status-dot {
-  background-color: var(--status-offline-text);
+.badge-demo {
+  background-color: var(--status-accent-blue-bg);
+  border: 1px solid var(--status-accent-blue-border);
+  color: var(--status-accent-blue);
 }
 
-.status-indicator.online {
-  background-color: rgba(34, 197, 94, 0.12);
-  border: 1px solid rgba(34, 197, 94, 0.35);
-  color: #4ade80;
+.badge-pending {
+  background-color: var(--status-warning-bg);
+  border: 1px solid var(--status-warning-border);
+  color: var(--status-warning-text);
 }
 
-.status-indicator.online .status-dot {
-  background-color: #4ade80;
+.badge-muted {
+  background-color: var(--status-neutral-bg);
+  border: 1px solid var(--status-neutral-border);
+  color: var(--status-neutral-text);
 }
 
 .status-dot {
-  width: 8px;
-  height: 8px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
-  background-color: var(--status-offline-text);
   display: inline-block;
-  transition: background-color var(--transition-fast);
+}
+
+.status-dot.online {
+  background-color: #4ade80;
+  box-shadow: 0 0 6px #4ade80;
+  animation: pulse 2s infinite;
+}
+
+.status-dot.offline {
+  background-color: var(--status-offline-text);
+}
+
+@keyframes pulse {
+  0% { transform: scale(0.95); opacity: 0.8; }
+  50% { transform: scale(1.15); opacity: 1; }
+  100% { transform: scale(0.95); opacity: 0.8; }
 }
 
 /* --------------------------------------------------------------------------
-   4. Main Dashboard Layout
+   4. Main Dashboard Container
    -------------------------------------------------------------------------- */
 .dashboard-main {
   flex: 1;
-  padding: 1.75rem 1.5rem 2.5rem;
+  padding: 1.5rem 1.5rem 2.5rem;
 }
 
 .dashboard-container {
@@ -201,11 +257,54 @@ body {
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 1.75rem;
+  gap: 1.5rem;
 }
 
 /* --------------------------------------------------------------------------
-   5. Section 1: Battery Overview
+   5. System Health Grid Banner (Section 13)
+   -------------------------------------------------------------------------- */
+.system-health-bar {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 0.875rem 1.25rem;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.75rem;
+}
+
+.health-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  border-right: 1px solid var(--border-subtle);
+  padding-right: 0.5rem;
+}
+
+.health-item:last-child {
+  border-right: none;
+  padding-right: 0;
+}
+
+.health-item-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+}
+
+.health-item-val {
+  font-size: 0.75rem;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+/* --------------------------------------------------------------------------
+   6. Section 1: Advanced Battery Overview Cards (Section 5)
    -------------------------------------------------------------------------- */
 .section-overview {
   background-color: var(--bg-surface);
@@ -218,35 +317,38 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 1rem;
+  margin-bottom: 1.125rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
 }
 
 .section-title {
   font-size: 0.875rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
+  font-weight: 800;
+  letter-spacing: 0.08em;
   color: var(--text-secondary);
   text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
-.section-badge {
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  background-color: var(--bg-surface-elevated);
-  padding: 0.2rem 0.6rem;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--border-subtle);
-  font-weight: 500;
-}
-
-/* Phase 3: Data Source Badge */
 .data-source-badge {
-  color: var(--status-accent-blue);
-  background-color: var(--status-accent-blue-bg);
-  border-color: var(--status-accent-blue-border);
-  letter-spacing: 0.05em;
-  font-weight: 600;
+  font-size: 0.75rem;
   font-family: var(--font-mono);
+  font-weight: 700;
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-sm);
+  background-color: var(--status-accent-blue-bg);
+  border: 1px solid var(--status-accent-blue-border);
+  color: var(--status-accent-blue);
+  letter-spacing: 0.05em;
+}
+
+.data-source-badge.json-mode {
+  background-color: var(--status-purple-bg);
+  border-color: var(--status-purple-border);
+  color: var(--status-purple);
 }
 
 .overview-grid {
@@ -255,7 +357,7 @@ body {
   gap: 1rem;
 }
 
-.metric-card {
+.bms-card {
   background-color: var(--bg-surface-elevated);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
@@ -263,397 +365,487 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-height: 110px;
-  transition: border-color var(--transition-fast);
+  min-height: 125px;
+  position: relative;
+  transition: all var(--transition-fast);
 }
 
-.metric-card:hover {
+.bms-card:hover {
   border-color: var(--border-medium);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
-.metric-header {
+.bms-card-top {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
 }
 
-.metric-label {
-  font-size: 0.8125rem;
-  font-weight: 600;
+.bms-card-title {
+  font-size: 0.75rem;
+  font-weight: 700;
   color: var(--text-secondary);
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.05em;
 }
 
-.metric-unit {
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  font-family: var(--font-mono);
-  font-weight: 500;
+.bms-card-icon {
+  font-size: 1.1rem;
+  opacity: 0.85;
 }
 
-.metric-value {
+.bms-card-val {
   font-size: 2rem;
-  font-weight: 700;
+  font-weight: 800;
   color: var(--text-primary);
   font-family: var(--font-mono);
-  line-height: 1;
-  margin: 0.5rem 0;
+  line-height: 1.1;
+  margin: 0.4rem 0;
   letter-spacing: -0.02em;
 }
 
-.metric-footer {
-  font-size: 0.7rem;
+.bms-card-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.68rem;
   color: var(--text-muted);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+  padding-top: 0.4rem;
+}
+
+.bms-card-tag {
+  font-size: 0.65rem;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  padding: 0.1rem 0.4rem;
+  border-radius: var(--radius-sm);
+  background-color: var(--status-neutral-bg);
+  color: var(--text-secondary);
+}
+
+.bms-card-tag.normal {
+  background-color: var(--status-online-bg);
+  color: #4ade80;
+}
+
+.bms-card-tag.warning {
+  background-color: var(--status-warning-bg);
+  color: var(--status-warning-text);
+}
+
+.bms-card-tag.critical {
+  background-color: var(--status-offline-bg);
+  color: var(--status-offline-text);
 }
 
 /* --------------------------------------------------------------------------
-   6. Workspace Grid (Primary & Secondary Columns)
+   7. Gauges & Visual Telemetry Section (Section 6 & 7 & 9)
    -------------------------------------------------------------------------- */
-.dashboard-workspace {
+.visual-telemetry-grid {
   display: grid;
-  grid-template-columns: 1.55fr 1fr;
-  gap: 1.5rem;
-  align-items: start;
-}
-
-.workspace-col {
-  display: flex;
-  flex-direction: column;
+  grid-template-columns: 1fr 1fr 1.35fr;
   gap: 1.5rem;
 }
 
-/* Reusable Panel Card */
-.panel-card {
+.gauge-panel {
   background-color: var(--bg-surface);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
   padding: 1.25rem 1.5rem;
-  position: relative;
-}
-
-.panel-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 1.125rem;
-  border-bottom: 1px solid var(--border-subtle);
-  padding-bottom: 0.75rem;
-}
-
-.panel-title {
-  font-size: 0.875rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  color: var(--text-secondary);
-  text-transform: uppercase;
-}
-
-.panel-tag {
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  background-color: var(--bg-surface-elevated);
-  padding: 0.2rem 0.55rem;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--border-subtle);
-  font-family: var(--font-mono);
-}
-
-/* --------------------------------------------------------------------------
-   7. Section 2: Thermal Monitoring
-   -------------------------------------------------------------------------- */
-.thermal-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
-}
-
-.thermal-stat-box {
-  background-color: var(--bg-surface-elevated);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-md);
-  padding: 1.125rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-height: 125px;
+  align-items: center;
 }
 
-.stat-label {
-  font-size: 0.75rem;
-  font-weight: 600;
+.gauge-title-bar {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.gauge-title {
+  font-size: 0.78rem;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
   color: var(--text-secondary);
 }
 
-.stat-value {
-  font-size: 2.125rem;
-  font-weight: 700;
-  color: var(--text-primary);
-  font-family: var(--font-mono);
-  line-height: 1.1;
-  margin: 0.5rem 0 0.35rem;
-}
-
-.stat-sub {
-  font-size: 0.7rem;
-  color: var(--text-muted);
-}
-
-.stat-status-badge {
-  display: inline-block;
-  margin: 0.65rem 0 0.4rem;
-  padding: 0.35rem 0.65rem;
-  border-radius: var(--radius-sm);
-  font-size: 0.75rem;
-  font-weight: 600;
-  font-family: var(--font-mono);
-  letter-spacing: 0.04em;
-  text-align: center;
-  background-color: var(--status-warning-bg);
-  border: 1px solid var(--status-warning-border);
-  color: var(--status-warning-text);
-  word-break: break-word;
-}
-
-.stat-status-badge.neutral {
-  background-color: var(--status-neutral-bg);
-  border: 1px solid var(--status-neutral-border);
-  color: var(--status-neutral-text);
-}
-
-/* --------------------------------------------------------------------------
-   8. Section 9: Temperature Trend Chart Placeholder
-   -------------------------------------------------------------------------- */
-.chart-placeholder-container {
-  background-color: var(--bg-surface-elevated);
-  border: 1px dashed var(--border-medium);
-  border-radius: var(--radius-md);
-  min-height: 250px;
+.gauge-container {
   position: relative;
+  width: 170px;
+  height: 170px;
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
-  padding: 1.5rem;
+  margin: 0.5rem 0;
 }
 
-.chart-placeholder-grid {
+.gauge-svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.gauge-bg-circle {
+  fill: none;
+  stroke: var(--bg-surface-elevated);
+  stroke-width: 14;
+}
+
+.gauge-progress-circle {
+  fill: none;
+  stroke: var(--status-accent-blue);
+  stroke-width: 14;
+  stroke-linecap: round;
+  stroke-dasharray: 440;
+  stroke-dashoffset: 440;
+  transition: stroke-dashoffset 800ms cubic-bezier(0.4, 0, 0.2, 1), stroke 400ms ease;
+}
+
+.gauge-progress-circle.soh-gauge {
+  stroke: #22c55e;
+}
+
+.gauge-center-text {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-size: 32px 32px;
-  background-image: 
-    linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-  pointer-events: none;
-}
-
-.chart-placeholder-message {
-  position: relative;
-  z-index: 1;
-  text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
+  justify-content: center;
 }
 
-.chart-icon {
-  color: var(--text-muted);
-  opacity: 0.6;
-}
-
-.chart-placeholder-text {
-  font-size: 0.9375rem;
-  font-weight: 500;
-  color: var(--text-secondary);
+.gauge-number {
+  font-size: 2rem;
+  font-weight: 800;
   font-family: var(--font-mono);
+  color: var(--text-primary);
+  line-height: 1;
 }
 
-.chart-subtext {
+.gauge-unit {
   font-size: 0.75rem;
+  font-weight: 700;
   color: var(--text-muted);
+  text-transform: uppercase;
+  margin-top: 0.2rem;
+}
+
+.gauge-footer-note {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  text-align: center;
+  margin-top: 0.5rem;
+}
+
+/* Status & State Panel */
+.state-panel {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 0.875rem;
+}
+
+.state-block {
+  background-color: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 0.875rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.state-block-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.state-block-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+}
+
+.state-block-value {
+  font-size: 1.15rem;
+  font-weight: 800;
+  font-family: var(--font-mono);
+  color: var(--status-accent-blue);
+  letter-spacing: 0.04em;
+}
+
+.state-block-sub {
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  line-height: 1.35;
 }
 
 /* --------------------------------------------------------------------------
-   9. Section 6: Battery Data Input
+   8. Temperature Analytics & Trend Chart (Section 8 & 10)
    -------------------------------------------------------------------------- */
-.input-meta-bar {
+.temp-analytics-grid {
+  display: grid;
+  grid-template-columns: 1.8fr 1fr;
+  gap: 1.5rem;
+}
+
+.chart-panel {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.chart-wrapper {
+  position: relative;
+  width: 100%;
+  height: 240px;
+  margin-top: 0.75rem;
+}
+
+#tempTrendCanvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.thermal-monitoring-panel {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+}
+
+.thermal-stat-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  background-color: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+}
+
+.thermal-stat-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.thermal-stat-title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.thermal-stat-sub {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+}
+
+.thermal-stat-val {
+  font-size: 1.35rem;
+  font-weight: 800;
+  font-family: var(--font-mono);
+  color: var(--text-primary);
+}
+
+.disclaimer-box {
+  background-color: var(--bg-terminal);
+  border: 1px dashed var(--border-medium);
+  border-radius: var(--radius-md);
+  padding: 0.75rem 1rem;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  line-height: 1.45;
+}
+
+/* --------------------------------------------------------------------------
+   9. Demo Controls Station (Section 2 & 18)
+   -------------------------------------------------------------------------- */
+.controls-panel {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-highlight);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem 1.5rem;
+  background: linear-gradient(180deg, var(--bg-surface) 0%, rgba(22, 32, 50, 0.5) 100%);
+}
+
+.mode-toggle-tabs {
+  display: flex;
+  gap: 0.5rem;
+  background-color: var(--bg-terminal);
+  padding: 0.35rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+  margin-bottom: 1.125rem;
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 0.55rem 1rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  background-color: transparent;
+  color: var(--text-muted);
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.tab-btn.active {
+  background-color: var(--bg-surface-elevated);
+  color: var(--status-accent-blue);
+  border-color: var(--border-medium);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.scenario-buttons-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr) 1.2fr 0.8fr;
+  gap: 0.65rem;
+  margin-bottom: 1rem;
+}
+
+.btn-scenario {
+  padding: 0.65rem 0.75rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  font-weight: 700;
+  font-family: var(--font-sans);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border: 1px solid var(--border-subtle);
+  background-color: var(--bg-surface-elevated);
+  color: var(--text-primary);
+  transition: all var(--transition-fast);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
+  min-height: 52px;
+}
+
+.btn-scenario:hover {
+  background-color: var(--bg-surface-hover);
+  border-color: var(--border-highlight);
+  transform: translateY(-1px);
+}
+
+.btn-scenario.active {
+  background-color: rgba(56, 189, 248, 0.15);
+  border-color: var(--status-accent-blue);
+  color: var(--status-accent-blue);
+}
+
+.btn-scenario.btn-random {
+  border-color: rgba(168, 85, 247, 0.4);
+  background-color: rgba(168, 85, 247, 0.08);
+  color: #c084fc;
+}
+
+.btn-scenario.btn-random:hover {
+  background-color: rgba(168, 85, 247, 0.2);
+}
+
+.btn-scenario.btn-reset {
+  border-color: rgba(239, 68, 68, 0.3);
+  background-color: rgba(239, 68, 68, 0.06);
+  color: #f87171;
+}
+
+.btn-scenario.btn-reset:hover {
+  background-color: rgba(239, 68, 68, 0.18);
+}
+
+.scenario-info-banner {
+  background-color: var(--bg-terminal);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-md);
+  padding: 0.75rem 1rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 0.75rem;
-  padding: 0.65rem 0.875rem;
-  background-color: var(--bg-surface-elevated);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-md);
-  margin-bottom: 0.875rem;
-}
-
-.meta-item {
-  display: flex;
-  align-items: center;
   gap: 0.5rem;
 }
 
-.meta-label {
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  color: var(--text-secondary);
-}
-
-.meta-timestamp {
-  font-size: 0.75rem;
-  font-family: var(--font-mono);
-  color: var(--text-primary);
-  font-weight: 600;
-}
-
-.data-status-badge {
-  font-size: 0.75rem;
-  font-family: var(--font-mono);
-  font-weight: 600;
-  padding: 0.2rem 0.6rem;
-  border-radius: var(--radius-sm);
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  display: inline-block;
-}
-
-.data-status-badge.pending {
-  background-color: var(--status-warning-bg);
-  border: 1px solid var(--status-warning-border);
-  color: var(--status-warning-text);
-}
-
-.data-status-badge.valid {
-  background-color: rgba(34, 197, 94, 0.12);
-  border: 1px solid rgba(34, 197, 94, 0.35);
-  color: #4ade80;
-}
-
-.data-status-badge.invalid {
-  background-color: var(--status-offline-bg);
-  border: 1px solid var(--status-offline-border);
-  color: var(--status-offline-text);
-}
-
-.data-status-badge.loaded,
-.data-status-badge.received {
-  background-color: rgba(56, 189, 248, 0.12);
-  border: 1px solid rgba(56, 189, 248, 0.35);
-  color: #38bdf8;
-}
-
-.validation-feedback {
-  margin-bottom: 0.875rem;
-  padding: 0.65rem 0.875rem;
-  border-radius: var(--radius-md);
-  font-size: 0.8125rem;
-  font-family: var(--font-mono);
-  line-height: 1.45;
-}
-
-.validation-feedback.success {
-  background-color: rgba(34, 197, 94, 0.1);
-  border: 1px solid rgba(34, 197, 94, 0.3);
-  color: #4ade80;
-}
-
-.validation-feedback.error {
-  background-color: var(--status-offline-bg);
-  border: 1px solid var(--status-offline-border);
-  color: var(--status-offline-text);
-}
-
-.additional-data-container {
-  margin-bottom: 0.875rem;
-  padding: 0.75rem 1rem;
-  background-color: var(--bg-terminal);
-  border: 1px solid var(--border-medium);
-  border-radius: var(--radius-md);
-}
-
-.additional-data-title {
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  margin-bottom: 0.35rem;
-}
-
-.additional-data-content {
-  font-family: var(--font-mono);
+.scenario-info-text {
   font-size: 0.75rem;
   color: var(--text-secondary);
-  white-space: pre-wrap;
-  word-break: break-word;
-  margin: 0;
 }
 
-.input-disclaimer {
-  font-size: 0.8125rem;
-  color: var(--text-secondary);
-  margin-bottom: 0.875rem;
-  line-height: 1.4;
+.scenario-meta-tag {
+  font-size: 0.7rem;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  color: var(--status-accent-blue);
 }
 
-.textarea-wrapper {
-  margin-bottom: 1rem;
+/* Custom JSON Input Section */
+.json-input-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
 }
 
 .json-textarea {
   width: 100%;
-  height: 160px;
+  height: 140px;
   background-color: var(--bg-terminal);
   border: 1px solid var(--border-medium);
   border-radius: var(--radius-md);
   padding: 0.875rem 1rem;
   color: var(--text-primary);
   font-family: var(--font-mono);
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   line-height: 1.5;
   resize: vertical;
   outline: none;
-  transition: border-color var(--transition-fast);
 }
 
 .json-textarea:focus {
   border-color: var(--border-highlight);
 }
 
-.json-textarea::placeholder {
-  color: var(--text-muted);
-  opacity: 0.7;
-}
-
-.input-actions {
+.json-actions-row {
   display: flex;
-  flex-wrap: wrap;
   gap: 0.65rem;
+  flex-wrap: wrap;
 }
 
 .btn {
   padding: 0.55rem 1.15rem;
   border-radius: var(--radius-sm);
-  font-size: 0.8125rem;
-  font-weight: 600;
+  font-size: 0.78rem;
+  font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
   cursor: pointer;
   border: 1px solid transparent;
-  transition: background-color var(--transition-fast), border-color var(--transition-fast), opacity var(--transition-fast);
-  font-family: var(--font-sans);
+  transition: all var(--transition-fast);
 }
 
 .btn-primary {
@@ -663,8 +855,8 @@ body {
 }
 
 .btn-primary:hover {
-  background-color: var(--border-subtle);
-  border-color: var(--border-highlight);
+  background-color: var(--border-highlight);
+  border-color: var(--status-accent-blue);
 }
 
 .btn-secondary {
@@ -676,28 +868,32 @@ body {
 .btn-secondary:hover {
   background-color: var(--bg-surface-elevated);
   color: var(--text-primary);
-  border-color: var(--border-medium);
 }
 
-.btn-tertiary {
+.btn-danger {
   background-color: transparent;
-  border-color: rgba(239, 68, 68, 0.25);
+  border-color: rgba(239, 68, 68, 0.3);
   color: #f87171;
 }
 
-.btn-tertiary:hover {
+.btn-danger:hover {
   background-color: var(--status-offline-bg);
-  border-color: var(--status-offline-border);
 }
 
 /* --------------------------------------------------------------------------
-   9b. Section 15: Received Data (Data Preview Panel)
+   10. Inspection & System Logs Section
    -------------------------------------------------------------------------- */
-.received-data-panel {
-  border-color: var(--border-subtle);
+.bottom-workspace-grid {
+  display: grid;
+  grid-template-columns: 1.35fr 1fr;
+  gap: 1.5rem;
 }
 
-.received-data-body {
+.received-data-panel {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem 1.5rem;
   display: flex;
   flex-direction: column;
   gap: 0.875rem;
@@ -706,10 +902,10 @@ body {
 .received-data-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 0.75rem;
+  gap: 0.65rem;
 }
 
-.received-item {
+.recv-card {
   background-color: var(--bg-surface-elevated);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-sm);
@@ -717,231 +913,29 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.5rem;
 }
 
-.received-item.wide {
-  grid-column: span 2;
-}
-
-.received-item-label {
-  font-size: 0.75rem;
-  font-weight: 600;
+.recv-label {
+  font-size: 0.72rem;
+  font-weight: 700;
   color: var(--text-secondary);
   text-transform: uppercase;
 }
 
-.received-item-val {
-  font-size: 0.875rem;
+.recv-val {
+  font-size: 0.85rem;
   font-family: var(--font-mono);
   font-weight: 700;
   color: var(--text-primary);
 }
 
-.received-item-tag {
-  font-size: 0.7rem;
-  font-family: var(--font-mono);
-  font-weight: 600;
-  background-color: var(--status-accent-blue-bg);
-  border: 1px solid var(--status-accent-blue-border);
-  color: var(--status-accent-blue);
-  padding: 0.15rem 0.45rem;
-  border-radius: var(--radius-sm);
-}
-
-.received-item-time {
-  font-size: 0.75rem;
-  font-family: var(--font-mono);
-  color: var(--text-secondary);
-  word-break: break-all;
-}
-
-.inspection-note {
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  font-style: italic;
-  line-height: 1.4;
-}
-
-/* --------------------------------------------------------------------------
-   10. Section 4: Risk Assessment
-   -------------------------------------------------------------------------- */
-.status-pill {
-  font-size: 0.7rem;
-  font-weight: 600;
-  padding: 0.2rem 0.55rem;
-  border-radius: var(--radius-sm);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-
-.status-pill-inactive {
-  background-color: var(--status-offline-bg);
-  border: 1px solid var(--status-offline-border);
-  color: var(--status-offline-text);
-}
-
-.status-pill-warning {
-  background-color: var(--status-warning-bg);
-  border: 1px solid var(--status-warning-border);
-  color: var(--status-warning-text);
-}
-
-.risk-status-display {
-  background-color: var(--status-offline-bg);
-  border: 1px solid var(--status-offline-border);
-  border-radius: var(--radius-md);
-  padding: 1rem;
-  text-align: center;
-  margin-bottom: 0.75rem;
-}
-
-.risk-main-text {
-  font-size: 1.05rem;
-  font-weight: 700;
-  font-family: var(--font-mono);
-  color: var(--status-offline-text);
-  letter-spacing: 0.05em;
-}
-
-.risk-description {
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  line-height: 1.45;
-}
-
-/* --------------------------------------------------------------------------
-   11. Section 5: Early Warning
-   -------------------------------------------------------------------------- */
-.warning-status-display {
-  background-color: var(--status-warning-bg);
-  border: 1px solid var(--status-warning-border);
-  border-radius: var(--radius-md);
-  padding: 1rem;
-  text-align: center;
-  margin-bottom: 0.75rem;
-}
-
-.warning-main-text {
-  font-size: 1.05rem;
-  font-weight: 700;
-  font-family: var(--font-mono);
-  color: var(--status-warning-text);
-  letter-spacing: 0.05em;
-}
-
-.warning-description {
-  font-size: 0.8125rem;
-  color: var(--text-secondary);
-  line-height: 1.45;
-  font-style: italic;
-}
-
-/* --------------------------------------------------------------------------
-   12. Section 3: Battery Health
-   -------------------------------------------------------------------------- */
-.health-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-  margin-bottom: 1rem;
-}
-
-.health-stat-box {
-  background-color: var(--bg-surface-elevated);
+.log-panel {
+  background-color: var(--bg-surface);
   border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-md);
-  padding: 0.875rem 1rem;
+  border-radius: var(--radius-lg);
+  padding: 1.25rem 1.5rem;
   display: flex;
   flex-direction: column;
-}
-
-.stat-unit-sub {
-  font-size: 0.7rem;
-  color: var(--text-muted);
-}
-
-.battery-state-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background-color: var(--bg-surface-elevated);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-md);
-  padding: 0.75rem 1rem;
-}
-
-.state-label {
-  font-size: 0.8125rem;
-  font-weight: 600;
-  color: var(--text-secondary);
-}
-
-.state-badge {
-  font-size: 0.75rem;
-  font-weight: 600;
-  font-family: var(--font-mono);
-  background-color: var(--status-neutral-bg);
-  border: 1px solid var(--status-neutral-border);
-  color: var(--status-neutral-text);
-  padding: 0.25rem 0.6rem;
-  border-radius: var(--radius-sm);
-  letter-spacing: 0.04em;
-}
-
-/* --------------------------------------------------------------------------
-   13. Section 7: Model Status
-   -------------------------------------------------------------------------- */
-.model-status-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.625rem;
-}
-
-.status-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0.5rem 0.75rem;
-  background-color: var(--bg-surface-elevated);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-sm);
-}
-
-.status-property {
-  font-size: 0.8125rem;
-  color: var(--text-secondary);
-  font-weight: 500;
-}
-
-.status-value-tag {
-  font-size: 0.75rem;
-  font-family: var(--font-mono);
-  font-weight: 600;
-  padding: 0.15rem 0.5rem;
-  border-radius: var(--radius-sm);
-}
-
-.status-value-tag.muted {
-  color: var(--text-secondary);
-  background-color: var(--border-subtle);
-}
-
-.status-value-tag.pending {
-  color: var(--status-warning-text);
-  background-color: var(--status-warning-bg);
-  border: 1px solid var(--status-warning-border);
-}
-
-/* --------------------------------------------------------------------------
-   14. Section 8: System Log
-   -------------------------------------------------------------------------- */
-.log-indicator-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background-color: var(--status-accent-blue);
-  box-shadow: 0 0 6px var(--status-accent-blue);
 }
 
 .system-log-terminal {
@@ -952,6 +946,8 @@ body {
   font-family: var(--font-mono);
   font-size: 0.75rem;
   line-height: 1.6;
+  height: 200px;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
@@ -961,293 +957,24 @@ body {
   color: var(--text-secondary);
 }
 
-.log-entry-waiting {
+.log-entry.waiting {
   color: var(--status-warning-text);
 }
 
 .log-prefix {
   color: var(--text-muted);
-  font-weight: 600;
+  font-weight: 700;
   margin-right: 0.35rem;
 }
 
-/* --------------------------------------------------------------------------
-   14b. Phase 4: Mode Switcher & Dataset Demo Controls
-   -------------------------------------------------------------------------- */
-.mode-toggle-group {
-  display: flex;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
-  background-color: var(--bg-terminal);
-  padding: 0.35rem;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--border-subtle);
-}
-
-.btn-mode {
-  flex: 1;
-  padding: 0.45rem 0.75rem;
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  background-color: transparent;
-  color: var(--text-muted);
-  border: 1px solid transparent;
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  transition: all var(--transition-fast);
-}
-
-.btn-mode.active {
-  background-color: var(--bg-surface-elevated);
-  color: var(--status-accent-blue);
-  border-color: var(--border-medium);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-}
-
-.demo-controls-box {
-  background-color: var(--bg-surface-elevated);
-  border: 1px solid var(--border-highlight);
-  border-radius: var(--radius-md);
-  padding: 0.875rem 1rem;
-  margin-bottom: 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-}
-
-.demo-header-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem;
-}
-
-.demo-sample-badge {
-  font-size: 0.7rem;
-  font-weight: 700;
-  font-family: var(--font-mono);
-  background-color: var(--status-accent-blue-bg);
-  border: 1px solid var(--status-accent-blue-border);
-  color: var(--status-accent-blue);
-  padding: 0.15rem 0.5rem;
-  border-radius: var(--radius-sm);
-}
-
-.demo-sample-id {
-  font-size: 0.8125rem;
-  font-weight: 700;
-  font-family: var(--font-mono);
-  color: var(--text-primary);
-}
-
-.demo-sample-desc {
-  font-size: 0.75rem;
-  color: var(--text-secondary);
-  line-height: 1.4;
-  margin: 0;
-}
-
-.demo-actions-row {
-  display: flex;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-}
-
-.btn-sm {
-  padding: 0.35rem 0.75rem;
-  font-size: 0.72rem;
-}
+.log-prefix.sys { color: var(--status-accent-blue); }
+.log-prefix.data { color: #4ade80; }
+.log-prefix.demo { color: #c084fc; }
+.log-prefix.model { color: #fbbf24; }
+.log-prefix.pinn { color: #f87171; }
 
 /* --------------------------------------------------------------------------
-   14c. Phase 4: Model Prediction Result Panel
-   -------------------------------------------------------------------------- */
-.prediction-result-panel {
-  border-color: var(--border-highlight);
-  background: linear-gradient(180deg, var(--bg-surface) 0%, rgba(22, 32, 50, 0.4) 100%);
-}
-
-.prediction-body {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.prediction-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 0.75rem;
-}
-
-.pred-item {
-  background-color: var(--bg-surface-elevated);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-md);
-  padding: 0.75rem 0.875rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  min-height: 85px;
-}
-
-.pred-item.highlight {
-  border-color: rgba(56, 189, 248, 0.3);
-  background-color: rgba(56, 189, 248, 0.04);
-}
-
-.pred-label {
-  font-size: 0.7rem;
-  font-weight: 600;
-  color: var(--text-secondary);
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-}
-
-.pred-value {
-  font-size: 1.1rem;
-  font-weight: 700;
-  font-family: var(--font-mono);
-  color: var(--text-primary);
-  margin: 0.25rem 0;
-}
-
-.pred-value.large {
-  font-size: 1.6rem;
-  color: var(--status-accent-blue);
-  line-height: 1;
-}
-
-.pred-sub {
-  font-size: 0.68rem;
-  color: var(--text-muted);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.pred-badge {
-  display: inline-block;
-  font-size: 0.72rem;
-  font-family: var(--font-mono);
-  font-weight: 700;
-  padding: 0.2rem 0.5rem;
-  border-radius: var(--radius-sm);
-  margin: 0.25rem 0;
-  text-transform: uppercase;
-}
-
-.pred-badge.pending {
-  background-color: var(--status-warning-bg);
-  border: 1px solid var(--status-warning-border);
-  color: var(--status-warning-text);
-}
-
-.pred-badge.valid,
-.pred-badge.normal {
-  background-color: rgba(34, 197, 94, 0.12);
-  border: 1px solid rgba(34, 197, 94, 0.35);
-  color: #4ade80;
-}
-
-.pred-badge.anomaly,
-.pred-badge.violation {
-  background-color: var(--status-offline-bg);
-  border: 1px solid var(--status-offline-border);
-  color: var(--status-offline-text);
-}
-
-.pred-badge.muted {
-  background-color: var(--status-neutral-bg);
-  border: 1px solid var(--status-neutral-border);
-  color: var(--status-neutral-text);
-}
-
-.pred-badge.neutral {
-  background-color: var(--status-neutral-bg);
-  border: 1px solid var(--status-neutral-border);
-  color: var(--status-neutral-text);
-}
-
-.pred-features-box {
-  background-color: var(--bg-terminal);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-md);
-  padding: 0.65rem 0.875rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
-.pred-features-title {
-  font-size: 0.68rem;
-  font-weight: 700;
-  color: var(--text-muted);
-  letter-spacing: 0.05em;
-}
-
-.pred-features-text {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  color: var(--status-accent-blue);
-  word-break: break-all;
-}
-
-/* --------------------------------------------------------------------------
-   14d. Phase 4: Dynamic Risk & Warning States
-   -------------------------------------------------------------------------- */
-.risk-status-display.normal,
-.warning-status-display.normal {
-  background-color: rgba(34, 197, 94, 0.08);
-  border: 1px solid rgba(34, 197, 94, 0.3);
-}
-
-.risk-status-display.normal .risk-main-text,
-.warning-status-display.normal .warning-main-text {
-  color: #4ade80;
-}
-
-.risk-status-display.warning,
-.warning-status-display.warning {
-  background-color: var(--status-warning-bg);
-  border: 1px solid var(--status-warning-border);
-}
-
-.risk-status-display.warning .risk-main-text,
-.warning-status-display.warning .warning-main-text {
-  color: var(--status-warning-text);
-}
-
-.risk-status-display.critical,
-.warning-status-display.critical {
-  background-color: var(--status-offline-bg);
-  border: 1px solid var(--status-offline-border);
-}
-
-.risk-status-display.critical .risk-main-text,
-.warning-status-display.critical .warning-main-text {
-  color: var(--status-offline-text);
-}
-
-.status-pill-success {
-  background-color: rgba(34, 197, 94, 0.12);
-  border: 1px solid rgba(34, 197, 94, 0.35);
-  color: #4ade80;
-}
-
-.status-pill-critical {
-  background-color: var(--status-offline-bg);
-  border: 1px solid var(--status-offline-border);
-  color: var(--status-offline-text);
-}
-
-.status-value-tag.valid {
-  background-color: rgba(34, 197, 94, 0.12);
-  border: 1px solid rgba(34, 197, 94, 0.35);
-  color: #4ade80;
-}
-
-/* --------------------------------------------------------------------------
-   15. Footer
+   11. Footer
    -------------------------------------------------------------------------- */
 .dashboard-footer {
   background-color: var(--bg-surface);
@@ -1270,121 +997,63 @@ body {
 
 .footer-brand {
   color: var(--text-secondary);
-  font-weight: 600;
+  font-weight: 700;
 }
 
 /* --------------------------------------------------------------------------
-   16. Responsive Layout Breakpoints
+   12. Responsive Breakpoints
    -------------------------------------------------------------------------- */
-
-/* Laptop / Medium Desktops (max-width: 1200px) */
 @media (max-width: 1200px) {
   .overview-grid {
     grid-template-columns: repeat(3, 1fr);
   }
-
-  .dashboard-workspace {
-    grid-template-columns: 1.25fr 1fr;
+  .system-health-bar {
+    grid-template-columns: repeat(4, 1fr);
   }
-}
-
-/* Tablets (max-width: 900px) */
-@media (max-width: 900px) {
-  .dashboard-workspace {
-    grid-template-columns: 1fr;
+  .scenario-buttons-grid {
+    grid-template-columns: repeat(4, 1fr);
   }
-
-  .overview-grid {
-    grid-template-columns: repeat(3, 1fr);
+  .visual-telemetry-grid {
+    grid-template-columns: 1fr 1fr;
   }
-
-  .thermal-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .received-data-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .received-item.wide {
+  .state-panel {
     grid-column: span 2;
   }
 }
 
-/* Mobile Devices (max-width: 640px) */
-@media (max-width: 640px) {
-  .dashboard-header {
-    padding: 0.875rem 1rem;
-  }
-
-  .header-container {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.75rem;
-  }
-
-  .main-title {
-    font-size: 1.25rem;
-  }
-
-  .sub-title {
-    font-size: 0.75rem;
-  }
-
-  .dashboard-main {
-    padding: 1rem 0.75rem 1.75rem;
-  }
-
-  .section-overview,
-  .panel-card {
-    padding: 1rem;
-  }
-
+@media (max-width: 900px) {
   .overview-grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 0.75rem;
   }
-
-  .metric-card {
-    min-height: 95px;
-    padding: 0.875rem;
+  .system-health-bar {
+    grid-template-columns: repeat(2, 1fr);
   }
-
-  .metric-value {
-    font-size: 1.65rem;
-  }
-
-  .health-grid {
+  .temp-analytics-grid {
     grid-template-columns: 1fr;
   }
-
-  .input-actions {
-    flex-direction: column;
-  }
-
-  .btn {
-    width: 100%;
-    text-align: center;
-  }
-
-  .received-data-grid {
+  .bottom-workspace-grid {
     grid-template-columns: 1fr;
   }
-
-  .received-item.wide {
+  .visual-telemetry-grid {
+    grid-template-columns: 1fr;
+  }
+  .state-panel {
     grid-column: span 1;
   }
-
-  .footer-container {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.25rem;
+  .scenario-buttons-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
-/* Extra small mobile (max-width: 400px) */
-@media (max-width: 400px) {
+@media (max-width: 600px) {
   .overview-grid {
     grid-template-columns: 1fr;
+  }
+  .scenario-buttons-grid {
+    grid-template-columns: 1fr;
+  }
+  .header-container {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }

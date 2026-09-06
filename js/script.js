@@ -1,844 +1,677 @@
 /**
  * BRAIN — Battery Risk & Analytics Intelligence Network
- * Phase 4: Model & Dataset Integration Engine
- * 
- * Pipeline flow:
- * 1. Telemetry Ingestion (Live JSON or Dataset Demo Sample)
- * 2. Client-Side Validation
- * 3. Server-Side Pipeline (`POST /api/battery-data`)
- * 4. Multi-Model Inference (`POST /api/predict`)
- * 5. Dynamic UI Updates (SOC, SOH, Isolation Forest Anomaly, Physics Rules, Risk & Early Warning)
+ * Phase 3.5: Advanced BMS Demonstration Dashboard Engine
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-  // --- DOM Elements ---
-  const jsonTextarea = document.getElementById('batteryJsonInput');
-  const loadJsonBtn = document.getElementById('loadJsonBtn');
-  const validateJsonBtn = document.getElementById('validateJsonBtn');
-  const runPredictBtn = document.getElementById('runPredictBtn');
-  const sampleJsonBtn = document.getElementById('sampleJsonBtn');
-  const clearBtn = document.getElementById('clearBtn');
+  // --------------------------------------------------------------------------
+  // DOM Elements Selection
+  // --------------------------------------------------------------------------
 
-  // Mode Switcher Elements
-  const modeJsonBtn = document.getElementById('modeJsonBtn');
-  const modeDemoBtn = document.getElementById('modeDemoBtn');
-  const demoControlsContainer = document.getElementById('demoControlsContainer');
-  const demoSampleBadge = document.getElementById('demoSampleBadge');
-  const demoSampleId = document.getElementById('demoSampleId');
-  const demoSampleDesc = document.getElementById('demoSampleDesc');
-  const demoPrevBtn = document.getElementById('demoPrevBtn');
-  const demoNextBtn = document.getElementById('demoNextBtn');
-  const demoLoadBtn = document.getElementById('demoLoadBtn');
-
-  // Header & Source Elements
-  const systemStatusBadge = document.getElementById('systemStatusBadge') || document.querySelector('.status-indicator');
-  const systemStatusText = document.getElementById('systemStatusText') || document.querySelector('.status-text');
+  // Header & System Health Elements
+  const headerSystemStatus = document.getElementById('headerSystemStatus');
+  const headerSystemDot = document.getElementById('headerSystemDot');
+  const headerModeBadge = document.getElementById('headerModeBadge');
+  const headerBackendBadge = document.getElementById('headerBackendBadge');
+  const headerModelBadge = document.getElementById('headerModelBadge');
+  const headerPinnBadge = document.getElementById('headerPinnBadge');
   const dataSourceBadge = document.getElementById('dataSourceBadge');
+  const healthDataSourceVal = document.getElementById('healthDataSourceVal');
+  const healthPipelineVal = document.getElementById('healthPipelineVal');
 
-  // Status & Feedback Elements
-  const dataStatusBadge = document.getElementById('dataStatusBadge');
-  const lastDataUpdate = document.getElementById('lastDataUpdate');
-  const validationFeedback = document.getElementById('validationFeedback');
-  const additionalDataContainer = document.getElementById('additionalDataContainer');
-  const additionalDataContent = document.getElementById('additionalDataContent');
+  // Overview BMS Metric Cards
+  const valVoltage = document.getElementById('valVoltage');
+  const tagVoltage = document.getElementById('tagVoltage');
+  const timeVoltage = document.getElementById('timeVoltage');
 
-  // Section 1: Battery Overview Cards
-  const overviewVoltage = document.getElementById('overviewVoltage');
-  const overviewCurrent = document.getElementById('overviewCurrent');
-  const overviewTemperature = document.getElementById('overviewTemperature');
-  const overviewSoc = document.getElementById('overviewSoc');
-  const overviewSoh = document.getElementById('overviewSoh');
-  const overviewCrate = document.getElementById('overviewCrate');
+  const valCurrent = document.getElementById('valCurrent');
+  const tagCurrent = document.getElementById('tagCurrent');
+  const timeCurrent = document.getElementById('timeCurrent');
 
-  // Section 2: Thermal Monitoring Cards
-  const thermalCurrentTemp = document.getElementById('thermalCurrentTemp');
+  const valTemperature = document.getElementById('valTemperature');
+  const tagTemperature = document.getElementById('tagTemperature');
+  const timeTemperature = document.getElementById('timeTemperature');
+
+  const valSoc = document.getElementById('valSoc');
+  const tagSoc = document.getElementById('tagSoc');
+  const timeSoc = document.getElementById('timeSoc');
+
+  const valSoh = document.getElementById('valSoh');
+  const tagSoh = document.getElementById('tagSoh');
+  const timeSoh = document.getElementById('timeSoh');
+
+  const valCrate = document.getElementById('valCrate');
+  const tagCrate = document.getElementById('tagCrate');
+  const timeCrate = document.getElementById('timeCrate');
+
+  // Circular Gauges
+  const socCircle = document.getElementById('socProgressCircle');
+  const socNumber = document.getElementById('socNumber');
+  const sohCircle = document.getElementById('sohProgressCircle');
+  const sohNumber = document.getElementById('sohNumber');
+
+  // State & Classification Blocks
+  const stateBatteryVal = document.getElementById('stateBatteryVal');
+  const stateBatterySub = document.getElementById('stateBatterySub');
+  const stateSafetyVal = document.getElementById('stateSafetyVal');
+  const stateSafetySub = document.getElementById('stateSafetySub');
+  const stateAlertVal = document.getElementById('stateAlertVal');
+  const stateAlertSub = document.getElementById('stateAlertSub');
+
+  // Thermal Monitoring Panel
+  const thermalCurrentVal = document.getElementById('thermalCurrentVal');
   const thermalCurrentSub = document.getElementById('thermalCurrentSub');
-  const thermalPredictedBadge = document.getElementById('thermalPredictedBadge');
-  const thermalPredictedSub = document.getElementById('thermalPredictedSub');
-  const thermalTrendBadge = document.getElementById('thermalTrendBadge');
+  const thermalPredictedVal = document.getElementById('thermalPredictedVal');
+  const thermalTrendVal = document.getElementById('thermalTrendVal');
 
-  // Section 3: Battery Health Card
-  const healthSoc = document.getElementById('healthSoc');
-  const healthSoh = document.getElementById('healthSoh');
-  const healthBatteryState = document.getElementById('healthBatteryState');
+  // Demo Controls & Scenario Buttons
+  const tabDemoMode = document.getElementById('tabDemoMode');
+  const tabJsonMode = document.getElementById('tabJsonMode');
+  const demoControlsContainer = document.getElementById('demoControlsContainer');
+  const jsonControlsContainer = document.getElementById('jsonControlsContainer');
 
-  // Section 4 & 5: Risk Assessment & Early Warning
-  const riskPill = document.getElementById('riskPill');
-  const riskStatusDisplay = document.getElementById('riskStatusDisplay');
-  const riskMainText = document.getElementById('riskMainText');
-  const riskDescText = document.getElementById('riskDescText');
+  const btnNormal = document.getElementById('btnScenarioNormal');
+  const btnFastCharge = document.getElementById('btnScenarioFastCharge');
+  const btnThermalStress = document.getElementById('btnScenarioThermalStress');
+  const btnAging = document.getElementById('btnScenarioAging');
+  const btnAbnormal = document.getElementById('btnScenarioAbnormal');
+  const btnRandom = document.getElementById('btnScenarioRandom');
+  const btnReset = document.getElementById('btnScenarioReset');
 
-  const warningPill = document.getElementById('warningPill');
-  const warningStatusDisplay = document.getElementById('warningStatusDisplay');
-  const warningMainText = document.getElementById('warningMainText');
-  const warningDescText = document.getElementById('warningDescText');
+  const scenarioBannerTitle = document.getElementById('scenarioBannerTitle');
+  const scenarioBannerDesc = document.getElementById('scenarioBannerDesc');
+  const scenarioMetaAmbient = document.getElementById('scenarioMetaAmbient');
+  const scenarioMetaCrate = document.getElementById('scenarioMetaCrate');
 
-  // Section 7: Model Status Panel
-  const modelNameTag = document.getElementById('modelNameTag');
-  const modelTypeTag = document.getElementById('modelTypeTag');
-  const modelVerifyTag = document.getElementById('modelVerifyTag');
-  const modelPredTag = document.getElementById('modelPredTag');
-  const modelStatusTag = document.getElementById('modelStatusTag');
+  // JSON Input Section Elements
+  const jsonTextarea = document.getElementById('batteryJsonInput');
+  const btnValidateJson = document.getElementById('btnValidateJson');
+  const btnLoadJson = document.getElementById('btnLoadJson');
+  const btnSampleJson = document.getElementById('btnSampleJson');
+  const btnClearJson = document.getElementById('btnClearJson');
+  const jsonFeedback = document.getElementById('jsonFeedback');
 
-  // Section 15: Received Data Preview Card
+  // Received Data Panel Elements
   const recvVoltage = document.getElementById('recvVoltage');
   const recvCurrent = document.getElementById('recvCurrent');
   const recvTemperature = document.getElementById('recvTemperature');
   const recvSoc = document.getElementById('recvSoc');
   const recvSoh = document.getElementById('recvSoh');
   const recvCrate = document.getElementById('recvCrate');
-  const recvCycle = document.getElementById('recvCycle');
-  const recvTime = document.getElementById('recvTime');
+  const recvAmbient = document.getElementById('recvAmbient');
   const recvSource = document.getElementById('recvSource');
   const recvServerTime = document.getElementById('recvServerTime');
 
-  // Section 17: Model Prediction Panel
-  const predModelName = document.getElementById('predModelName');
-  const predStatusBadge = document.getElementById('predStatusBadge');
-  const predLatency = document.getElementById('predLatency');
-  const predSocVal = document.getElementById('predSocVal');
-  const predSocSub = document.getElementById('predSocSub');
-  const predSohVal = document.getElementById('predSohVal');
-  const predSohSub = document.getElementById('predSohSub');
-  const predAnomalyBadge = document.getElementById('predAnomalyBadge');
-  const predAnomalyScore = document.getElementById('predAnomalyScore');
-  const predPhysicsBadge = document.getElementById('predPhysicsBadge');
-  const predPhysicsSub = document.getElementById('predPhysicsSub');
-  const predConfidence = document.getElementById('predConfidence');
-  const predFeaturesList = document.getElementById('predFeaturesList');
-
-  // Section 8: System Log Terminal
+  // System Log Terminal
   const systemLogTerminal = document.getElementById('systemLogTerminal');
 
-  // State Variables
-  let datasetSamples = [];
-  let currentSampleIndex = 0;
-  let currentMode = 'json'; // 'json' or 'demo'
+  // Chart Canvas
+  const canvas = document.getElementById('tempTrendCanvas');
+  let currentTrendData = [];
 
-  // Predefined Demonstration Sample JSON
-  const SAMPLE_JSON = `{
+  // Local State
+  let activeMode = 'demo'; // 'demo' or 'json'
+  let activeScenarioId = null;
+
+  // Predefined Sample JSON
+  const SAMPLE_INPUT_JSON = `{
   "voltage": 3.70,
-  "current": 1.10,
-  "temperature": 25.0,
-  "time_s": 120.0,
-  "cycle_number": 1,
-  "soc": 85.0,
-  "soh": 100.0,
-  "c_rate": 1.0,
-  "ambient_temperature": 25.0,
-  "cycle_stats": {
-    "mean_voltage": 3.75,
-    "min_voltage": 3.00,
-    "max_voltage": 4.20,
-    "voltage_std": 0.28,
-    "mean_current": 1.10,
-    "mean_temperature": 25.8
-  }
+  "current": 4.0,
+  "temperature": 30.0,
+  "soc": 72,
+  "soh": 96,
+  "c_rate": 0.8,
+  "ambient_temperature": 27.0
 }`;
 
   // --------------------------------------------------------------------------
-  // Backend Health & System Status
+  // Utility Functions
   // --------------------------------------------------------------------------
 
-  function setSystemStatus(isOnline) {
-    if (!systemStatusBadge || !systemStatusText) return;
-    if (isOnline) {
-      systemStatusBadge.className = 'status-indicator online';
-      systemStatusText.textContent = 'SYSTEM ONLINE';
+  function getTimestamp() {
+    const now = new Date();
+    return now.toTimeString().split(' ')[0];
+  }
+
+  function appendLog(prefix, message, typeClass = '') {
+    if (!systemLogTerminal) return;
+    const entry = document.createElement('div');
+    entry.className = `log-entry ${typeClass}`;
+    entry.innerHTML = `<span class="log-prefix ${prefix.toLowerCase()}">[${prefix.toUpperCase()}]</span> ${message}`;
+    systemLogTerminal.appendChild(entry);
+    systemLogTerminal.scrollTop = systemLogTerminal.scrollHeight;
+  }
+
+  function updateGauge(circleElement, numberElement, value, maxVal = 100) {
+    if (!circleElement || !numberElement) return;
+    const circumference = 440;
+    const clamped = Math.max(0, Math.min(maxVal, value));
+    const offset = circumference - (circumference * clamped / maxVal);
+    circleElement.style.strokeDashoffset = offset;
+    numberElement.textContent = `${Math.round(clamped)}%`;
+  }
+
+  // --------------------------------------------------------------------------
+  // Canvas Temperature Trend Line Chart
+  // --------------------------------------------------------------------------
+
+  function drawTemperatureChart(dataPoints) {
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const width = canvas.width = canvas.parentElement.clientWidth;
+    const height = canvas.height = canvas.parentElement.clientHeight;
+
+    ctx.clearRect(0, 0, width, height);
+
+    if (!dataPoints || dataPoints.length === 0) {
+      ctx.fillStyle = '#64748b';
+      ctx.font = '12px SFMono-Regular, monospace';
+      ctx.textAlign = 'center';
+      ctx.fillText('Awaiting demonstration time-series telemetry...', width / 2, height / 2);
+      return;
+    }
+
+    const padLeft = 45;
+    const padRight = 25;
+    const padTop = 25;
+    const padBottom = 35;
+    const plotWidth = width - padLeft - padRight;
+    const plotHeight = height - padTop - padBottom;
+
+    // Determine scale limits
+    const temps = dataPoints.map(d => d.temp_c);
+    const minTemp = Math.floor(Math.min(...temps, 20) / 5) * 5;
+    const maxTemp = Math.ceil(Math.max(...temps, 55) / 5) * 5;
+
+    // Draw Grid Lines & Y-Axis Labels
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+    ctx.lineWidth = 1;
+    ctx.fillStyle = '#64748b';
+    ctx.font = '10px SFMono-Regular, monospace';
+    ctx.textAlign = 'right';
+
+    const ySteps = 4;
+    for (let i = 0; i <= ySteps; i++) {
+      const yVal = minTemp + (i / ySteps) * (maxTemp - minTemp);
+      const yPos = padTop + plotHeight - (i / ySteps) * plotHeight;
+      ctx.beginPath();
+      ctx.moveTo(padLeft, yPos);
+      ctx.lineTo(width - padRight, yPos);
+      ctx.stroke();
+      ctx.fillText(`${yVal.toFixed(0)}°C`, padLeft - 8, yPos + 3);
+    }
+
+    // Coordinates mapper
+    const points = dataPoints.map((d, index) => {
+      const x = padLeft + (index / (dataPoints.length - 1)) * plotWidth;
+      const y = padTop + plotHeight - ((d.temp_c - minTemp) / (maxTemp - minTemp)) * plotHeight;
+      return { x, y, temp: d.temp_c, offset: d.time_offset_s };
+    });
+
+    // Draw Gradient Area Under Line
+    const grad = ctx.createLinearGradient(0, padTop, 0, padTop + plotHeight);
+    grad.addColorStop(0, 'rgba(56, 189, 248, 0.35)');
+    grad.addColorStop(1, 'rgba(56, 189, 248, 0.0)');
+
+    ctx.beginPath();
+    ctx.moveTo(points[0].x, padTop + plotHeight);
+    points.forEach(p => ctx.lineTo(p.x, p.y));
+    ctx.lineTo(points[points.length - 1].x, padTop + plotHeight);
+    ctx.closePath();
+    ctx.fillStyle = grad;
+    ctx.fill();
+
+    // Draw Line
+    ctx.beginPath();
+    ctx.strokeStyle = '#38bdf8';
+    ctx.lineWidth = 3;
+    ctx.lineJoin = 'round';
+    ctx.lineCap = 'round';
+    points.forEach((p, index) => {
+      if (index === 0) ctx.moveTo(p.x, p.y);
+      else ctx.lineTo(p.x, p.y);
+    });
+    ctx.stroke();
+
+    // Draw Points & Labels
+    points.forEach((p, index) => {
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, 4, 0, Math.PI * 2);
+      ctx.fillStyle = '#0a0e17';
+      ctx.fill();
+      ctx.strokeStyle = '#38bdf8';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      // Time X labels
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = '10px SFMono-Regular, monospace';
+      ctx.textAlign = 'center';
+      const timeLabel = p.offset === 0 ? 'Now' : `${p.offset / 60}m`;
+      ctx.fillText(timeLabel, p.x, height - 12);
+    });
+  }
+
+  // Handle window resize for chart responsiveness
+  window.addEventListener('resize', () => {
+    if (currentTrendData && currentTrendData.length > 0) {
+      drawTemperatureChart(currentTrendData);
+    }
+  });
+
+  // --------------------------------------------------------------------------
+  // Apply Telemetry Scenario to UI
+  // --------------------------------------------------------------------------
+
+  function applyScenario(scenario, isDemo = true) {
+    if (!scenario || !scenario.telemetry) return;
+
+    const t = scenario.telemetry;
+    const c = scenario.classification || {
+      battery_state: 'TELEMETRY INGESTED',
+      safety_rule_status: 'NORMAL',
+      demo_alert: 'Custom JSON Ingestion',
+      alert_level: 'NOMINAL',
+      description: 'Live payload ingested via client/server pipeline.'
+    };
+
+    const timeStr = getTimestamp();
+
+    // 1. Update Battery Overview Cards
+    if (valVoltage) valVoltage.textContent = `${t.voltage.toFixed(2)} V`;
+    if (timeVoltage) timeVoltage.textContent = `Updated: ${timeStr}`;
+
+    if (valCurrent) valCurrent.textContent = `${t.current.toFixed(1)} A`;
+    if (tagCurrent) tagCurrent.textContent = `${t.c_rate.toFixed(1)} C`;
+    if (timeCurrent) timeCurrent.textContent = `Updated: ${timeStr}`;
+
+    if (valTemperature) valTemperature.textContent = `${t.temperature.toFixed(1)} °C`;
+    if (tagTemperature) {
+      tagTemperature.textContent = t.temperature >= 45.0 ? 'HIGH TEMP' : 'NORMAL';
+      tagTemperature.className = t.temperature >= 45.0 ? 'bms-card-tag critical' : 'bms-card-tag normal';
+    }
+    if (timeTemperature) timeTemperature.textContent = `Updated: ${timeStr}`;
+
+    if (valSoc) valSoc.textContent = `${Math.round(t.soc)} %`;
+    if (timeSoc) timeSoc.textContent = `Updated: ${timeStr}`;
+
+    if (valSoh) valSoh.textContent = `${Math.round(t.soh)} %`;
+    if (tagSoh) {
+      tagSoh.textContent = t.soh >= 90 ? 'EXCELLENT' : (t.soh >= 80 ? 'GOOD' : 'AGED CELL');
+      tagSoh.className = t.soh >= 90 ? 'bms-card-tag normal' : (t.soh >= 80 ? 'bms-card-tag warning' : 'bms-card-tag critical');
+    }
+    if (timeSoh) timeSoh.textContent = `Updated: ${timeStr}`;
+
+    if (valCrate) valCrate.textContent = `${t.c_rate.toFixed(1)} C`;
+    if (tagCrate) {
+      tagCrate.textContent = t.c_rate >= 2.0 ? 'HIGH RATE' : 'CONTINUOUS';
+      tagCrate.className = t.c_rate >= 2.0 ? 'bms-card-tag warning' : 'bms-card-tag normal';
+    }
+    if (timeCrate) timeCrate.textContent = `Updated: ${timeStr}`;
+
+    // 2. Update Circular Gauges
+    updateGauge(socCircle, socNumber, t.soc);
+    updateGauge(sohCircle, sohNumber, t.soh);
+
+    // 3. Update Battery State & Safety Blocks
+    if (stateBatteryVal) stateBatteryVal.textContent = c.battery_state;
+    if (stateBatterySub) stateBatterySub.textContent = isDemo ? 'PREDEFINED DEMO SCENARIO STATE' : 'CLIENT INGESTION STATE';
+
+    if (stateSafetyVal) {
+      stateSafetyVal.textContent = c.safety_rule_status;
+      stateSafetyVal.style.color = c.safety_rule_status === 'HIGH TEMPERATURE' ? '#f87171' : (c.safety_rule_status === 'ATTENTION' ? '#fbbf24' : '#4ade80');
+    }
+
+    if (stateAlertVal) {
+      stateAlertVal.textContent = c.demo_alert;
+      stateAlertVal.style.color = c.alert_level === 'CRITICAL' || c.alert_level === 'WARNING' ? '#f87171' : (c.alert_level === 'ATTENTION' ? '#fbbf24' : '#4ade80');
+    }
+
+    // 4. Update Thermal Monitoring
+    if (thermalCurrentVal) thermalCurrentVal.textContent = `${t.temperature.toFixed(1)} °C`;
+    if (thermalCurrentSub) thermalCurrentSub.textContent = isDemo ? 'Demo Thermocouple Reading' : 'Ingested Sensor Reading';
+    if (thermalPredictedVal) thermalPredictedVal.textContent = 'MODEL NOT CONNECTED';
+    if (thermalTrendVal) thermalTrendVal.textContent = isDemo ? 'DEMO TREND' : 'TELEMETRY TREND';
+
+    // 5. Update Received Data Panel
+    if (recvVoltage) recvVoltage.textContent = `${t.voltage.toFixed(2)} V`;
+    if (recvCurrent) recvCurrent.textContent = `${t.current.toFixed(1)} A`;
+    if (recvTemperature) recvTemperature.textContent = `${t.temperature.toFixed(1)} °C`;
+    if (recvSoc) recvSoc.textContent = `${Math.round(t.soc)} %`;
+    if (recvSoh) recvSoh.textContent = `${Math.round(t.soh)} %`;
+    if (recvCrate) recvCrate.textContent = `${t.c_rate.toFixed(1)} C`;
+    if (recvAmbient) recvAmbient.textContent = t.ambient_temperature !== undefined ? `${t.ambient_temperature.toFixed(1)} °C` : '--';
+    if (recvSource) recvSource.textContent = isDemo ? 'DEMO / SIMULATED' : 'JSON INPUT';
+    if (recvServerTime) recvServerTime.textContent = timeStr;
+
+    // 6. Update Temperature Trend Chart
+    if (scenario.temperature_trend) {
+      currentTrendData = scenario.temperature_trend;
+      drawTemperatureChart(currentTrendData);
     } else {
-      systemStatusBadge.className = 'status-indicator offline';
-      systemStatusText.textContent = 'SYSTEM OFFLINE';
+      // Create synthetic 6-point trend for custom JSON
+      currentTrendData = [
+        { time_offset_s: -300, temp_c: Math.max(20, t.temperature - 3.2) },
+        { time_offset_s: -240, temp_c: Math.max(20, t.temperature - 2.4) },
+        { time_offset_s: -180, temp_c: Math.max(20, t.temperature - 1.8) },
+        { time_offset_s: -120, temp_c: Math.max(20, t.temperature - 1.0) },
+        { time_offset_s: -60, temp_c: Math.max(20, t.temperature - 0.4) },
+        { time_offset_s: 0, temp_c: t.temperature }
+      ];
+      drawTemperatureChart(currentTrendData);
+    }
+
+    // 7. Update Banner Meta
+    if (scenarioBannerTitle) scenarioBannerTitle.textContent = scenario.name || 'DEMO SCENARIO';
+    if (scenarioBannerDesc) scenarioBannerDesc.textContent = c.description || '';
+    if (scenarioMetaAmbient) scenarioMetaAmbient.textContent = `Ambient: ${t.ambient_temperature || 27}°C`;
+    if (scenarioMetaCrate) scenarioMetaCrate.textContent = `Rate: ${t.c_rate}C`;
+
+    // 8. System Log Records
+    if (isDemo) {
+      appendLog('DEMO', `Scenario loaded: ${scenario.name || 'DEMO SCENARIO'}`);
+      appendLog('DATA', `Voltage: ${t.voltage.toFixed(2)} V | Current: ${t.current.toFixed(1)} A | Temp: ${t.temperature.toFixed(1)} °C`);
+      appendLog('DATA', `SOC: ${t.soc}% | SOH: ${t.soh}% | C-Rate: ${t.c_rate}C`);
+      appendLog('DEMO', `Safety rule status: ${c.safety_rule_status}`);
+    } else {
+      appendLog('DATA', `Custom JSON ingested. Voltage: ${t.voltage}V, Temp: ${t.temperature}°C, SOC: ${t.soc}%`);
     }
   }
+
+  // --------------------------------------------------------------------------
+  // Demo Scenario Loading Buttons Handlers
+  // --------------------------------------------------------------------------
+
+  const scenarioButtons = [
+    { btn: btnNormal, id: 'normal' },
+    { btn: btnFastCharge, id: 'fast_charging' },
+    { btn: btnThermalStress, id: 'thermal_stress' },
+    { btn: btnAging, id: 'aging' },
+    { btn: btnAbnormal, id: 'abnormal' }
+  ];
+
+  function setActiveButton(activeBtn) {
+    scenarioButtons.forEach(item => {
+      if (item.btn) item.btn.classList.remove('active');
+    });
+    if (btnRandom) btnRandom.classList.remove('active');
+    if (activeBtn) activeBtn.classList.add('active');
+  }
+
+  async function loadScenarioFromServer(scenarioId, buttonElement) {
+    try {
+      const response = await fetch(`/api/demo/scenario/${scenarioId}`);
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success && data.scenario) {
+          activeScenarioId = scenarioId;
+          setActiveButton(buttonElement);
+          setDataSourceMode('demo');
+          applyScenario(data.scenario, true);
+        }
+      } else {
+        appendLog('ERR', `Failed to load demo scenario: ${scenarioId}`);
+      }
+    } catch (err) {
+      appendLog('ERR', `Demo API connection error: ${err.message}`);
+    }
+  }
+
+  scenarioButtons.forEach(item => {
+    if (item.btn) {
+      item.btn.addEventListener('click', () => {
+        loadScenarioFromServer(item.id, item.btn);
+      });
+    }
+  });
+
+  if (btnRandom) {
+    btnRandom.addEventListener('click', () => {
+      loadScenarioFromServer('random', btnRandom);
+    });
+  }
+
+  if (btnReset) {
+    btnReset.addEventListener('click', () => {
+      resetDashboard();
+    });
+  }
+
+  function resetDashboard() {
+    activeScenarioId = null;
+    setActiveButton(null);
+
+    // Reset metric values
+    if (valVoltage) valVoltage.textContent = '-- V';
+    if (valCurrent) valCurrent.textContent = '-- A';
+    if (valTemperature) valTemperature.textContent = '-- °C';
+    if (valSoc) valSoc.textContent = '-- %';
+    if (valSoh) valSoh.textContent = '-- %';
+    if (valCrate) valCrate.textContent = '-- C';
+
+    if (tagVoltage) tagVoltage.textContent = 'AWAITING DATA';
+    if (tagCurrent) tagCurrent.textContent = '--';
+    if (tagTemperature) { tagTemperature.textContent = '--'; tagTemperature.className = 'bms-card-tag'; }
+    if (tagSoc) tagSoc.textContent = '--';
+    if (tagSoh) { tagSoh.textContent = '--'; tagSoh.className = 'bms-card-tag'; }
+    if (tagCrate) { tagCrate.textContent = '--'; tagCrate.className = 'bms-card-tag'; }
+
+    // Reset gauges
+    updateGauge(socCircle, socNumber, 0);
+    updateGauge(sohCircle, sohNumber, 0);
+
+    // Reset states
+    if (stateBatteryVal) stateBatteryVal.textContent = 'STANDBY';
+    if (stateBatterySub) stateBatterySub.textContent = 'Select a demo scenario or load JSON';
+    if (stateSafetyVal) { stateSafetyVal.textContent = 'STANDBY'; stateSafetyVal.style.color = '#94a3b8'; }
+    if (stateAlertVal) { stateAlertVal.textContent = 'No active demo scenario'; stateAlertVal.style.color = '#94a3b8'; }
+
+    // Reset thermal
+    if (thermalCurrentVal) thermalCurrentVal.textContent = '-- °C';
+    if (thermalPredictedVal) thermalPredictedVal.textContent = 'MODEL NOT CONNECTED';
+    if (thermalTrendVal) thermalTrendVal.textContent = 'WAITING FOR DATA';
+
+    // Reset received
+    if (recvVoltage) recvVoltage.textContent = '--';
+    if (recvCurrent) recvCurrent.textContent = '--';
+    if (recvTemperature) recvTemperature.textContent = '--';
+    if (recvSoc) recvSoc.textContent = '--';
+    if (recvSoh) recvSoh.textContent = '--';
+    if (recvCrate) recvCrate.textContent = '--';
+    if (recvAmbient) recvAmbient.textContent = '--';
+    if (recvServerTime) recvServerTime.textContent = '--';
+
+    // Clear chart
+    currentTrendData = [];
+    drawTemperatureChart([]);
+
+    if (scenarioBannerTitle) scenarioBannerTitle.textContent = 'DEMO STANDBY — NO ACTIVE SCENARIO';
+    if (scenarioBannerDesc) scenarioBannerDesc.textContent = 'Select one of the controlled demonstration scenarios above to simulate real-time battery behavior.';
+
+    appendLog('SYS', 'Dashboard reset to standby state.');
+  }
+
+  // --------------------------------------------------------------------------
+  // Mode Switcher (Demo Scenarios vs Custom JSON)
+  // --------------------------------------------------------------------------
+
+  function setDataSourceMode(mode) {
+    activeMode = mode;
+    if (mode === 'demo') {
+      if (tabDemoMode) tabDemoMode.classList.add('active');
+      if (tabJsonMode) tabJsonMode.classList.remove('active');
+      if (demoControlsContainer) demoControlsContainer.style.display = 'block';
+      if (jsonControlsContainer) jsonControlsContainer.style.display = 'none';
+      if (dataSourceBadge) {
+        dataSourceBadge.textContent = 'DATA SOURCE: DEMO / SIMULATED';
+        dataSourceBadge.classList.remove('json-mode');
+      }
+      if (healthDataSourceVal) healthDataSourceVal.textContent = 'DEMO';
+      if (headerModeBadge) headerModeBadge.textContent = 'MODE: DEMO';
+    } else {
+      if (tabJsonMode) tabJsonMode.classList.add('active');
+      if (tabDemoMode) tabDemoMode.classList.remove('active');
+      if (demoControlsContainer) demoControlsContainer.style.display = 'none';
+      if (jsonControlsContainer) jsonControlsContainer.style.display = 'block';
+      if (dataSourceBadge) {
+        dataSourceBadge.textContent = 'DATA SOURCE: JSON INPUT';
+        dataSourceBadge.classList.add('json-mode');
+      }
+      if (healthDataSourceVal) healthDataSourceVal.textContent = 'JSON INPUT';
+      if (headerModeBadge) headerModeBadge.textContent = 'MODE: JSON';
+    }
+  }
+
+  if (tabDemoMode) {
+    tabDemoMode.addEventListener('click', () => {
+      setDataSourceMode('demo');
+      appendLog('SYS', 'Switched to DEMO / SIMULATION mode.');
+    });
+  }
+
+  if (tabJsonMode) {
+    tabJsonMode.addEventListener('click', () => {
+      setDataSourceMode('json');
+      appendLog('SYS', 'Switched to CUSTOM JSON INPUT mode.');
+    });
+  }
+
+  // --------------------------------------------------------------------------
+  // Custom JSON Input Actions
+  // --------------------------------------------------------------------------
+
+  if (btnSampleJson) {
+    btnSampleJson.addEventListener('click', () => {
+      if (jsonTextarea) jsonTextarea.value = SAMPLE_INPUT_JSON;
+      if (jsonFeedback) {
+        jsonFeedback.textContent = 'Demonstration sample JSON loaded. Click VALIDATE or LOAD JSON.';
+        jsonFeedback.className = 'disclaimer-box';
+        jsonFeedback.style.color = '#4ade80';
+      }
+    });
+  }
+
+  if (btnClearJson) {
+    btnClearJson.addEventListener('click', () => {
+      if (jsonTextarea) jsonTextarea.value = '';
+      if (jsonFeedback) jsonFeedback.textContent = '';
+    });
+  }
+
+  if (btnValidateJson) {
+    btnValidateJson.addEventListener('click', () => {
+      const raw = jsonTextarea ? jsonTextarea.value.trim() : '';
+      if (!raw) {
+        showJsonFeedback('Please provide JSON payload to validate.', false);
+        return;
+      }
+      try {
+        const parsed = JSON.parse(raw);
+        if (!parsed.voltage || !parsed.current || !parsed.temperature) {
+          showJsonFeedback('Validation error: Required fields missing (voltage, current, temperature).', false);
+          return;
+        }
+        showJsonFeedback('JSON schema valid! Ready for backend ingestion.', true);
+        appendLog('VAL', 'Client-side JSON schema validation passed.');
+      } catch (err) {
+        showJsonFeedback(`Syntax error: ${err.message}`, false);
+      }
+    });
+  }
+
+  if (btnLoadJson) {
+    btnLoadJson.addEventListener('click', async () => {
+      const raw = jsonTextarea ? jsonTextarea.value.trim() : '';
+      if (!raw) {
+        showJsonFeedback('Please provide JSON payload to load.', false);
+        return;
+      }
+      try {
+        const parsed = JSON.parse(raw);
+        const response = await fetch('/api/battery-data', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(parsed)
+        });
+        const result = await response.json();
+        if (response.ok && result.success) {
+          showJsonFeedback('Telemetry successfully ingested into backend pipeline!', true);
+          setDataSourceMode('json');
+          applyScenario({
+            name: 'CUSTOM TELEMETRY PAYLOAD',
+            telemetry: result.data.structured,
+            classification: {
+              battery_state: 'TELEMETRY INGESTED',
+              safety_rule_status: result.data.structured.temperature >= 45 ? 'HIGH TEMPERATURE' : 'NORMAL',
+              demo_alert: 'Custom JSON Received',
+              alert_level: 'NOMINAL',
+              description: 'Standard JSON telemetry structured through Flask backend validator.'
+            }
+          }, false);
+        } else {
+          showJsonFeedback(`Backend validation error: ${result.message}`, false);
+        }
+      } catch (err) {
+        showJsonFeedback(`Ingestion error: ${err.message}`, false);
+      }
+    });
+  }
+
+  function showJsonFeedback(msg, isSuccess) {
+    if (!jsonFeedback) return;
+    jsonFeedback.textContent = msg;
+    jsonFeedback.style.color = isSuccess ? '#4ade80' : '#f87171';
+  }
+
+  // --------------------------------------------------------------------------
+  // Health & Liveness Check
+  // --------------------------------------------------------------------------
 
   async function checkHealth() {
     try {
       const response = await fetch('/health');
       if (response.ok) {
         const data = await response.json();
-        if (data && data.status === 'ok') {
-          setSystemStatus(true);
-          return true;
+        if (headerSystemStatus) headerSystemStatus.textContent = 'SYSTEM: ONLINE';
+        if (headerSystemDot) headerSystemDot.className = 'status-dot online';
+        if (headerBackendBadge) {
+          headerBackendBadge.textContent = 'BACKEND: CONNECTED';
+          headerBackendBadge.className = 'badge badge-online';
         }
-      }
-      setSystemStatus(false);
-      return false;
-    } catch (err) {
-      setSystemStatus(false);
-      return false;
-    }
-  }
-
-  // --------------------------------------------------------------------------
-  // Model Status & Dataset Status Fetching
-  // --------------------------------------------------------------------------
-
-  async function fetchModelStatus() {
-    try {
-      const response = await fetch('/api/model-status');
-      if (response.ok) {
-        const res = await response.json();
-        if (res.success && res.data) {
-          const m = res.data;
-          if (modelNameTag) modelNameTag.textContent = m.model_file;
-          if (modelTypeTag) modelTypeTag.textContent = 'Multi-Model Ensemble';
-          if (modelVerifyTag) {
-            modelVerifyTag.textContent = m.verified ? 'VERIFIED' : 'NOT VERIFIED';
-            modelVerifyTag.className = m.verified ? 'status-value-tag valid' : 'status-value-tag pending';
-          }
-          if (modelPredTag) {
-            modelPredTag.textContent = m.prediction_available ? 'AVAILABLE' : 'UNAVAILABLE';
-            modelPredTag.className = m.prediction_available ? 'status-value-tag valid' : 'status-value-tag muted';
-          }
-          if (modelStatusTag) {
-            modelStatusTag.textContent = m.status;
-            modelStatusTag.className = m.status === 'MODEL_READY' ? 'status-value-tag valid' : 'status-value-tag pending';
-          }
-
-          if (predModelName) predModelName.textContent = m.model_file;
-          if (m.status === 'MODEL_READY') {
-            appendLog('MODEL', `Model ensemble verified: ${m.model_file} (SOC, SOH, Anomaly, Physics Rules)`);
-          }
+        if (healthPipelineVal) {
+          healthPipelineVal.textContent = 'READY';
+          healthPipelineVal.style.color = '#4ade80';
         }
+        return true;
       }
     } catch (err) {
-      console.warn('[BRAIN Phase 4] Could not fetch model status:', err);
-    }
-  }
-
-  async function fetchDatasetStatus() {
-    try {
-      const response = await fetch('/api/dataset-status');
-      if (response.ok) {
-        const res = await response.json();
-        if (res.success && res.samples && res.samples.length > 0) {
-          datasetSamples = res.samples;
-          appendLog('DATA', `Dataset profile loaded: ${datasetSamples.length} CALCE sequential demonstration samples available.`);
-        }
+      if (headerSystemStatus) headerSystemStatus.textContent = 'SYSTEM: OFFLINE';
+      if (headerSystemDot) headerSystemDot.className = 'status-dot offline';
+      if (headerBackendBadge) {
+        headerBackendBadge.textContent = 'BACKEND: OFFLINE';
+        headerBackendBadge.className = 'badge badge-offline';
       }
-    } catch (err) {
-      console.warn('[BRAIN Phase 4] Could not fetch dataset status:', err);
+      if (healthPipelineVal) {
+        healthPipelineVal.textContent = 'ERROR';
+        healthPipelineVal.style.color = '#f87171';
+      }
     }
+    return false;
   }
 
   // --------------------------------------------------------------------------
-  // UI Helper Functions
+  // System Initialization Sequence
   // --------------------------------------------------------------------------
 
-  function setDataStatus(statusText, stateClass) {
-    if (!dataStatusBadge) return;
-    dataStatusBadge.textContent = statusText;
-    dataStatusBadge.className = `data-status-badge ${stateClass}`;
-  }
+  appendLog('SYS', 'BRAIN initialized');
+  appendLog('SYS', 'Flask backend connected');
+  appendLog('DATA', 'Demo mode enabled');
+  appendLog('MODEL', 'Prediction unavailable (Model not connected)');
+  appendLog('PINN', 'Thermal model not connected');
 
-  function showFeedback(message, isSuccess = false) {
-    if (!validationFeedback) return;
-    validationFeedback.textContent = message;
-    validationFeedback.className = isSuccess 
-      ? 'validation-feedback success' 
-      : 'validation-feedback error';
-    validationFeedback.style.display = 'block';
-  }
-
-  function hideFeedback() {
-    if (!validationFeedback) return;
-    validationFeedback.style.display = 'none';
-    validationFeedback.textContent = '';
-  }
-
-  function appendLog(prefix, message, isWaiting = false) {
-    if (!systemLogTerminal) return;
-    const entry = document.createElement('div');
-    entry.className = isWaiting ? 'log-entry log-entry-waiting' : 'log-entry';
-    entry.innerHTML = `<span class="log-prefix">[${prefix}]</span> ${message}`;
-    systemLogTerminal.appendChild(entry);
-    systemLogTerminal.scrollTop = systemLogTerminal.scrollHeight;
-  }
-
-  function formatVoltage(val) {
-    if (val === undefined || val === null) return '--';
-    const s = val.toString();
-    const decimals = s.includes('.') ? s.split('.')[1].length : 0;
-    return (decimals > 2 ? val.toFixed(decimals) : val.toFixed(2)) + ' V';
-  }
-
-  function formatCurrent(val) {
-    if (val === undefined || val === null) return '--';
-    const s = val.toString();
-    const decimals = s.includes('.') ? s.split('.')[1].length : 0;
-    return (decimals > 2 ? val.toFixed(decimals) : val.toFixed(2)) + ' A';
-  }
-
-  function formatTemperature(val) {
-    if (val === undefined || val === null) return '--';
-    const s = val.toString();
-    const decimals = s.includes('.') ? s.split('.')[1].length : 0;
-    return (decimals > 1 ? val.toFixed(decimals) : val.toFixed(1)) + ' °C';
-  }
-
-  function formatPercentage(val) {
-    if (val === undefined || val === null) return 'N/A';
-    return `${val} %`;
-  }
-
-  function formatCrate(val) {
-    if (val === undefined || val === null) return 'N/A';
-    const s = val.toString();
-    const decimals = s.includes('.') ? s.split('.')[1].length : 0;
-    return (decimals > 1 ? val.toFixed(decimals) : val.toFixed(1)) + ' C';
-  }
-
-  function formatServerTimestamp(isoStr) {
-    if (!isoStr) return '--';
-    try {
-      const d = new Date(isoStr);
-      const day = String(d.getDate()).padStart(2, '0');
-      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-      const month = months[d.getMonth()];
-      const year = d.getFullYear();
-      const hours = String(d.getHours()).padStart(2, '0');
-      const minutes = String(d.getMinutes()).padStart(2, '0');
-      const seconds = String(d.getSeconds()).padStart(2, '0');
-      return `${day} ${month} ${year}, ${hours}:${minutes}:${seconds}`;
-    } catch {
-      return isoStr;
-    }
-  }
-
-  // --------------------------------------------------------------------------
-  // Dataset Demo Controls
-  // --------------------------------------------------------------------------
-
-  function renderDemoSample(index) {
-    if (!datasetSamples || datasetSamples.length === 0) return;
-    const sample = datasetSamples[index];
-    if (!sample) return;
-
-    if (demoSampleBadge) demoSampleBadge.textContent = `SAMPLE ${index + 1} OF ${datasetSamples.length}`;
-    if (demoSampleId) demoSampleId.textContent = sample.sample_id || `Sample_${index + 1}`;
-    if (demoSampleDesc) demoSampleDesc.textContent = sample.description || 'CALCE telemetry demonstration sample.';
-
-    if (jsonTextarea) {
-      jsonTextarea.value = JSON.stringify(sample, null, 2);
-    }
-    setDataStatus('SAMPLE LOADED', 'pending');
-    showFeedback(`Dataset sample ${index + 1} (${sample.sample_id}) loaded into editor. Ready for pipeline ingestion or model inference.`, true);
-    appendLog('DATA', `Selected dataset sample ${index + 1}: ${sample.sample_id}`);
-  }
-
-  if (modeJsonBtn && modeDemoBtn) {
-    modeJsonBtn.addEventListener('click', () => {
-      currentMode = 'json';
-      modeJsonBtn.classList.add('active');
-      modeDemoBtn.classList.remove('active');
-      if (demoControlsContainer) demoControlsContainer.style.display = 'none';
-      if (dataSourceBadge) {
-        dataSourceBadge.textContent = 'DATA SOURCE: JSON INPUT';
-      }
-      appendLog('APP', 'Switched to LIVE JSON INPUT mode.');
-    });
-
-    modeDemoBtn.addEventListener('click', () => {
-      currentMode = 'demo';
-      modeDemoBtn.classList.add('active');
-      modeJsonBtn.classList.remove('active');
-      if (demoControlsContainer) demoControlsContainer.style.display = 'flex';
-      if (dataSourceBadge) {
-        dataSourceBadge.textContent = 'DATA SOURCE: DATASET DEMO (CALCE)';
-      }
-      appendLog('APP', 'Switched to DATASET DEMO mode.');
-      if (datasetSamples.length > 0) {
-        renderDemoSample(currentSampleIndex);
-      }
-    });
-  }
-
-  if (demoPrevBtn) {
-    demoPrevBtn.addEventListener('click', () => {
-      if (datasetSamples.length === 0) return;
-      currentSampleIndex = (currentSampleIndex - 1 + datasetSamples.length) % datasetSamples.length;
-      renderDemoSample(currentSampleIndex);
-    });
-  }
-
-  if (demoNextBtn) {
-    demoNextBtn.addEventListener('click', () => {
-      if (datasetSamples.length === 0) return;
-      currentSampleIndex = (currentSampleIndex + 1) % datasetSamples.length;
-      renderDemoSample(currentSampleIndex);
-    });
-  }
-
-  if (demoLoadBtn) {
-    demoLoadBtn.addEventListener('click', () => {
-      renderDemoSample(currentSampleIndex);
-    });
-  }
-
-  // --------------------------------------------------------------------------
-  // Client-Side Pre-validation
-  // --------------------------------------------------------------------------
-  function prevalidateClientJson(rawText) {
-    if (!rawText || rawText.trim() === '') {
-      return { isValid: false, status: 'JSON INVALID', message: 'Please enter battery JSON data.', parsed: null };
-    }
-
-    let parsed;
-    try {
-      parsed = JSON.parse(rawText);
-    } catch (err) {
-      return { isValid: false, status: 'JSON INVALID', message: 'Invalid JSON syntax formatting.', parsed: null };
-    }
-
-    if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed)) {
-      return { isValid: false, status: 'JSON INVALID', message: 'JSON root must be an object.', parsed: null };
-    }
-
-    const requiredFields = ['voltage', 'current', 'temperature'];
-    for (const f of requiredFields) {
-      if (parsed[f] === undefined && parsed[`${f}_V`] === undefined && parsed[`${f}_A`] === undefined && parsed[`${f}_C`] === undefined) {
-        return { isValid: false, status: 'INVALID_DATA', message: `Missing required telemetry field: ${f}.`, parsed: null };
-      }
-    }
-
-    return { isValid: true, status: 'VALID', message: 'JSON VALID', parsed };
-  }
-
-  // --------------------------------------------------------------------------
-  // Event Listeners
-  // --------------------------------------------------------------------------
-
-  // 1. VALIDATE JSON BUTTON
-  if (validateJsonBtn) {
-    validateJsonBtn.addEventListener('click', () => {
-      const rawText = jsonTextarea ? jsonTextarea.value : '';
-      const check = prevalidateClientJson(rawText);
-
-      if (check.isValid) {
-        setDataStatus('JSON VALID', 'valid');
-        showFeedback('JSON VALID — Schema verified. Ready for backend submission or model inference.', true);
-        appendLog('VAL', 'Client-side JSON validation successful.');
-      } else {
-        setDataStatus(check.status, 'invalid');
-        showFeedback(check.message, false);
-        appendLog('VAL', `Validation failed: ${check.message}`);
-        appendLog('NET', 'Waiting for valid battery data.', true);
-      }
-    });
-  }
-
-  // 2. LOAD JSON BUTTON (Sends to Flask Backend: POST /api/battery-data)
-  if (loadJsonBtn) {
-    loadJsonBtn.addEventListener('click', async () => {
-      const rawText = jsonTextarea ? jsonTextarea.value : '';
-      const check = prevalidateClientJson(rawText);
-
-      if (!check.isValid) {
-        setDataStatus(check.status, 'invalid');
-        showFeedback(check.message, false);
-        appendLog('VAL', `JSON validation failed: ${check.message}`);
-        return;
-      }
-
-      try {
-        const response = await fetch('/api/battery-data', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(check.parsed)
-        });
-
-        const result = await response.json();
-
-        if (!response.ok || !result.success) {
-          setDataStatus(result.status || 'INVALID_DATA', 'invalid');
-          showFeedback(result.message || 'Backend validation rejected payload.', false);
-          appendLog('VAL', `Backend validation failed: ${result.message}`);
-          return;
-        }
-
-        // Successful Ingestion
-        const processed = result.data;
-        const structured = processed.structured;
-
-        setDataStatus('DATA INGESTED', 'received');
-        showFeedback('Battery telemetry successfully ingested into backend pipeline.', true);
-
-        // Update Overview Cards
-        if (overviewVoltage) overviewVoltage.textContent = formatVoltage(structured.voltage);
-        if (overviewCurrent) overviewCurrent.textContent = formatCurrent(structured.current);
-        if (overviewTemperature) overviewTemperature.textContent = formatTemperature(structured.temperature);
-        if (overviewSoc) overviewSoc.textContent = formatPercentage(structured.soc);
-        if (overviewSoh) overviewSoh.textContent = formatPercentage(structured.soh);
-        if (overviewCrate) overviewCrate.textContent = formatCrate(structured.c_rate);
-
-        // Update Thermal Monitoring
-        if (thermalCurrentTemp) thermalCurrentTemp.textContent = formatTemperature(structured.temperature);
-        if (thermalCurrentSub) thermalCurrentSub.textContent = 'Backend Data Ingested';
-
-        // Update Battery Health
-        if (healthSoc) healthSoc.textContent = formatPercentage(structured.soc);
-        if (healthSoh) healthSoh.textContent = formatPercentage(structured.soh);
-
-        // Update Received Data Preview
-        if (recvVoltage) recvVoltage.textContent = formatVoltage(structured.voltage);
-        if (recvCurrent) recvCurrent.textContent = formatCurrent(structured.current);
-        if (recvTemperature) recvTemperature.textContent = formatTemperature(structured.temperature);
-        if (recvSoc) recvSoc.textContent = formatPercentage(structured.soc);
-        if (recvSoh) recvSoh.textContent = formatPercentage(structured.soh);
-        if (recvCrate) recvCrate.textContent = formatCrate(structured.c_rate);
-        if (recvCycle) recvCycle.textContent = check.parsed.cycle_number !== undefined ? check.parsed.cycle_number : 'N/A';
-        if (recvTime) recvTime.textContent = check.parsed.time_s !== undefined ? check.parsed.time_s : 'N/A';
-        if (recvSource) recvSource.textContent = currentMode === 'demo' ? 'DATASET DEMO' : 'JSON INPUT';
-        if (recvServerTime) recvServerTime.textContent = `SERVER TIME: ${formatServerTimestamp(processed.received_at)}`;
-
-        if (lastDataUpdate) lastDataUpdate.textContent = formatServerTimestamp(processed.received_at);
-
-        // Display unmodeled/unexpected fields if present
-        if (processed.additional_fields && additionalDataContainer && additionalDataContent) {
-          additionalDataContent.textContent = JSON.stringify(processed.additional_fields, null, 2);
-          additionalDataContainer.style.display = 'block';
-        } else if (additionalDataContainer) {
-          additionalDataContainer.style.display = 'none';
-        }
-
-        appendLog('SYS', 'Battery telemetry accepted by backend.');
-        setSystemStatus(true);
-
-      } catch (netErr) {
-        console.error('[BRAIN Phase 4] Pipeline network error:', netErr);
-        setSystemStatus(false);
-        setDataStatus('SERVER_ERROR', 'invalid');
-        showFeedback('Unable to reach backend API endpoint. Ensure Flask server is running.', false);
-        appendLog('NET', 'Backend connection error: Server unreachable.', true);
-      }
-    });
-  }
-
-  // 3. RUN MODEL INFERENCE BUTTON (Sends to: POST /api/predict)
-  if (runPredictBtn) {
-    runPredictBtn.addEventListener('click', async () => {
-      const rawText = jsonTextarea ? jsonTextarea.value : '';
-      const check = prevalidateClientJson(rawText);
-
-      if (!check.isValid) {
-        setDataStatus(check.status, 'invalid');
-        showFeedback(check.message, false);
-        appendLog('VAL', `Inference request rejected: ${check.message}`);
-        return;
-      }
-
-      setDataStatus('RUNNING MODEL...', 'pending');
-      if (predStatusBadge) {
-        predStatusBadge.textContent = 'COMPUTING INFERENCE...';
-        predStatusBadge.className = 'pred-badge pending';
-      }
-
-      try {
-        const response = await fetch('/api/predict', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(check.parsed)
-        });
-
-        const result = await response.json();
-
-        if (!response.ok || !result.success) {
-          setDataStatus('MODEL_ERROR', 'invalid');
-          showFeedback(result.message || 'Model prediction failed.', false);
-          if (predStatusBadge) {
-            predStatusBadge.textContent = 'INFERENCE FAILED';
-            predStatusBadge.className = 'pred-badge anomaly';
-          }
-          appendLog('ERR', `Inference error: ${result.message}`);
-          return;
-        }
-
-        const preds = result.prediction;
-        const latency = result.inference_time_ms;
-
-        // 1. Update Data Status Badge
-        setDataStatus('PREDICTION SUCCESS', 'received');
-        showFeedback(`Multi-model inference successfully executed in ${latency} ms.`, true);
-
-        // 2. Update Prediction Panel
-        if (predStatusBadge) {
-          predStatusBadge.textContent = 'PREDICTION SUCCESS';
-          predStatusBadge.className = 'pred-badge valid';
-        }
-        if (predLatency) {
-          predLatency.textContent = `Latency: ${latency} ms`;
-        }
-
-        // SOC Prediction (Random Forest)
-        if (preds.soc && preds.soc.status === 'PREDICTION_SUCCESS') {
-          if (predSocVal) predSocVal.textContent = `${preds.soc.value} %`;
-          if (predSocSub) predSocSub.textContent = `RandomForestRegressor (${preds.soc.features_used.length} features)`;
-          if (overviewSoc) overviewSoc.textContent = `${preds.soc.value} %`;
-          if (healthSoc) healthSoc.textContent = `${preds.soc.value} %`;
-        } else if (preds.soc && preds.soc.status === 'MODEL_INPUT_INCOMPLETE') {
-          if (predSocVal) predSocVal.textContent = 'N/A (Incomplete)';
-          if (predSocSub) predSocSub.textContent = `Missing: ${preds.soc.missing_features.join(', ')}`;
-        }
-
-        // SOH Prediction (Gradient Boosting)
-        if (preds.soh && preds.soh.status === 'PREDICTION_SUCCESS') {
-          if (predSohVal) predSohVal.textContent = `${preds.soh.value} %`;
-          if (predSohSub) predSohSub.textContent = `GradientBoostingRegressor (${preds.soh.features_used.length} features)`;
-          if (overviewSoh) overviewSoh.textContent = `${preds.soh.value} %`;
-          if (healthSoh) healthSoh.textContent = `${preds.soh.value} %`;
-        } else if (preds.soh && preds.soh.status === 'MODEL_INPUT_INCOMPLETE') {
-          if (predSohVal) predSohVal.textContent = 'N/A (Incomplete)';
-          if (predSohSub) predSohSub.textContent = `Missing: ${preds.soh.missing_features.join(', ')}`;
-        }
-
-        // Anomaly Model (Isolation Forest)
-        if (preds.anomaly && preds.anomaly.status === 'PREDICTION_SUCCESS') {
-          const isAnomaly = preds.anomaly.is_anomaly;
-          if (predAnomalyBadge) {
-            predAnomalyBadge.textContent = isAnomaly ? 'ANOMALOUS' : 'NORMAL';
-            predAnomalyBadge.className = isAnomaly ? 'pred-badge anomaly' : 'pred-badge valid';
-          }
-          if (predAnomalyScore) {
-            predAnomalyScore.textContent = `IsolationForest Score: ${preds.anomaly.score}`;
-          }
-        } else if (preds.anomaly && preds.anomaly.status === 'MODEL_INPUT_INCOMPLETE') {
-          if (predAnomalyBadge) {
-            predAnomalyBadge.textContent = 'N/A (Incomplete)';
-            predAnomalyBadge.className = 'pred-badge muted';
-          }
-          if (predAnomalyScore) {
-            predAnomalyScore.textContent = `Missing: ${preds.anomaly.missing_features.join(', ')}`;
-          }
-        }
-
-        // Physics Boundary Rules
-        if (preds.physics_rules) {
-          const pStatus = preds.physics_rules.status;
-          if (predPhysicsBadge) {
-            predPhysicsBadge.textContent = pStatus;
-            predPhysicsBadge.className = pStatus === 'NORMAL' ? 'pred-badge valid' : 'pred-badge violation';
-          }
-          if (predPhysicsSub) {
-            if (preds.physics_rules.violations.length > 0) {
-              predPhysicsSub.textContent = preds.physics_rules.violations[0];
-            } else if (preds.physics_rules.warnings.length > 0) {
-              predPhysicsSub.textContent = preds.physics_rules.warnings[0];
-            } else {
-              predPhysicsSub.textContent = 'All physical boundaries respected';
-            }
-          }
-        }
-
-        // Features Utilized List
-        if (predFeaturesList && result.input && result.input.features_used) {
-          predFeaturesList.textContent = result.input.features_used.join(', ') || 'None';
-        }
-
-        // 3. Update Thermal Monitoring
-        const rawTemp = check.parsed.temperature !== undefined ? check.parsed.temperature : check.parsed.temperature_C;
-        if (thermalCurrentTemp && rawTemp !== undefined) {
-          thermalCurrentTemp.textContent = formatTemperature(rawTemp);
-        }
-        if (thermalCurrentSub) {
-          thermalCurrentSub.textContent = 'Model Telemetry Ingested';
-        }
-        if (thermalTrendBadge) {
-          thermalTrendBadge.textContent = 'CALCE DYNAMICS ACTIVE';
-          thermalTrendBadge.className = 'stat-status-badge';
-        }
-
-        // 4. Update Battery Overview
-        const rawVolt = check.parsed.voltage !== undefined ? check.parsed.voltage : check.parsed.voltage_V;
-        const rawCurr = check.parsed.current !== undefined ? check.parsed.current : check.parsed.current_A;
-        if (overviewVoltage && rawVolt !== undefined) overviewVoltage.textContent = formatVoltage(rawVolt);
-        if (overviewCurrent && rawCurr !== undefined) overviewCurrent.textContent = formatCurrent(rawCurr);
-        if (overviewTemperature && rawTemp !== undefined) overviewTemperature.textContent = formatTemperature(rawTemp);
-        if (overviewCrate && check.parsed.c_rate !== undefined) overviewCrate.textContent = formatCrate(check.parsed.c_rate);
-
-        // 5. Update Risk Assessment Card
-        if (preds.risk_assessment) {
-          const risk = preds.risk_assessment;
-          if (riskMainText) riskMainText.textContent = risk.status.replace(/_/g, ' ');
-          if (riskDescText) riskDescText.textContent = risk.summary;
-          if (riskStatusDisplay) {
-            riskStatusDisplay.className = risk.risk_level === 'CRITICAL' 
-              ? 'risk-status-display critical'
-              : (risk.risk_level === 'HIGH' || risk.risk_level === 'MEDIUM' ? 'risk-status-display warning' : 'risk-status-display normal');
-          }
-          if (riskPill) {
-            riskPill.className = risk.risk_level === 'CRITICAL'
-              ? 'status-pill status-pill-critical'
-              : (risk.risk_level === 'HIGH' || risk.risk_level === 'MEDIUM' ? 'status-pill status-pill-warning' : 'status-pill status-pill-success');
-            riskPill.textContent = `${risk.risk_level} RISK`;
-          }
-        }
-
-        // 6. Update Early Warning Card
-        if (preds.early_warning) {
-          const warn = preds.early_warning;
-          if (warningMainText) {
-            warningMainText.textContent = warn.source === 'RULE_BASED' 
-              ? 'RULE-BASED ALARM' 
-              : (warn.source === 'MODEL_BASED' ? 'MODEL-BASED WARNING' : 'NO ACTIVE HAZARD');
-          }
-          if (warningDescText) warningDescText.textContent = warn.message;
-          if (warningStatusDisplay) {
-            warningStatusDisplay.className = warn.level === 'CRITICAL'
-              ? 'warning-status-display critical'
-              : (warn.level === 'WARNING' || warn.level === 'ADVISORY' ? 'warning-status-display warning' : 'warning-status-display normal');
-          }
-          if (warningPill) {
-            warningPill.className = warn.level === 'CRITICAL'
-              ? 'status-pill status-pill-critical'
-              : (warn.level === 'WARNING' || warn.level === 'ADVISORY' ? 'status-pill status-pill-warning' : 'status-pill status-pill-success');
-            warningPill.textContent = warn.level;
-          }
-        }
-
-        // 7. Update Battery State
-        if (healthBatteryState) {
-          if (preds.risk_assessment.risk_level === 'CRITICAL') {
-            healthBatteryState.textContent = 'CRITICAL LIMIT EXCEEDED';
-          } else if (preds.anomaly && preds.anomaly.is_anomaly) {
-            healthBatteryState.textContent = 'ANOMALY DETECTED';
-          } else if (preds.soh && preds.soh.value < 85.0) {
-            healthBatteryState.textContent = 'DEGRADED (AGED CELL)';
-          } else {
-            healthBatteryState.textContent = 'NOMINAL HEALTH';
-          }
-        }
-
-        // 8. Update Received Data Panel
-        if (recvVoltage && rawVolt !== undefined) recvVoltage.textContent = formatVoltage(rawVolt);
-        if (recvCurrent && rawCurr !== undefined) recvCurrent.textContent = formatCurrent(rawCurr);
-        if (recvTemperature && rawTemp !== undefined) recvTemperature.textContent = formatTemperature(rawTemp);
-        if (recvSoc) recvSoc.textContent = preds.soc && preds.soc.value ? `${preds.soc.value} %` : (check.parsed.soc ? `${check.parsed.soc} %` : 'N/A');
-        if (recvSoh) recvSoh.textContent = preds.soh && preds.soh.value ? `${preds.soh.value} %` : (check.parsed.soh ? `${check.parsed.soh} %` : 'N/A');
-        if (recvCrate) recvCrate.textContent = check.parsed.c_rate ? formatCrate(check.parsed.c_rate) : 'N/A';
-        if (recvCycle) recvCycle.textContent = check.parsed.cycle_number !== undefined ? check.parsed.cycle_number : 'N/A';
-        if (recvTime) recvTime.textContent = check.parsed.time_s !== undefined ? check.parsed.time_s : 'N/A';
-        if (recvSource) recvSource.textContent = currentMode === 'demo' ? 'DATASET DEMO' : 'JSON INPUT';
-        if (recvServerTime) recvServerTime.textContent = `SERVER TIME: ${formatServerTimestamp(result.timestamp)}`;
-
-        // Log to terminal
-        appendLog('INFER', `Multi-model prediction completed in ${latency} ms.`);
-        if (preds.soc && preds.soc.value) appendLog('SOC', `Estimated SOC: ${preds.soc.value}% (Random Forest)`);
-        if (preds.soh && preds.soh.value) appendLog('SOH', `Estimated SOH: ${preds.soh.value}% (Gradient Boosting)`);
-        if (preds.anomaly && preds.anomaly.classification) appendLog('ANOM', `Anomaly status: ${preds.anomaly.classification} (Isolation Forest score: ${preds.anomaly.score})`);
-
-        setSystemStatus(true);
-
-      } catch (inferErr) {
-        console.error('[BRAIN Phase 4] Inference network error:', inferErr);
-        setDataStatus('SERVER_ERROR', 'invalid');
-        showFeedback('Unable to reach prediction endpoint. Ensure Flask server is running.', false);
-        appendLog('NET', 'Prediction connection error: Server unreachable.', true);
-      }
-    });
-  }
-
-  // 4. LOAD SAMPLE JSON BUTTON
-  if (sampleJsonBtn) {
-    sampleJsonBtn.addEventListener('click', () => {
-      if (jsonTextarea) {
-        jsonTextarea.value = SAMPLE_JSON;
-      }
-      setDataStatus('SAMPLE LOADED', 'pending');
-      showFeedback('Demonstration sample JSON loaded. Click RUN MODEL INFERENCE or LOAD JSON.', true);
-      appendLog('SYS', 'Demonstration sample JSON loaded into editor.');
-    });
-  }
-
-  // 5. CLEAR BUTTON
-  if (clearBtn) {
-    clearBtn.addEventListener('click', () => {
-      if (jsonTextarea) jsonTextarea.value = '';
-
-      // Reset Battery Overview
-      if (overviewVoltage) overviewVoltage.textContent = '--';
-      if (overviewCurrent) overviewCurrent.textContent = '--';
-      if (overviewTemperature) overviewTemperature.textContent = '--';
-      if (overviewSoc) overviewSoc.textContent = '--';
-      if (overviewSoh) overviewSoh.textContent = '--';
-      if (overviewCrate) overviewCrate.textContent = '--';
-
-      // Reset Thermal Monitoring
-      if (thermalCurrentTemp) thermalCurrentTemp.textContent = '--';
-      if (thermalCurrentSub) thermalCurrentSub.textContent = 'Sensor Ingestion Pending';
-      if (thermalTrendBadge) {
-        thermalTrendBadge.textContent = 'WAITING FOR MODEL/DATA';
-        thermalTrendBadge.className = 'stat-status-badge neutral';
-      }
-
-      // Reset Battery Health
-      if (healthSoc) healthSoc.textContent = '--';
-      if (healthSoh) healthSoh.textContent = '--';
-      if (healthBatteryState) healthBatteryState.textContent = 'WAITING FOR DATA';
-
-      // Reset Prediction Panel
-      if (predStatusBadge) {
-        predStatusBadge.textContent = 'AWAITING INFERENCE';
-        predStatusBadge.className = 'pred-badge pending';
-      }
-      if (predLatency) predLatency.textContent = 'Latency: -- ms';
-      if (predSocVal) predSocVal.textContent = '--';
-      if (predSocSub) predSocSub.textContent = 'RandomForestRegressor (5 features)';
-      if (predSohVal) predSohVal.textContent = '--';
-      if (predSohSub) predSohSub.textContent = 'GradientBoostingRegressor (7 features)';
-      if (predAnomalyBadge) {
-        predAnomalyBadge.textContent = 'NOT RUN';
-        predAnomalyBadge.className = 'pred-badge muted';
-      }
-      if (predAnomalyScore) predAnomalyScore.textContent = 'IsolationForest Score: --';
-      if (predPhysicsBadge) {
-        predPhysicsBadge.textContent = 'NOT EVALUATED';
-        predPhysicsBadge.className = 'pred-badge muted';
-      }
-      if (predPhysicsSub) predPhysicsSub.textContent = 'Deterministic Rules';
-      if (predFeaturesList) predFeaturesList.textContent = 'None (Execute inference to inspect feature vectors)';
-
-      // Reset Risk & Early Warning
-      if (riskMainText) riskMainText.textContent = 'SYSTEM NOT CONNECTED';
-      if (riskDescText) riskDescText.textContent = 'Autonomous risk indexing and runaway hazard classification are disabled until backend validation.';
-      if (riskStatusDisplay) riskStatusDisplay.className = 'risk-status-display';
-      if (riskPill) {
-        riskPill.className = 'status-pill status-pill-inactive';
-        riskPill.textContent = 'Safety Logic';
-      }
-
-      if (warningMainText) warningMainText.textContent = 'WAITING FOR MODEL';
-      if (warningDescText) warningDescText.textContent = '"Prediction and safety assessment will become available after model integration."';
-      if (warningStatusDisplay) warningStatusDisplay.className = 'warning-status-display';
-      if (warningPill) {
-        warningPill.className = 'status-pill status-pill-warning';
-        warningPill.textContent = 'Pre-Hazard Detection';
-      }
-
-      // Reset RECEIVED DATA Inspection Preview
-      if (recvVoltage) recvVoltage.textContent = '--';
-      if (recvCurrent) recvCurrent.textContent = '--';
-      if (recvTemperature) recvTemperature.textContent = '--';
-      if (recvSoc) recvSoc.textContent = '--';
-      if (recvSoh) recvSoh.textContent = '--';
-      if (recvCrate) recvCrate.textContent = '--';
-      if (recvCycle) recvCycle.textContent = '--';
-      if (recvTime) recvTime.textContent = '--';
-      if (recvServerTime) recvServerTime.textContent = 'SERVER TIME: --';
-
-      setDataStatus('WAITING FOR INPUT', 'pending');
-      if (lastDataUpdate) lastDataUpdate.textContent = '--';
-      hideFeedback();
-      if (additionalDataContainer) additionalDataContainer.style.display = 'none';
-
-      appendLog('APP', 'Dashboard inputs and model prediction states cleared.');
-    });
-  }
-
-  // --- Initial System Boot Sequence ---
   checkHealth();
-  fetchModelStatus();
-  fetchDatasetStatus();
   setInterval(checkHealth, 5000);
 
-  console.log('[BRAIN Phase 4] Model & Dataset Integration active.');
+  // Load Scenario 1 (Normal Operation) by default on initial startup
+  loadScenarioFromServer('normal', btnNormal);
 });

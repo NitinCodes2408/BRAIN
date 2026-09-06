@@ -14,6 +14,7 @@ from flask import Flask, request, jsonify, render_template, send_from_directory
 from utils.json_validator import validate_incoming_battery_data
 from utils.data_processor import process_battery_data
 from utils.model_service import ModelService
+from utils.demo_scenarios import get_all_scenarios, get_scenario_by_id, generate_random_demo_scenario
 
 # Initialize Flask application with explicit template and static paths
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -132,6 +133,54 @@ def get_dataset_status():
         "profile": profile_data,
         "sample_count": len(samples_data),
         "samples": samples_data
+    }), 200
+
+
+@app.route("/api/demo/scenarios", methods=["GET", "OPTIONS"])
+def get_demo_scenarios():
+    """
+    Phase 3.5 Demo Mode Endpoint: GET /api/demo/scenarios
+    Returns all predefined demonstration scenarios with telemetry and classification metadata.
+    """
+    if request.method == "OPTIONS":
+        return "", 204
+
+    return jsonify({
+        "success": True,
+        "data": get_all_scenarios()
+    }), 200
+
+
+@app.route("/api/demo/scenario/<name>", methods=["GET", "OPTIONS"])
+def get_demo_scenario(name):
+    """
+    Phase 3.5 Demo Mode Detail Endpoint: GET /api/demo/scenario/<name>
+    Returns a specific scenario (normal, fast_charging, thermal_stress, aging, abnormal, random).
+    """
+    if request.method == "OPTIONS":
+        return "", 204
+
+    clean_name = name.lower().strip()
+    if clean_name in ["random", "random_demo", "rand"]:
+        scenario = generate_random_demo_scenario()
+        return jsonify({
+            "success": True,
+            "status": "ok",
+            "scenario": scenario
+        }), 200
+
+    scenario = get_scenario_by_id(clean_name)
+    if not scenario:
+        return jsonify({
+            "success": False,
+            "status": "NOT_FOUND",
+            "message": f"Demo scenario '{name}' not found. Available: normal, fast_charging, thermal_stress, aging, abnormal, random."
+        }), 404
+
+    return jsonify({
+        "success": True,
+        "status": "ok",
+        "scenario": scenario
     }), 200
 
 

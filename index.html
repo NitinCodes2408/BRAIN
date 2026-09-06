@@ -4,11 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>BRAIN — Battery Risk & Analytics Intelligence Network</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="/static/css/style.css">
   <style id="brain-styles">
 /* ==========================================================================
    BRAIN — Battery Risk & Analytics Intelligence Network
-   Phase 3: Flask Backend Pipeline Stylesheet
+   Phase 3.5: Advanced BMS Demonstration Dashboard Stylesheet
    Theme: Professional Research & Engineering Dark Mode
    ========================================================================== */
 
@@ -26,7 +26,7 @@
   /* Borders & Dividers */
   --border-subtle: rgba(255, 255, 255, 0.08);
   --border-medium: rgba(255, 255, 255, 0.14);
-  --border-highlight: rgba(79, 142, 247, 0.3);
+  --border-highlight: rgba(79, 142, 247, 0.35);
 
   /* Typography Colors */
   --text-primary: #f1f5f9;
@@ -34,35 +34,46 @@
   --text-muted: #64748b;
   --text-dim: #475569;
 
-  /* Functional Status Colors (Muted & Engineering-Grade) */
+  /* Functional Status Colors */
+  --status-online: #22c55e;
+  --status-online-bg: rgba(34, 197, 94, 0.12);
+  --status-online-border: rgba(34, 197, 94, 0.35);
+
+  --status-offline: #ef4444;
   --status-offline-bg: rgba(239, 68, 68, 0.12);
   --status-offline-border: rgba(239, 68, 68, 0.3);
   --status-offline-text: #f87171;
 
+  --status-warning: #f59e0b;
   --status-warning-bg: rgba(245, 158, 11, 0.12);
   --status-warning-border: rgba(245, 158, 11, 0.3);
   --status-warning-text: #fbbf24;
 
+  --status-accent-blue: #38bdf8;
+  --status-accent-blue-bg: rgba(56, 189, 248, 0.12);
+  --status-accent-blue-border: rgba(56, 189, 248, 0.3);
+
+  --status-purple: #a855f7;
+  --status-purple-bg: rgba(168, 85, 247, 0.12);
+  --status-purple-border: rgba(168, 85, 247, 0.3);
+
   --status-neutral-bg: rgba(148, 163, 184, 0.1);
   --status-neutral-border: rgba(148, 163, 184, 0.2);
   --status-neutral-text: #94a3b8;
-
-  --status-accent-blue: #38bdf8;
-  --status-accent-blue-bg: rgba(56, 189, 248, 0.1);
-  --status-accent-blue-border: rgba(56, 189, 248, 0.25);
 
   /* Typography */
   --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
 
   /* Layout Spacing */
-  --container-max-width: 1440px;
+  --container-max-width: 1480px;
   --radius-sm: 4px;
   --radius-md: 8px;
   --radius-lg: 12px;
 
   /* Transitions */
   --transition-fast: 150ms ease;
+  --transition-smooth: 300ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* --------------------------------------------------------------------------
@@ -92,15 +103,16 @@ body {
 }
 
 /* --------------------------------------------------------------------------
-   3. Header
+   3. Header & System Bar
    -------------------------------------------------------------------------- */
 .dashboard-header {
   background-color: var(--bg-surface);
   border-bottom: 1px solid var(--border-medium);
-  padding: 1rem 1.5rem;
+  padding: 0.875rem 1.5rem;
   position: sticky;
   top: 0;
   z-index: 100;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
 }
 
 .header-container {
@@ -109,6 +121,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
   gap: 1rem;
 }
 
@@ -122,12 +135,13 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 42px;
-  height: 42px;
+  width: 44px;
+  height: 44px;
   background-color: var(--bg-surface-elevated);
-  border: 1px solid var(--border-medium);
+  border: 1px solid var(--border-highlight);
   border-radius: var(--radius-md);
-  font-size: 1.25rem;
+  font-size: 1.35rem;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
 }
 
 .brand-titles {
@@ -137,10 +151,25 @@ body {
 
 .main-title {
   font-size: 1.5rem;
-  font-weight: 700;
+  font-weight: 800;
   letter-spacing: 0.08em;
   color: var(--text-primary);
   line-height: 1.1;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.phase-tag {
+  font-size: 0.65rem;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  background: rgba(56, 189, 248, 0.15);
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  color: var(--status-accent-blue);
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--radius-sm);
+  letter-spacing: 0.05em;
 }
 
 .sub-title {
@@ -150,58 +179,85 @@ body {
   letter-spacing: 0.02em;
 }
 
-.header-status {
+.header-badges-group {
   display: flex;
   align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
 }
 
-.status-indicator {
+.badge {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.4rem 0.875rem;
+  gap: 0.4rem;
+  padding: 0.35rem 0.75rem;
   border-radius: var(--radius-sm);
-  font-size: 0.8125rem;
-  font-weight: 600;
-  letter-spacing: 0.05em;
+  font-size: 0.75rem;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
 }
 
-.status-indicator.offline {
+.badge-online {
+  background-color: var(--status-online-bg);
+  border: 1px solid var(--status-online-border);
+  color: #4ade80;
+}
+
+.badge-offline {
   background-color: var(--status-offline-bg);
   border: 1px solid var(--status-offline-border);
   color: var(--status-offline-text);
 }
 
-.status-indicator.offline .status-dot {
-  background-color: var(--status-offline-text);
+.badge-demo {
+  background-color: var(--status-accent-blue-bg);
+  border: 1px solid var(--status-accent-blue-border);
+  color: var(--status-accent-blue);
 }
 
-.status-indicator.online {
-  background-color: rgba(34, 197, 94, 0.12);
-  border: 1px solid rgba(34, 197, 94, 0.35);
-  color: #4ade80;
+.badge-pending {
+  background-color: var(--status-warning-bg);
+  border: 1px solid var(--status-warning-border);
+  color: var(--status-warning-text);
 }
 
-.status-indicator.online .status-dot {
-  background-color: #4ade80;
+.badge-muted {
+  background-color: var(--status-neutral-bg);
+  border: 1px solid var(--status-neutral-border);
+  color: var(--status-neutral-text);
 }
 
 .status-dot {
-  width: 8px;
-  height: 8px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
-  background-color: var(--status-offline-text);
   display: inline-block;
-  transition: background-color var(--transition-fast);
+}
+
+.status-dot.online {
+  background-color: #4ade80;
+  box-shadow: 0 0 6px #4ade80;
+  animation: pulse 2s infinite;
+}
+
+.status-dot.offline {
+  background-color: var(--status-offline-text);
+}
+
+@keyframes pulse {
+  0% { transform: scale(0.95); opacity: 0.8; }
+  50% { transform: scale(1.15); opacity: 1; }
+  100% { transform: scale(0.95); opacity: 0.8; }
 }
 
 /* --------------------------------------------------------------------------
-   4. Main Dashboard Layout
+   4. Main Dashboard Container
    -------------------------------------------------------------------------- */
 .dashboard-main {
   flex: 1;
-  padding: 1.75rem 1.5rem 2.5rem;
+  padding: 1.5rem 1.5rem 2.5rem;
 }
 
 .dashboard-container {
@@ -209,11 +265,54 @@ body {
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 1.75rem;
+  gap: 1.5rem;
 }
 
 /* --------------------------------------------------------------------------
-   5. Section 1: Battery Overview
+   5. System Health Grid Banner (Section 13)
+   -------------------------------------------------------------------------- */
+.system-health-bar {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 0.875rem 1.25rem;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.75rem;
+}
+
+.health-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  border-right: 1px solid var(--border-subtle);
+  padding-right: 0.5rem;
+}
+
+.health-item:last-child {
+  border-right: none;
+  padding-right: 0;
+}
+
+.health-item-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+}
+
+.health-item-val {
+  font-size: 0.75rem;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+/* --------------------------------------------------------------------------
+   6. Section 1: Advanced Battery Overview Cards (Section 5)
    -------------------------------------------------------------------------- */
 .section-overview {
   background-color: var(--bg-surface);
@@ -226,35 +325,38 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 1rem;
+  margin-bottom: 1.125rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
 }
 
 .section-title {
   font-size: 0.875rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
+  font-weight: 800;
+  letter-spacing: 0.08em;
   color: var(--text-secondary);
   text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
-.section-badge {
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  background-color: var(--bg-surface-elevated);
-  padding: 0.2rem 0.6rem;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--border-subtle);
-  font-weight: 500;
-}
-
-/* Phase 3: Data Source Badge */
 .data-source-badge {
-  color: var(--status-accent-blue);
-  background-color: var(--status-accent-blue-bg);
-  border-color: var(--status-accent-blue-border);
-  letter-spacing: 0.05em;
-  font-weight: 600;
+  font-size: 0.75rem;
   font-family: var(--font-mono);
+  font-weight: 700;
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-sm);
+  background-color: var(--status-accent-blue-bg);
+  border: 1px solid var(--status-accent-blue-border);
+  color: var(--status-accent-blue);
+  letter-spacing: 0.05em;
+}
+
+.data-source-badge.json-mode {
+  background-color: var(--status-purple-bg);
+  border-color: var(--status-purple-border);
+  color: var(--status-purple);
 }
 
 .overview-grid {
@@ -263,7 +365,7 @@ body {
   gap: 1rem;
 }
 
-.metric-card {
+.bms-card {
   background-color: var(--bg-surface-elevated);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
@@ -271,397 +373,487 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-height: 110px;
-  transition: border-color var(--transition-fast);
+  min-height: 125px;
+  position: relative;
+  transition: all var(--transition-fast);
 }
 
-.metric-card:hover {
+.bms-card:hover {
   border-color: var(--border-medium);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
-.metric-header {
+.bms-card-top {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
 }
 
-.metric-label {
-  font-size: 0.8125rem;
-  font-weight: 600;
+.bms-card-title {
+  font-size: 0.75rem;
+  font-weight: 700;
   color: var(--text-secondary);
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.05em;
 }
 
-.metric-unit {
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  font-family: var(--font-mono);
-  font-weight: 500;
+.bms-card-icon {
+  font-size: 1.1rem;
+  opacity: 0.85;
 }
 
-.metric-value {
+.bms-card-val {
   font-size: 2rem;
-  font-weight: 700;
+  font-weight: 800;
   color: var(--text-primary);
   font-family: var(--font-mono);
-  line-height: 1;
-  margin: 0.5rem 0;
+  line-height: 1.1;
+  margin: 0.4rem 0;
   letter-spacing: -0.02em;
 }
 
-.metric-footer {
-  font-size: 0.7rem;
+.bms-card-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.68rem;
   color: var(--text-muted);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+  padding-top: 0.4rem;
+}
+
+.bms-card-tag {
+  font-size: 0.65rem;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  padding: 0.1rem 0.4rem;
+  border-radius: var(--radius-sm);
+  background-color: var(--status-neutral-bg);
+  color: var(--text-secondary);
+}
+
+.bms-card-tag.normal {
+  background-color: var(--status-online-bg);
+  color: #4ade80;
+}
+
+.bms-card-tag.warning {
+  background-color: var(--status-warning-bg);
+  color: var(--status-warning-text);
+}
+
+.bms-card-tag.critical {
+  background-color: var(--status-offline-bg);
+  color: var(--status-offline-text);
 }
 
 /* --------------------------------------------------------------------------
-   6. Workspace Grid (Primary & Secondary Columns)
+   7. Gauges & Visual Telemetry Section (Section 6 & 7 & 9)
    -------------------------------------------------------------------------- */
-.dashboard-workspace {
+.visual-telemetry-grid {
   display: grid;
-  grid-template-columns: 1.55fr 1fr;
-  gap: 1.5rem;
-  align-items: start;
-}
-
-.workspace-col {
-  display: flex;
-  flex-direction: column;
+  grid-template-columns: 1fr 1fr 1.35fr;
   gap: 1.5rem;
 }
 
-/* Reusable Panel Card */
-.panel-card {
+.gauge-panel {
   background-color: var(--bg-surface);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
   padding: 1.25rem 1.5rem;
-  position: relative;
-}
-
-.panel-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 1.125rem;
-  border-bottom: 1px solid var(--border-subtle);
-  padding-bottom: 0.75rem;
-}
-
-.panel-title {
-  font-size: 0.875rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  color: var(--text-secondary);
-  text-transform: uppercase;
-}
-
-.panel-tag {
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  background-color: var(--bg-surface-elevated);
-  padding: 0.2rem 0.55rem;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--border-subtle);
-  font-family: var(--font-mono);
-}
-
-/* --------------------------------------------------------------------------
-   7. Section 2: Thermal Monitoring
-   -------------------------------------------------------------------------- */
-.thermal-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
-}
-
-.thermal-stat-box {
-  background-color: var(--bg-surface-elevated);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-md);
-  padding: 1.125rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-height: 125px;
+  align-items: center;
 }
 
-.stat-label {
-  font-size: 0.75rem;
-  font-weight: 600;
+.gauge-title-bar {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.gauge-title {
+  font-size: 0.78rem;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
   color: var(--text-secondary);
 }
 
-.stat-value {
-  font-size: 2.125rem;
-  font-weight: 700;
-  color: var(--text-primary);
-  font-family: var(--font-mono);
-  line-height: 1.1;
-  margin: 0.5rem 0 0.35rem;
-}
-
-.stat-sub {
-  font-size: 0.7rem;
-  color: var(--text-muted);
-}
-
-.stat-status-badge {
-  display: inline-block;
-  margin: 0.65rem 0 0.4rem;
-  padding: 0.35rem 0.65rem;
-  border-radius: var(--radius-sm);
-  font-size: 0.75rem;
-  font-weight: 600;
-  font-family: var(--font-mono);
-  letter-spacing: 0.04em;
-  text-align: center;
-  background-color: var(--status-warning-bg);
-  border: 1px solid var(--status-warning-border);
-  color: var(--status-warning-text);
-  word-break: break-word;
-}
-
-.stat-status-badge.neutral {
-  background-color: var(--status-neutral-bg);
-  border: 1px solid var(--status-neutral-border);
-  color: var(--status-neutral-text);
-}
-
-/* --------------------------------------------------------------------------
-   8. Section 9: Temperature Trend Chart Placeholder
-   -------------------------------------------------------------------------- */
-.chart-placeholder-container {
-  background-color: var(--bg-surface-elevated);
-  border: 1px dashed var(--border-medium);
-  border-radius: var(--radius-md);
-  min-height: 250px;
+.gauge-container {
   position: relative;
+  width: 170px;
+  height: 170px;
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
-  padding: 1.5rem;
+  margin: 0.5rem 0;
 }
 
-.chart-placeholder-grid {
+.gauge-svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.gauge-bg-circle {
+  fill: none;
+  stroke: var(--bg-surface-elevated);
+  stroke-width: 14;
+}
+
+.gauge-progress-circle {
+  fill: none;
+  stroke: var(--status-accent-blue);
+  stroke-width: 14;
+  stroke-linecap: round;
+  stroke-dasharray: 440;
+  stroke-dashoffset: 440;
+  transition: stroke-dashoffset 800ms cubic-bezier(0.4, 0, 0.2, 1), stroke 400ms ease;
+}
+
+.gauge-progress-circle.soh-gauge {
+  stroke: #22c55e;
+}
+
+.gauge-center-text {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-size: 32px 32px;
-  background-image: 
-    linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-  pointer-events: none;
-}
-
-.chart-placeholder-message {
-  position: relative;
-  z-index: 1;
-  text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
+  justify-content: center;
 }
 
-.chart-icon {
-  color: var(--text-muted);
-  opacity: 0.6;
-}
-
-.chart-placeholder-text {
-  font-size: 0.9375rem;
-  font-weight: 500;
-  color: var(--text-secondary);
+.gauge-number {
+  font-size: 2rem;
+  font-weight: 800;
   font-family: var(--font-mono);
+  color: var(--text-primary);
+  line-height: 1;
 }
 
-.chart-subtext {
+.gauge-unit {
   font-size: 0.75rem;
+  font-weight: 700;
   color: var(--text-muted);
+  text-transform: uppercase;
+  margin-top: 0.2rem;
+}
+
+.gauge-footer-note {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  text-align: center;
+  margin-top: 0.5rem;
+}
+
+/* Status & State Panel */
+.state-panel {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 0.875rem;
+}
+
+.state-block {
+  background-color: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 0.875rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.state-block-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.state-block-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+}
+
+.state-block-value {
+  font-size: 1.15rem;
+  font-weight: 800;
+  font-family: var(--font-mono);
+  color: var(--status-accent-blue);
+  letter-spacing: 0.04em;
+}
+
+.state-block-sub {
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  line-height: 1.35;
 }
 
 /* --------------------------------------------------------------------------
-   9. Section 6: Battery Data Input
+   8. Temperature Analytics & Trend Chart (Section 8 & 10)
    -------------------------------------------------------------------------- */
-.input-meta-bar {
+.temp-analytics-grid {
+  display: grid;
+  grid-template-columns: 1.8fr 1fr;
+  gap: 1.5rem;
+}
+
+.chart-panel {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.chart-wrapper {
+  position: relative;
+  width: 100%;
+  height: 240px;
+  margin-top: 0.75rem;
+}
+
+#tempTrendCanvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.thermal-monitoring-panel {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+}
+
+.thermal-stat-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  background-color: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+}
+
+.thermal-stat-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.thermal-stat-title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.thermal-stat-sub {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+}
+
+.thermal-stat-val {
+  font-size: 1.35rem;
+  font-weight: 800;
+  font-family: var(--font-mono);
+  color: var(--text-primary);
+}
+
+.disclaimer-box {
+  background-color: var(--bg-terminal);
+  border: 1px dashed var(--border-medium);
+  border-radius: var(--radius-md);
+  padding: 0.75rem 1rem;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  line-height: 1.45;
+}
+
+/* --------------------------------------------------------------------------
+   9. Demo Controls Station (Section 2 & 18)
+   -------------------------------------------------------------------------- */
+.controls-panel {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-highlight);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem 1.5rem;
+  background: linear-gradient(180deg, var(--bg-surface) 0%, rgba(22, 32, 50, 0.5) 100%);
+}
+
+.mode-toggle-tabs {
+  display: flex;
+  gap: 0.5rem;
+  background-color: var(--bg-terminal);
+  padding: 0.35rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+  margin-bottom: 1.125rem;
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 0.55rem 1rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  background-color: transparent;
+  color: var(--text-muted);
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.tab-btn.active {
+  background-color: var(--bg-surface-elevated);
+  color: var(--status-accent-blue);
+  border-color: var(--border-medium);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.scenario-buttons-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr) 1.2fr 0.8fr;
+  gap: 0.65rem;
+  margin-bottom: 1rem;
+}
+
+.btn-scenario {
+  padding: 0.65rem 0.75rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  font-weight: 700;
+  font-family: var(--font-sans);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border: 1px solid var(--border-subtle);
+  background-color: var(--bg-surface-elevated);
+  color: var(--text-primary);
+  transition: all var(--transition-fast);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
+  min-height: 52px;
+}
+
+.btn-scenario:hover {
+  background-color: var(--bg-surface-hover);
+  border-color: var(--border-highlight);
+  transform: translateY(-1px);
+}
+
+.btn-scenario.active {
+  background-color: rgba(56, 189, 248, 0.15);
+  border-color: var(--status-accent-blue);
+  color: var(--status-accent-blue);
+}
+
+.btn-scenario.btn-random {
+  border-color: rgba(168, 85, 247, 0.4);
+  background-color: rgba(168, 85, 247, 0.08);
+  color: #c084fc;
+}
+
+.btn-scenario.btn-random:hover {
+  background-color: rgba(168, 85, 247, 0.2);
+}
+
+.btn-scenario.btn-reset {
+  border-color: rgba(239, 68, 68, 0.3);
+  background-color: rgba(239, 68, 68, 0.06);
+  color: #f87171;
+}
+
+.btn-scenario.btn-reset:hover {
+  background-color: rgba(239, 68, 68, 0.18);
+}
+
+.scenario-info-banner {
+  background-color: var(--bg-terminal);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-md);
+  padding: 0.75rem 1rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 0.75rem;
-  padding: 0.65rem 0.875rem;
-  background-color: var(--bg-surface-elevated);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-md);
-  margin-bottom: 0.875rem;
-}
-
-.meta-item {
-  display: flex;
-  align-items: center;
   gap: 0.5rem;
 }
 
-.meta-label {
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  color: var(--text-secondary);
-}
-
-.meta-timestamp {
-  font-size: 0.75rem;
-  font-family: var(--font-mono);
-  color: var(--text-primary);
-  font-weight: 600;
-}
-
-.data-status-badge {
-  font-size: 0.75rem;
-  font-family: var(--font-mono);
-  font-weight: 600;
-  padding: 0.2rem 0.6rem;
-  border-radius: var(--radius-sm);
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  display: inline-block;
-}
-
-.data-status-badge.pending {
-  background-color: var(--status-warning-bg);
-  border: 1px solid var(--status-warning-border);
-  color: var(--status-warning-text);
-}
-
-.data-status-badge.valid {
-  background-color: rgba(34, 197, 94, 0.12);
-  border: 1px solid rgba(34, 197, 94, 0.35);
-  color: #4ade80;
-}
-
-.data-status-badge.invalid {
-  background-color: var(--status-offline-bg);
-  border: 1px solid var(--status-offline-border);
-  color: var(--status-offline-text);
-}
-
-.data-status-badge.loaded,
-.data-status-badge.received {
-  background-color: rgba(56, 189, 248, 0.12);
-  border: 1px solid rgba(56, 189, 248, 0.35);
-  color: #38bdf8;
-}
-
-.validation-feedback {
-  margin-bottom: 0.875rem;
-  padding: 0.65rem 0.875rem;
-  border-radius: var(--radius-md);
-  font-size: 0.8125rem;
-  font-family: var(--font-mono);
-  line-height: 1.45;
-}
-
-.validation-feedback.success {
-  background-color: rgba(34, 197, 94, 0.1);
-  border: 1px solid rgba(34, 197, 94, 0.3);
-  color: #4ade80;
-}
-
-.validation-feedback.error {
-  background-color: var(--status-offline-bg);
-  border: 1px solid var(--status-offline-border);
-  color: var(--status-offline-text);
-}
-
-.additional-data-container {
-  margin-bottom: 0.875rem;
-  padding: 0.75rem 1rem;
-  background-color: var(--bg-terminal);
-  border: 1px solid var(--border-medium);
-  border-radius: var(--radius-md);
-}
-
-.additional-data-title {
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  margin-bottom: 0.35rem;
-}
-
-.additional-data-content {
-  font-family: var(--font-mono);
+.scenario-info-text {
   font-size: 0.75rem;
   color: var(--text-secondary);
-  white-space: pre-wrap;
-  word-break: break-word;
-  margin: 0;
 }
 
-.input-disclaimer {
-  font-size: 0.8125rem;
-  color: var(--text-secondary);
-  margin-bottom: 0.875rem;
-  line-height: 1.4;
+.scenario-meta-tag {
+  font-size: 0.7rem;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  color: var(--status-accent-blue);
 }
 
-.textarea-wrapper {
-  margin-bottom: 1rem;
+/* Custom JSON Input Section */
+.json-input-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
 }
 
 .json-textarea {
   width: 100%;
-  height: 160px;
+  height: 140px;
   background-color: var(--bg-terminal);
   border: 1px solid var(--border-medium);
   border-radius: var(--radius-md);
   padding: 0.875rem 1rem;
   color: var(--text-primary);
   font-family: var(--font-mono);
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   line-height: 1.5;
   resize: vertical;
   outline: none;
-  transition: border-color var(--transition-fast);
 }
 
 .json-textarea:focus {
   border-color: var(--border-highlight);
 }
 
-.json-textarea::placeholder {
-  color: var(--text-muted);
-  opacity: 0.7;
-}
-
-.input-actions {
+.json-actions-row {
   display: flex;
-  flex-wrap: wrap;
   gap: 0.65rem;
+  flex-wrap: wrap;
 }
 
 .btn {
   padding: 0.55rem 1.15rem;
   border-radius: var(--radius-sm);
-  font-size: 0.8125rem;
-  font-weight: 600;
+  font-size: 0.78rem;
+  font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
   cursor: pointer;
   border: 1px solid transparent;
-  transition: background-color var(--transition-fast), border-color var(--transition-fast), opacity var(--transition-fast);
-  font-family: var(--font-sans);
+  transition: all var(--transition-fast);
 }
 
 .btn-primary {
@@ -671,8 +863,8 @@ body {
 }
 
 .btn-primary:hover {
-  background-color: var(--border-subtle);
-  border-color: var(--border-highlight);
+  background-color: var(--border-highlight);
+  border-color: var(--status-accent-blue);
 }
 
 .btn-secondary {
@@ -684,28 +876,32 @@ body {
 .btn-secondary:hover {
   background-color: var(--bg-surface-elevated);
   color: var(--text-primary);
-  border-color: var(--border-medium);
 }
 
-.btn-tertiary {
+.btn-danger {
   background-color: transparent;
-  border-color: rgba(239, 68, 68, 0.25);
+  border-color: rgba(239, 68, 68, 0.3);
   color: #f87171;
 }
 
-.btn-tertiary:hover {
+.btn-danger:hover {
   background-color: var(--status-offline-bg);
-  border-color: var(--status-offline-border);
 }
 
 /* --------------------------------------------------------------------------
-   9b. Section 15: Received Data (Data Preview Panel)
+   10. Inspection & System Logs Section
    -------------------------------------------------------------------------- */
-.received-data-panel {
-  border-color: var(--border-subtle);
+.bottom-workspace-grid {
+  display: grid;
+  grid-template-columns: 1.35fr 1fr;
+  gap: 1.5rem;
 }
 
-.received-data-body {
+.received-data-panel {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem 1.5rem;
   display: flex;
   flex-direction: column;
   gap: 0.875rem;
@@ -714,10 +910,10 @@ body {
 .received-data-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 0.75rem;
+  gap: 0.65rem;
 }
 
-.received-item {
+.recv-card {
   background-color: var(--bg-surface-elevated);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-sm);
@@ -725,231 +921,29 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.5rem;
 }
 
-.received-item.wide {
-  grid-column: span 2;
-}
-
-.received-item-label {
-  font-size: 0.75rem;
-  font-weight: 600;
+.recv-label {
+  font-size: 0.72rem;
+  font-weight: 700;
   color: var(--text-secondary);
   text-transform: uppercase;
 }
 
-.received-item-val {
-  font-size: 0.875rem;
+.recv-val {
+  font-size: 0.85rem;
   font-family: var(--font-mono);
   font-weight: 700;
   color: var(--text-primary);
 }
 
-.received-item-tag {
-  font-size: 0.7rem;
-  font-family: var(--font-mono);
-  font-weight: 600;
-  background-color: var(--status-accent-blue-bg);
-  border: 1px solid var(--status-accent-blue-border);
-  color: var(--status-accent-blue);
-  padding: 0.15rem 0.45rem;
-  border-radius: var(--radius-sm);
-}
-
-.received-item-time {
-  font-size: 0.75rem;
-  font-family: var(--font-mono);
-  color: var(--text-secondary);
-  word-break: break-all;
-}
-
-.inspection-note {
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  font-style: italic;
-  line-height: 1.4;
-}
-
-/* --------------------------------------------------------------------------
-   10. Section 4: Risk Assessment
-   -------------------------------------------------------------------------- */
-.status-pill {
-  font-size: 0.7rem;
-  font-weight: 600;
-  padding: 0.2rem 0.55rem;
-  border-radius: var(--radius-sm);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-
-.status-pill-inactive {
-  background-color: var(--status-offline-bg);
-  border: 1px solid var(--status-offline-border);
-  color: var(--status-offline-text);
-}
-
-.status-pill-warning {
-  background-color: var(--status-warning-bg);
-  border: 1px solid var(--status-warning-border);
-  color: var(--status-warning-text);
-}
-
-.risk-status-display {
-  background-color: var(--status-offline-bg);
-  border: 1px solid var(--status-offline-border);
-  border-radius: var(--radius-md);
-  padding: 1rem;
-  text-align: center;
-  margin-bottom: 0.75rem;
-}
-
-.risk-main-text {
-  font-size: 1.05rem;
-  font-weight: 700;
-  font-family: var(--font-mono);
-  color: var(--status-offline-text);
-  letter-spacing: 0.05em;
-}
-
-.risk-description {
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  line-height: 1.45;
-}
-
-/* --------------------------------------------------------------------------
-   11. Section 5: Early Warning
-   -------------------------------------------------------------------------- */
-.warning-status-display {
-  background-color: var(--status-warning-bg);
-  border: 1px solid var(--status-warning-border);
-  border-radius: var(--radius-md);
-  padding: 1rem;
-  text-align: center;
-  margin-bottom: 0.75rem;
-}
-
-.warning-main-text {
-  font-size: 1.05rem;
-  font-weight: 700;
-  font-family: var(--font-mono);
-  color: var(--status-warning-text);
-  letter-spacing: 0.05em;
-}
-
-.warning-description {
-  font-size: 0.8125rem;
-  color: var(--text-secondary);
-  line-height: 1.45;
-  font-style: italic;
-}
-
-/* --------------------------------------------------------------------------
-   12. Section 3: Battery Health
-   -------------------------------------------------------------------------- */
-.health-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-  margin-bottom: 1rem;
-}
-
-.health-stat-box {
-  background-color: var(--bg-surface-elevated);
+.log-panel {
+  background-color: var(--bg-surface);
   border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-md);
-  padding: 0.875rem 1rem;
+  border-radius: var(--radius-lg);
+  padding: 1.25rem 1.5rem;
   display: flex;
   flex-direction: column;
-}
-
-.stat-unit-sub {
-  font-size: 0.7rem;
-  color: var(--text-muted);
-}
-
-.battery-state-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background-color: var(--bg-surface-elevated);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-md);
-  padding: 0.75rem 1rem;
-}
-
-.state-label {
-  font-size: 0.8125rem;
-  font-weight: 600;
-  color: var(--text-secondary);
-}
-
-.state-badge {
-  font-size: 0.75rem;
-  font-weight: 600;
-  font-family: var(--font-mono);
-  background-color: var(--status-neutral-bg);
-  border: 1px solid var(--status-neutral-border);
-  color: var(--status-neutral-text);
-  padding: 0.25rem 0.6rem;
-  border-radius: var(--radius-sm);
-  letter-spacing: 0.04em;
-}
-
-/* --------------------------------------------------------------------------
-   13. Section 7: Model Status
-   -------------------------------------------------------------------------- */
-.model-status-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.625rem;
-}
-
-.status-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0.5rem 0.75rem;
-  background-color: var(--bg-surface-elevated);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-sm);
-}
-
-.status-property {
-  font-size: 0.8125rem;
-  color: var(--text-secondary);
-  font-weight: 500;
-}
-
-.status-value-tag {
-  font-size: 0.75rem;
-  font-family: var(--font-mono);
-  font-weight: 600;
-  padding: 0.15rem 0.5rem;
-  border-radius: var(--radius-sm);
-}
-
-.status-value-tag.muted {
-  color: var(--text-secondary);
-  background-color: var(--border-subtle);
-}
-
-.status-value-tag.pending {
-  color: var(--status-warning-text);
-  background-color: var(--status-warning-bg);
-  border: 1px solid var(--status-warning-border);
-}
-
-/* --------------------------------------------------------------------------
-   14. Section 8: System Log
-   -------------------------------------------------------------------------- */
-.log-indicator-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background-color: var(--status-accent-blue);
-  box-shadow: 0 0 6px var(--status-accent-blue);
 }
 
 .system-log-terminal {
@@ -960,6 +954,8 @@ body {
   font-family: var(--font-mono);
   font-size: 0.75rem;
   line-height: 1.6;
+  height: 200px;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
@@ -969,293 +965,24 @@ body {
   color: var(--text-secondary);
 }
 
-.log-entry-waiting {
+.log-entry.waiting {
   color: var(--status-warning-text);
 }
 
 .log-prefix {
   color: var(--text-muted);
-  font-weight: 600;
+  font-weight: 700;
   margin-right: 0.35rem;
 }
 
-/* --------------------------------------------------------------------------
-   14b. Phase 4: Mode Switcher & Dataset Demo Controls
-   -------------------------------------------------------------------------- */
-.mode-toggle-group {
-  display: flex;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
-  background-color: var(--bg-terminal);
-  padding: 0.35rem;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--border-subtle);
-}
-
-.btn-mode {
-  flex: 1;
-  padding: 0.45rem 0.75rem;
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  background-color: transparent;
-  color: var(--text-muted);
-  border: 1px solid transparent;
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  transition: all var(--transition-fast);
-}
-
-.btn-mode.active {
-  background-color: var(--bg-surface-elevated);
-  color: var(--status-accent-blue);
-  border-color: var(--border-medium);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-}
-
-.demo-controls-box {
-  background-color: var(--bg-surface-elevated);
-  border: 1px solid var(--border-highlight);
-  border-radius: var(--radius-md);
-  padding: 0.875rem 1rem;
-  margin-bottom: 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-}
-
-.demo-header-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem;
-}
-
-.demo-sample-badge {
-  font-size: 0.7rem;
-  font-weight: 700;
-  font-family: var(--font-mono);
-  background-color: var(--status-accent-blue-bg);
-  border: 1px solid var(--status-accent-blue-border);
-  color: var(--status-accent-blue);
-  padding: 0.15rem 0.5rem;
-  border-radius: var(--radius-sm);
-}
-
-.demo-sample-id {
-  font-size: 0.8125rem;
-  font-weight: 700;
-  font-family: var(--font-mono);
-  color: var(--text-primary);
-}
-
-.demo-sample-desc {
-  font-size: 0.75rem;
-  color: var(--text-secondary);
-  line-height: 1.4;
-  margin: 0;
-}
-
-.demo-actions-row {
-  display: flex;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-}
-
-.btn-sm {
-  padding: 0.35rem 0.75rem;
-  font-size: 0.72rem;
-}
+.log-prefix.sys { color: var(--status-accent-blue); }
+.log-prefix.data { color: #4ade80; }
+.log-prefix.demo { color: #c084fc; }
+.log-prefix.model { color: #fbbf24; }
+.log-prefix.pinn { color: #f87171; }
 
 /* --------------------------------------------------------------------------
-   14c. Phase 4: Model Prediction Result Panel
-   -------------------------------------------------------------------------- */
-.prediction-result-panel {
-  border-color: var(--border-highlight);
-  background: linear-gradient(180deg, var(--bg-surface) 0%, rgba(22, 32, 50, 0.4) 100%);
-}
-
-.prediction-body {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.prediction-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 0.75rem;
-}
-
-.pred-item {
-  background-color: var(--bg-surface-elevated);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-md);
-  padding: 0.75rem 0.875rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  min-height: 85px;
-}
-
-.pred-item.highlight {
-  border-color: rgba(56, 189, 248, 0.3);
-  background-color: rgba(56, 189, 248, 0.04);
-}
-
-.pred-label {
-  font-size: 0.7rem;
-  font-weight: 600;
-  color: var(--text-secondary);
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-}
-
-.pred-value {
-  font-size: 1.1rem;
-  font-weight: 700;
-  font-family: var(--font-mono);
-  color: var(--text-primary);
-  margin: 0.25rem 0;
-}
-
-.pred-value.large {
-  font-size: 1.6rem;
-  color: var(--status-accent-blue);
-  line-height: 1;
-}
-
-.pred-sub {
-  font-size: 0.68rem;
-  color: var(--text-muted);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.pred-badge {
-  display: inline-block;
-  font-size: 0.72rem;
-  font-family: var(--font-mono);
-  font-weight: 700;
-  padding: 0.2rem 0.5rem;
-  border-radius: var(--radius-sm);
-  margin: 0.25rem 0;
-  text-transform: uppercase;
-}
-
-.pred-badge.pending {
-  background-color: var(--status-warning-bg);
-  border: 1px solid var(--status-warning-border);
-  color: var(--status-warning-text);
-}
-
-.pred-badge.valid,
-.pred-badge.normal {
-  background-color: rgba(34, 197, 94, 0.12);
-  border: 1px solid rgba(34, 197, 94, 0.35);
-  color: #4ade80;
-}
-
-.pred-badge.anomaly,
-.pred-badge.violation {
-  background-color: var(--status-offline-bg);
-  border: 1px solid var(--status-offline-border);
-  color: var(--status-offline-text);
-}
-
-.pred-badge.muted {
-  background-color: var(--status-neutral-bg);
-  border: 1px solid var(--status-neutral-border);
-  color: var(--status-neutral-text);
-}
-
-.pred-badge.neutral {
-  background-color: var(--status-neutral-bg);
-  border: 1px solid var(--status-neutral-border);
-  color: var(--status-neutral-text);
-}
-
-.pred-features-box {
-  background-color: var(--bg-terminal);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-md);
-  padding: 0.65rem 0.875rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
-.pred-features-title {
-  font-size: 0.68rem;
-  font-weight: 700;
-  color: var(--text-muted);
-  letter-spacing: 0.05em;
-}
-
-.pred-features-text {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  color: var(--status-accent-blue);
-  word-break: break-all;
-}
-
-/* --------------------------------------------------------------------------
-   14d. Phase 4: Dynamic Risk & Warning States
-   -------------------------------------------------------------------------- */
-.risk-status-display.normal,
-.warning-status-display.normal {
-  background-color: rgba(34, 197, 94, 0.08);
-  border: 1px solid rgba(34, 197, 94, 0.3);
-}
-
-.risk-status-display.normal .risk-main-text,
-.warning-status-display.normal .warning-main-text {
-  color: #4ade80;
-}
-
-.risk-status-display.warning,
-.warning-status-display.warning {
-  background-color: var(--status-warning-bg);
-  border: 1px solid var(--status-warning-border);
-}
-
-.risk-status-display.warning .risk-main-text,
-.warning-status-display.warning .warning-main-text {
-  color: var(--status-warning-text);
-}
-
-.risk-status-display.critical,
-.warning-status-display.critical {
-  background-color: var(--status-offline-bg);
-  border: 1px solid var(--status-offline-border);
-}
-
-.risk-status-display.critical .risk-main-text,
-.warning-status-display.critical .warning-main-text {
-  color: var(--status-offline-text);
-}
-
-.status-pill-success {
-  background-color: rgba(34, 197, 94, 0.12);
-  border: 1px solid rgba(34, 197, 94, 0.35);
-  color: #4ade80;
-}
-
-.status-pill-critical {
-  background-color: var(--status-offline-bg);
-  border: 1px solid var(--status-offline-border);
-  color: var(--status-offline-text);
-}
-
-.status-value-tag.valid {
-  background-color: rgba(34, 197, 94, 0.12);
-  border: 1px solid rgba(34, 197, 94, 0.35);
-  color: #4ade80;
-}
-
-/* --------------------------------------------------------------------------
-   15. Footer
+   11. Footer
    -------------------------------------------------------------------------- */
 .dashboard-footer {
   background-color: var(--bg-surface);
@@ -1278,571 +1005,491 @@ body {
 
 .footer-brand {
   color: var(--text-secondary);
-  font-weight: 600;
+  font-weight: 700;
 }
 
 /* --------------------------------------------------------------------------
-   16. Responsive Layout Breakpoints
+   12. Responsive Breakpoints
    -------------------------------------------------------------------------- */
-
-/* Laptop / Medium Desktops (max-width: 1200px) */
 @media (max-width: 1200px) {
   .overview-grid {
     grid-template-columns: repeat(3, 1fr);
   }
-
-  .dashboard-workspace {
-    grid-template-columns: 1.25fr 1fr;
+  .system-health-bar {
+    grid-template-columns: repeat(4, 1fr);
   }
-}
-
-/* Tablets (max-width: 900px) */
-@media (max-width: 900px) {
-  .dashboard-workspace {
-    grid-template-columns: 1fr;
+  .scenario-buttons-grid {
+    grid-template-columns: repeat(4, 1fr);
   }
-
-  .overview-grid {
-    grid-template-columns: repeat(3, 1fr);
+  .visual-telemetry-grid {
+    grid-template-columns: 1fr 1fr;
   }
-
-  .thermal-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .received-data-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .received-item.wide {
+  .state-panel {
     grid-column: span 2;
   }
 }
 
-/* Mobile Devices (max-width: 640px) */
-@media (max-width: 640px) {
-  .dashboard-header {
-    padding: 0.875rem 1rem;
-  }
-
-  .header-container {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.75rem;
-  }
-
-  .main-title {
-    font-size: 1.25rem;
-  }
-
-  .sub-title {
-    font-size: 0.75rem;
-  }
-
-  .dashboard-main {
-    padding: 1rem 0.75rem 1.75rem;
-  }
-
-  .section-overview,
-  .panel-card {
-    padding: 1rem;
-  }
-
+@media (max-width: 900px) {
   .overview-grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 0.75rem;
   }
-
-  .metric-card {
-    min-height: 95px;
-    padding: 0.875rem;
+  .system-health-bar {
+    grid-template-columns: repeat(2, 1fr);
   }
-
-  .metric-value {
-    font-size: 1.65rem;
-  }
-
-  .health-grid {
+  .temp-analytics-grid {
     grid-template-columns: 1fr;
   }
-
-  .input-actions {
-    flex-direction: column;
-  }
-
-  .btn {
-    width: 100%;
-    text-align: center;
-  }
-
-  .received-data-grid {
+  .bottom-workspace-grid {
     grid-template-columns: 1fr;
   }
-
-  .received-item.wide {
+  .visual-telemetry-grid {
+    grid-template-columns: 1fr;
+  }
+  .state-panel {
     grid-column: span 1;
   }
-
-  .footer-container {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.25rem;
+  .scenario-buttons-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
-/* Extra small mobile (max-width: 400px) */
-@media (max-width: 400px) {
+@media (max-width: 600px) {
   .overview-grid {
     grid-template-columns: 1fr;
+  }
+  .scenario-buttons-grid {
+    grid-template-columns: 1fr;
+  }
+  .header-container {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }
 
 </style>
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-  <!-- HEADER -->
+
+  <!-- ====================================================================
+       1. HEADER (Section 17)
+       ==================================================================== -->
   <header class="dashboard-header">
     <div class="header-container">
       <div class="brand-group">
-        <div class="brand-logo-badge">
-          <span class="logo-icon">⚡</span>
-        </div>
+        <div class="brand-logo-badge">⚡</div>
         <div class="brand-titles">
-          <h1 class="main-title">BRAIN</h1>
+          <h1 class="main-title">
+            BRAIN
+            <span class="phase-tag">PHASE 3.5 BMS DEMO</span>
+          </h1>
           <p class="sub-title">Battery Risk & Analytics Intelligence Network</p>
         </div>
       </div>
-      <div class="header-status">
-        <span id="systemStatusBadge" class="status-indicator offline">
-          <span class="status-dot"></span>
-          <span id="systemStatusText" class="status-text">SYSTEM OFFLINE</span>
+
+      <div class="header-badges-group">
+        <span id="headerSystemBadge" class="badge badge-online">
+          <span id="headerSystemDot" class="status-dot online"></span>
+          <span id="headerSystemStatus">SYSTEM: ONLINE</span>
         </span>
+        <span id="headerModeBadge" class="badge badge-demo">MODE: DEMO</span>
+        <span id="headerBackendBadge" class="badge badge-online">BACKEND: CONNECTED</span>
+        <span id="headerModelBadge" class="badge badge-pending">MODEL: NOT CONNECTED</span>
+        <span id="headerPinnBadge" class="badge badge-pending">PINN: NOT CONNECTED</span>
       </div>
     </div>
   </header>
 
-  <!-- MAIN DASHBOARD CONTENT -->
+  <!-- ====================================================================
+       2. MAIN DASHBOARD WORKSPACE
+       ==================================================================== -->
   <main class="dashboard-main">
     <div class="dashboard-container">
 
-      <!-- SECTION 1: BATTERY OVERVIEW -->
+      <!-- SYSTEM HEALTH BAR (Section 13) -->
+      <section class="system-health-bar">
+        <div class="health-item">
+          <span class="health-item-label">System Status</span>
+          <span class="health-item-val" style="color: #4ade80;">● ONLINE</span>
+        </div>
+        <div class="health-item">
+          <span class="health-item-label">Data Pipeline</span>
+          <span id="healthPipelineVal" class="health-item-val" style="color: #4ade80;">READY</span>
+        </div>
+        <div class="health-item">
+          <span class="health-item-label">Data Source</span>
+          <span id="healthDataSourceVal" class="health-item-val" style="color: #38bdf8;">DEMO / SIMULATED</span>
+        </div>
+        <div class="health-item">
+          <span class="health-item-label">Model Engine</span>
+          <span class="health-item-val" style="color: #fbbf24;">NOT CONNECTED</span>
+        </div>
+        <div class="health-item">
+          <span class="health-item-label">PINN Thermal</span>
+          <span class="health-item-val" style="color: #fbbf24;">NOT CONNECTED</span>
+        </div>
+        <div class="health-item">
+          <span class="health-item-label">Sensor Mode</span>
+          <span class="health-item-val" style="color: #38bdf8;">SIMULATION</span>
+        </div>
+        <div class="health-item">
+          <span class="health-item-label">Database</span>
+          <span class="health-item-val" style="color: #64748b;">STANDALONE</span>
+        </div>
+      </section>
+
+      <!-- SECTION 1: ADVANCED BATTERY OVERVIEW CARDS (Section 5) -->
       <section class="section-overview">
         <div class="section-header">
-          <h2 class="section-title">BATTERY OVERVIEW</h2>
-          <span id="dataSourceBadge" class="section-badge data-source-badge">DATA SOURCE: JSON INPUT</span>
+          <h2 class="section-title">⚡ Advanced Battery Overview</h2>
+          <span id="dataSourceBadge" class="data-source-badge">DATA SOURCE: DEMO / SIMULATED</span>
         </div>
+
         <div class="overview-grid">
-          <div class="metric-card">
-            <div class="metric-header">
-              <span class="metric-label">Voltage</span>
-              <span class="metric-unit">V</span>
+          <!-- Voltage Card -->
+          <div class="bms-card">
+            <div class="bms-card-top">
+              <span class="bms-card-title">Voltage</span>
+              <span class="bms-card-icon">⚡</span>
             </div>
-            <div id="overviewVoltage" class="metric-value">--</div>
-            <div class="metric-footer">Nominal Cell / Pack</div>
+            <div id="valVoltage" class="bms-card-val">3.70 V</div>
+            <div class="bms-card-bottom">
+              <span id="tagVoltage" class="bms-card-tag normal">NOMINAL</span>
+              <span id="timeVoltage">Updated: --:--:--</span>
+            </div>
           </div>
 
-          <div class="metric-card">
-            <div class="metric-header">
-              <span class="metric-label">Current</span>
-              <span class="metric-unit">A</span>
+          <!-- Current Card -->
+          <div class="bms-card">
+            <div class="bms-card-top">
+              <span class="bms-card-title">Current</span>
+              <span class="bms-card-icon">🔋</span>
             </div>
-            <div id="overviewCurrent" class="metric-value">--</div>
-            <div class="metric-footer">Discharge / Charge</div>
+            <div id="valCurrent" class="bms-card-val">4.0 A</div>
+            <div class="bms-card-bottom">
+              <span id="tagCurrent" class="bms-card-tag normal">0.8 C</span>
+              <span id="timeCurrent">Updated: --:--:--</span>
+            </div>
           </div>
 
-          <div class="metric-card">
-            <div class="metric-header">
-              <span class="metric-label">Temperature</span>
-              <span class="metric-unit">°C</span>
+          <!-- Temperature Card -->
+          <div class="bms-card">
+            <div class="bms-card-top">
+              <span class="bms-card-title">Temperature</span>
+              <span class="bms-card-icon">🌡️</span>
             </div>
-            <div id="overviewTemperature" class="metric-value">--</div>
-            <div class="metric-footer">Core Surface Sensor</div>
+            <div id="valTemperature" class="bms-card-val">30.0 °C</div>
+            <div class="bms-card-bottom">
+              <span id="tagTemperature" class="bms-card-tag normal">NORMAL</span>
+              <span id="timeTemperature">Updated: --:--:--</span>
+            </div>
           </div>
 
-          <div class="metric-card">
-            <div class="metric-header">
-              <span class="metric-label">SOC</span>
-              <span class="metric-unit">%</span>
+          <!-- SOC Card -->
+          <div class="bms-card">
+            <div class="bms-card-top">
+              <span class="bms-card-title">State of Charge</span>
+              <span class="bms-card-icon">⚡</span>
             </div>
-            <div id="overviewSoc" class="metric-value">--</div>
-            <div class="metric-footer">State of Charge</div>
+            <div id="valSoc" class="bms-card-val">72 %</div>
+            <div class="bms-card-bottom">
+              <span id="tagSoc" class="bms-card-tag normal">HEALTHY</span>
+              <span id="timeSoc">Updated: --:--:--</span>
+            </div>
           </div>
 
-          <div class="metric-card">
-            <div class="metric-header">
-              <span class="metric-label">SOH</span>
-              <span class="metric-unit">%</span>
+          <!-- SOH Card -->
+          <div class="bms-card">
+            <div class="bms-card-top">
+              <span class="bms-card-title">State of Health</span>
+              <span class="bms-card-icon">🩺</span>
             </div>
-            <div id="overviewSoh" class="metric-value">--</div>
-            <div class="metric-footer">State of Health</div>
+            <div id="valSoh" class="bms-card-val">96 %</div>
+            <div class="bms-card-bottom">
+              <span id="tagSoh" class="bms-card-tag normal">EXCELLENT</span>
+              <span id="timeSoh">Updated: --:--:--</span>
+            </div>
           </div>
 
-          <div class="metric-card">
-            <div class="metric-header">
-              <span class="metric-label">C-Rate</span>
-              <span class="metric-unit">C</span>
+          <!-- C-Rate Card -->
+          <div class="bms-card">
+            <div class="bms-card-top">
+              <span class="bms-card-title">C-Rate</span>
+              <span class="bms-card-icon">📈</span>
             </div>
-            <div id="overviewCrate" class="metric-value">--</div>
-            <div class="metric-footer">Effective Rate</div>
+            <div id="valCrate" class="bms-card-val">0.8 C</div>
+            <div class="bms-card-bottom">
+              <span id="tagCrate" class="bms-card-tag normal">CONTINUOUS</span>
+              <span id="timeCrate">Updated: --:--:--</span>
+            </div>
           </div>
         </div>
       </section>
 
-      <!-- DASHBOARD MAIN WORKSPACE (2-COLUMN GRID) -->
-      <div class="dashboard-workspace">
-
-        <!-- LEFT COLUMN: THERMAL MONITORING, CHART, JSON INPUT, RECEIVED DATA PREVIEW, MODEL PREDICTION -->
-        <div class="workspace-col col-primary">
-
-          <!-- SECTION 2: THERMAL MONITORING -->
-          <section class="panel-card thermal-monitoring-panel">
-            <div class="panel-header">
-              <h2 class="panel-title">THERMAL MONITORING</h2>
-              <span class="panel-tag">Physics-Informed Domain</span>
+      <!-- SECTION 2: CIRCULAR GAUGES & VISUAL TELEMETRY (Section 6 & 7 & 9 & 11 & 12) -->
+      <section class="visual-telemetry-grid">
+        <!-- Circular SOC Gauge -->
+        <div class="gauge-panel">
+          <div class="gauge-title-bar">
+            <span class="gauge-title">State of Charge (SOC)</span>
+            <span class="badge badge-demo">GAUGE</span>
+          </div>
+          <div class="gauge-container">
+            <svg class="gauge-svg" viewBox="0 0 160 160">
+              <circle class="gauge-bg-circle" cx="80" cy="80" r="70" />
+              <circle id="socProgressCircle" class="gauge-progress-circle" cx="80" cy="80" r="70" />
+            </svg>
+            <div class="gauge-center-text">
+              <span id="socNumber" class="gauge-number">72%</span>
+              <span class="gauge-unit">SOC</span>
             </div>
-            <div class="thermal-grid">
-              <div class="thermal-stat-box">
-                <span class="stat-label">Current Temperature</span>
-                <div id="thermalCurrentTemp" class="stat-value">--</div>
-                <span id="thermalCurrentSub" class="stat-sub">Sensor Ingestion Pending</span>
-              </div>
-              <div class="thermal-stat-box highlight">
-                <span class="stat-label">Predicted Temperature</span>
-                <div id="thermalPredictedBadge" class="stat-status-badge neutral">NOT INCLUDED IN MODEL</div>
-                <span id="thermalPredictedSub" class="stat-sub">Model uses temp as input, not output</span>
-              </div>
-              <div class="thermal-stat-box">
-                <span class="stat-label">Temperature Trend</span>
-                <div id="thermalTrendBadge" class="stat-status-badge neutral">WAITING FOR MODEL/DATA</div>
-                <span class="stat-sub">CALCE Thermal Dynamics</span>
-              </div>
+          </div>
+          <span class="gauge-footer-note">State of Charge (Remaining Capacity)</span>
+        </div>
+
+        <!-- Circular SOH Gauge -->
+        <div class="gauge-panel">
+          <div class="gauge-title-bar">
+            <span class="gauge-title">State of Health (SOH)</span>
+            <span class="badge badge-demo">DEMO VALUE</span>
+          </div>
+          <div class="gauge-container">
+            <svg class="gauge-svg" viewBox="0 0 160 160">
+              <circle class="gauge-bg-circle" cx="80" cy="80" r="70" />
+              <circle id="sohProgressCircle" class="gauge-progress-circle soh-gauge" cx="80" cy="80" r="70" />
+            </svg>
+            <div class="gauge-center-text">
+              <span id="sohNumber" class="gauge-number">96%</span>
+              <span class="gauge-unit">SOH</span>
             </div>
-          </section>
+          </div>
+          <span class="gauge-footer-note">Capacity Retention (Predefined Demo Value)</span>
+        </div>
 
-          <!-- SECTION 9: TEMPERATURE TREND (CHART PLACEHOLDER) -->
-          <section class="panel-card chart-panel">
-            <div class="panel-header">
-              <h2 class="panel-title">TEMPERATURE TREND</h2>
-              <span class="panel-tag">Time-Series Visualization</span>
+        <!-- Battery State & Demo Safety Indicators -->
+        <div class="state-panel">
+          <!-- Battery State -->
+          <div class="state-block">
+            <div class="state-block-header">
+              <span class="state-block-label">Battery State</span>
+              <span class="badge badge-demo">DEMO CLASSIFICATION</span>
             </div>
-            <div class="chart-placeholder-container">
-              <div class="chart-placeholder-grid"></div>
-              <div class="chart-placeholder-message">
-                <svg class="chart-icon" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M3 3v18h18"/>
-                  <path d="m19 9-5 5-4-4-3 3"/>
-                </svg>
-                <p id="chartPlaceholderText" class="chart-placeholder-text">Waiting for battery data...</p>
-                <span id="chartSubText" class="chart-subtext">Real-time thermal curve will render upon telemetry input</span>
-              </div>
+            <div id="stateBatteryVal" class="state-block-value">NORMAL</div>
+            <div id="stateBatterySub" class="state-block-sub">Standard discharge operation at nominal ambient temperature.</div>
+          </div>
+
+          <!-- Demo Safety Indicator -->
+          <div class="state-block">
+            <div class="state-block-header">
+              <span class="state-block-label">Demo Safety Indicator</span>
+              <span class="badge badge-muted">DEMO RULE STATUS</span>
             </div>
-          </section>
+            <div id="stateSafetyVal" class="state-block-value" style="color: #4ade80;">NORMAL</div>
+            <div id="stateSafetySub" class="state-block-sub">Rule-based demo status. Not a trained AI model prediction.</div>
+          </div>
 
-          <!-- SECTION 6: BATTERY DATA INPUT & DATASET DEMO -->
-          <section class="panel-card input-panel">
-            <div class="panel-header">
-              <h2 class="panel-title">BATTERY DATA INPUT & DATASET DEMO</h2>
-              <span class="panel-tag">Pipeline Gateway</span>
+          <!-- Demo Alert -->
+          <div class="state-block">
+            <div class="state-block-header">
+              <span class="state-block-label">Demo Alert</span>
+              <span class="badge badge-muted">DEMO / RULE-BASED</span>
             </div>
-            <div class="input-content">
-              <!-- Mode Switcher Toolbar -->
-              <div class="mode-toggle-group">
-                <button type="button" id="modeJsonBtn" class="btn btn-mode active">LIVE JSON INPUT</button>
-                <button type="button" id="modeDemoBtn" class="btn btn-mode">DATASET DEMO (CALCE)</button>
-              </div>
+            <div id="stateAlertVal" class="state-block-value" style="color: #4ade80;">No demo alert</div>
+            <div id="stateAlertSub" class="state-block-sub">Operational threshold verification. AI thermal runaway model pending.</div>
+          </div>
+        </div>
+      </section>
 
-              <!-- Dataset Demo Navigator Box (Visible in Dataset Demo Mode) -->
-              <div id="demoControlsContainer" class="demo-controls-box" style="display: none;">
-                <div class="demo-header-row">
-                  <span id="demoSampleBadge" class="demo-sample-badge">SAMPLE 1 OF 8</span>
-                  <span id="demoSampleId" class="demo-sample-id">CALCE_CS2_35_CYC001</span>
-                </div>
-                <p id="demoSampleDesc" class="demo-sample-desc">Nominal early-life discharge cycle at room ambient temperature.</p>
-                <div class="demo-actions-row">
-                  <button type="button" id="demoPrevBtn" class="btn btn-secondary btn-sm">◀ PREVIOUS SAMPLE</button>
-                  <button type="button" id="demoNextBtn" class="btn btn-secondary btn-sm">NEXT SAMPLE ▶</button>
-                  <button type="button" id="demoLoadBtn" class="btn btn-primary btn-sm">LOAD SAMPLE TO EDITOR</button>
-                </div>
-              </div>
+      <!-- SECTION 3: TEMPERATURE ANALYTICS & TIME-SERIES TREND (Section 8 & 10) -->
+      <section class="temp-analytics-grid">
+        <!-- Interactive Canvas Line Chart -->
+        <div class="chart-panel">
+          <div class="section-header">
+            <h2 class="section-title">📈 Demo Temperature Trend</h2>
+            <span class="badge badge-demo">DEMO TIME-SERIES — NOT PHYSICAL EXPERIMENT</span>
+          </div>
+          <div class="chart-wrapper">
+            <canvas id="tempTrendCanvas"></canvas>
+          </div>
+        </div>
 
-              <!-- Meta status & timestamp bar -->
-              <div class="input-meta-bar">
-                <div class="meta-item">
-                  <span class="meta-label">DATA STATUS:</span>
-                  <span id="dataStatusBadge" class="data-status-badge pending">WAITING FOR INPUT</span>
-                </div>
-                <div class="meta-item">
-                  <span class="meta-label">LAST DATA UPDATE:</span>
-                  <span id="lastDataUpdate" class="meta-timestamp">--</span>
-                </div>
-              </div>
+        <!-- Thermal Monitoring Panel -->
+        <div class="thermal-monitoring-panel">
+          <div class="section-header" style="margin-bottom: 0.5rem;">
+            <h2 class="section-title">🌡️ Thermal Monitoring</h2>
+            <span class="badge badge-pending">MODEL DISCONNECTED</span>
+          </div>
 
-              <p class="input-disclaimer">
-                Telemetry schema supporting instantaneous sensor readings and multi-model feature estimation.
-              </p>
+          <div class="thermal-stat-row">
+            <div class="thermal-stat-info">
+              <span class="thermal-stat-title">Current Temperature</span>
+              <span id="thermalCurrentSub" class="thermal-stat-sub">Demo Thermocouple Reading</span>
+            </div>
+            <div id="thermalCurrentVal" class="thermal-stat-val">30.0 °C</div>
+          </div>
 
-              <div class="textarea-wrapper">
-                <textarea 
-                  id="batteryJsonInput" 
-                  class="json-textarea" 
-                  spellcheck="false"
-                  placeholder='{
+          <div class="thermal-stat-row">
+            <div class="thermal-stat-info">
+              <span class="thermal-stat-title">Predicted Temperature</span>
+              <span class="thermal-stat-sub">PINN Thermal Estimator</span>
+            </div>
+            <div id="thermalPredictedVal" class="thermal-stat-val" style="font-size: 0.95rem; color: #fbbf24;">MODEL NOT CONNECTED</div>
+          </div>
+
+          <div class="thermal-stat-row">
+            <div class="thermal-stat-info">
+              <span class="thermal-stat-title">Thermal Trend</span>
+              <span class="thermal-stat-sub">Short History Tracking</span>
+            </div>
+            <div id="thermalTrendVal" class="thermal-stat-val" style="font-size: 0.95rem; color: #38bdf8;">DEMO TREND</div>
+          </div>
+
+          <div class="disclaimer-box">
+            ⚠️ <strong>Scientific Disclaimer:</strong> Physics-Informed Neural Network (PINN) and machine-learning thermal runaway detection models are not yet connected in this demonstration phase.
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 4: DEMO CONTROLS STATION (Section 2 & 18) -->
+      <section class="controls-panel">
+        <div class="section-header">
+          <h2 class="section-title">🎛️ Demo Control & Telemetry Ingestion</h2>
+          <span class="badge badge-demo">CONTROL STATION</span>
+        </div>
+
+        <!-- Mode Toggle Tabs -->
+        <div class="mode-toggle-tabs">
+          <button id="tabDemoMode" class="tab-btn active">DEMO SCENARIOS (5 PREDEFINED)</button>
+          <button id="tabJsonMode" class="tab-btn">CUSTOM JSON INPUT (PIPELINE)</button>
+        </div>
+
+        <!-- Demo Scenarios Container -->
+        <div id="demoControlsContainer">
+          <div class="scenario-buttons-grid">
+            <button id="btnScenarioNormal" class="btn-scenario active">
+              <span>LOAD NORMAL</span>
+              <span style="font-size: 0.65rem; color: #94a3b8;">3.70V | 30.0°C | 0.8C</span>
+            </button>
+            <button id="btnScenarioFastCharge" class="btn-scenario">
+              <span>FAST CHARGING</span>
+              <span style="font-size: 0.65rem; color: #94a3b8;">4.05V | 38.0°C | 2.5C</span>
+            </button>
+            <button id="btnScenarioThermalStress" class="btn-scenario">
+              <span>THERMAL STRESS</span>
+              <span style="font-size: 0.65rem; color: #94a3b8;">3.82V | 45.0°C | 2.0C</span>
+            </button>
+            <button id="btnScenarioAging" class="btn-scenario">
+              <span>AGING BATTERY</span>
+              <span style="font-size: 0.65rem; color: #94a3b8;">3.65V | 41.0°C | 78% SOH</span>
+            </button>
+            <button id="btnScenarioAbnormal" class="btn-scenario">
+              <span>ABNORMAL</span>
+              <span style="font-size: 0.65rem; color: #94a3b8;">3.55V | 52.0°C | 3.0C</span>
+            </button>
+            <button id="btnScenarioRandom" class="btn-scenario btn-random">
+              <span>LOAD RANDOM DEMO</span>
+              <span style="font-size: 0.65rem; opacity: 0.85;">PHYSICAL BOUNDS</span>
+            </button>
+            <button id="btnScenarioReset" class="btn-scenario btn-reset">
+              <span>RESET</span>
+              <span style="font-size: 0.65rem; opacity: 0.85;">CLEAR ALL</span>
+            </button>
+          </div>
+
+          <!-- Active Scenario Banner -->
+          <div class="scenario-info-banner">
+            <div>
+              <strong id="scenarioBannerTitle" style="color: #38bdf8;">NORMAL OPERATION</strong>
+              <div id="scenarioBannerDesc" class="scenario-info-text">Standard nominal discharge operation at moderate C-rate and ambient room temperature.</div>
+            </div>
+            <div style="display: flex; gap: 0.75rem;">
+              <span id="scenarioMetaAmbient" class="scenario-meta-tag">Ambient: 27.0°C</span>
+              <span id="scenarioMetaCrate" class="scenario-meta-tag">Rate: 0.8C</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Custom JSON Ingestion Container (Hidden by default) -->
+        <div id="jsonControlsContainer" class="json-input-section" style="display: none;">
+          <textarea id="batteryJsonInput" class="json-textarea" placeholder="Paste custom battery telemetry JSON payload here...">{
   "voltage": 3.70,
-  "current": 1.10,
-  "temperature": 25.0,
-  "time_s": 120.0,
-  "cycle_number": 1,
-  "soc": 85.0,
-  "soh": 100.0,
-  "c_rate": 1.0,
-  "ambient_temperature": 25.0
-}'></textarea>
-              </div>
+  "current": 4.0,
+  "temperature": 30.0,
+  "soc": 72,
+  "soh": 96,
+  "c_rate": 0.8,
+  "ambient_temperature": 27.0
+}</textarea>
+          <div class="json-actions-row">
+            <button id="btnValidateJson" class="btn btn-primary">VALIDATE JSON</button>
+            <button id="btnLoadJson" class="btn btn-primary">LOAD JSON (POST API)</button>
+            <button id="btnSampleJson" class="btn btn-secondary">LOAD SAMPLE JSON</button>
+            <button id="btnClearJson" class="btn btn-danger">CLEAR</button>
+          </div>
+          <div id="jsonFeedback" class="disclaimer-box" style="display: none;"></div>
+        </div>
+      </section>
 
-              <!-- Validation Feedback Notification Area -->
-              <div id="validationFeedback" class="validation-feedback" style="display: none;"></div>
+      <!-- SECTION 5: RECEIVED DATA PREVIEW & SYSTEM LOG (Section 3 & 15) -->
+      <section class="bottom-workspace-grid">
+        <!-- Received Telemetry Structured Card -->
+        <div class="received-data-panel">
+          <div class="section-header">
+            <h2 class="section-title">📥 Received Data Preview</h2>
+            <span id="recvSource" class="badge badge-demo">DEMO / SIMULATED</span>
+          </div>
 
-              <!-- Additional Data (for unmodeled/unexpected fields) -->
-              <div id="additionalDataContainer" class="additional-data-container" style="display: none;">
-                <div class="additional-data-title">ADDITIONAL DATA (Unmodeled Fields):</div>
-                <pre id="additionalDataContent" class="additional-data-content"></pre>
-              </div>
-
-              <div class="input-actions">
-                <button type="button" id="loadJsonBtn" class="btn btn-secondary">LOAD JSON TO PIPELINE</button>
-                <button type="button" id="validateJsonBtn" class="btn btn-secondary">VALIDATE JSON</button>
-                <button type="button" id="runPredictBtn" class="btn btn-primary" title="Execute multi-model inference via battery_intelligence.pkl">⚡ RUN MODEL INFERENCE</button>
-                <button type="button" id="sampleJsonBtn" class="btn btn-secondary" title="Demonstration data only. Not model training data.">LOAD SAMPLE JSON</button>
-                <button type="button" id="clearBtn" class="btn btn-tertiary">CLEAR</button>
-              </div>
+          <div class="received-data-grid">
+            <div class="recv-card">
+              <span class="recv-label">Voltage</span>
+              <span id="recvVoltage" class="recv-val">3.70 V</span>
             </div>
-          </section>
-
-          <!-- SECTION 15: RECEIVED DATA (DATA PREVIEW SECTION) -->
-          <section id="receivedDataPanel" class="panel-card received-data-panel">
-            <div class="panel-header">
-              <h2 class="panel-title">RECEIVED DATA</h2>
-              <span class="panel-tag">Backend Pipeline Inspection</span>
+            <div class="recv-card">
+              <span class="recv-label">Current</span>
+              <span id="recvCurrent" class="recv-val">4.0 A</span>
             </div>
-            <div class="received-data-body">
-              <div class="received-data-grid">
-                <div class="received-item">
-                  <span class="received-item-label">Voltage:</span>
-                  <span id="recvVoltage" class="received-item-val">--</span>
-                </div>
-                <div class="received-item">
-                  <span class="received-item-label">Current:</span>
-                  <span id="recvCurrent" class="received-item-val">--</span>
-                </div>
-                <div class="received-item">
-                  <span class="received-item-label">Temperature:</span>
-                  <span id="recvTemperature" class="received-item-val">--</span>
-                </div>
-                <div class="received-item">
-                  <span class="received-item-label">SOC:</span>
-                  <span id="recvSoc" class="received-item-val">--</span>
-                </div>
-                <div class="received-item">
-                  <span class="received-item-label">SOH:</span>
-                  <span id="recvSoh" class="received-item-val">--</span>
-                </div>
-                <div class="received-item">
-                  <span class="received-item-label">C-Rate:</span>
-                  <span id="recvCrate" class="received-item-val">--</span>
-                </div>
-                <div class="received-item">
-                  <span class="received-item-label">Cycle Number:</span>
-                  <span id="recvCycle" class="received-item-val">--</span>
-                </div>
-                <div class="received-item">
-                  <span class="received-item-label">Time (s):</span>
-                  <span id="recvTime" class="received-item-val">--</span>
-                </div>
-                <div class="received-item">
-                  <span class="received-item-label">Source:</span>
-                  <span id="recvSource" class="received-item-tag">JSON INPUT</span>
-                </div>
-                <div class="received-item wide">
-                  <span class="received-item-label">Received:</span>
-                  <span id="recvServerTime" class="received-item-time">SERVER TIME: --</span>
-                </div>
-              </div>
-              <p class="inspection-note">Raw telemetry received by backend. Click "RUN MODEL INFERENCE" to execute machine-learning predictions.</p>
+            <div class="recv-card">
+              <span class="recv-label">Temperature</span>
+              <span id="recvTemperature" class="recv-val">30.0 °C</span>
             </div>
-          </section>
-
-          <!-- SECTION 17: MODEL PREDICTION RESULT PANEL -->
-          <section id="predictionResultPanel" class="panel-card prediction-result-panel">
-            <div class="panel-header">
-              <h2 class="panel-title">MODEL PREDICTION</h2>
-              <span id="predHeaderBadge" class="panel-tag highlight">battery_intelligence.pkl</span>
+            <div class="recv-card">
+              <span class="recv-label">State of Charge</span>
+              <span id="recvSoc" class="recv-val">72 %</span>
             </div>
-            <div class="prediction-body">
-              <div class="prediction-grid">
-                <div class="pred-item">
-                  <span class="pred-label">Model Ensemble:</span>
-                  <span id="predModelName" class="pred-value">battery_intelligence.pkl</span>
-                  <span class="pred-sub">CALCE Trained Ensemble</span>
-                </div>
-
-                <div class="pred-item">
-                  <span class="pred-label">Inference Status:</span>
-                  <span id="predStatusBadge" class="pred-badge pending">AWAITING INFERENCE</span>
-                  <span id="predLatency" class="pred-sub">Latency: -- ms</span>
-                </div>
-
-                <div class="pred-item highlight">
-                  <span class="pred-label">Estimated SOC (RF):</span>
-                  <span id="predSocVal" class="pred-value large">--</span>
-                  <span id="predSocSub" class="pred-sub">RandomForestRegressor (5 features)</span>
-                </div>
-
-                <div class="pred-item highlight">
-                  <span class="pred-label">Estimated SOH (GB):</span>
-                  <span id="predSohVal" class="pred-value large">--</span>
-                  <span id="predSohSub" class="pred-sub">GradientBoostingRegressor (7 features)</span>
-                </div>
-
-                <div class="pred-item">
-                  <span class="pred-label">Anomaly Model (IF):</span>
-                  <span id="predAnomalyBadge" class="pred-badge muted">NOT RUN</span>
-                  <span id="predAnomalyScore" class="pred-sub">IsolationForest Score: --</span>
-                </div>
-
-                <div class="pred-item">
-                  <span class="pred-label">Physics Boundary:</span>
-                  <span id="predPhysicsBadge" class="pred-badge muted">NOT EVALUATED</span>
-                  <span id="predPhysicsSub" class="pred-sub">Deterministic Rules</span>
-                </div>
-
-                <div class="pred-item">
-                  <span class="pred-label">Model Confidence:</span>
-                  <span id="predConfidence" class="pred-value">N/A</span>
-                  <span class="pred-sub">Non-probabilistic ensemble</span>
-                </div>
-
-                <div class="pred-item">
-                  <span class="pred-label">Thermal Prediction:</span>
-                  <span id="predTempNote" class="pred-badge neutral">NOT INCLUDED</span>
-                  <span class="pred-sub">Input feature only</span>
-                </div>
-              </div>
-
-              <!-- Input Features Used Box -->
-              <div class="pred-features-box">
-                <span class="pred-features-title">FEATURES UTILIZED BY ACTIVE SUBMODELS:</span>
-                <span id="predFeaturesList" class="pred-features-text">None (Execute inference to inspect feature vectors)</span>
-              </div>
+            <div class="recv-card">
+              <span class="recv-label">State of Health</span>
+              <span id="recvSoh" class="recv-val">96 %</span>
             </div>
-          </section>
-
+            <div class="recv-card">
+              <span class="recv-label">C-Rate</span>
+              <span id="recvCrate" class="recv-val">0.8 C</span>
+            </div>
+            <div class="recv-card" style="grid-column: span 2;">
+              <span class="recv-label">Ambient Temperature</span>
+              <span id="recvAmbient" class="recv-val">27.0 °C</span>
+            </div>
+            <div class="recv-card">
+              <span class="recv-label">Server Time</span>
+              <span id="recvServerTime" class="recv-val" style="font-size: 0.75rem;">--:--:--</span>
+            </div>
+          </div>
         </div>
 
-        <!-- RIGHT COLUMN: RISK ASSESSMENT, EARLY WARNING, BATTERY HEALTH, MODEL STATUS, SYSTEM LOG -->
-        <div class="workspace-col col-secondary">
-
-          <!-- SECTION 4: RISK ASSESSMENT -->
-          <section class="panel-card risk-panel">
-            <div class="panel-header">
-              <h2 class="panel-title">RISK ASSESSMENT</h2>
-              <span id="riskPill" class="status-pill status-pill-inactive">Safety Logic</span>
-            </div>
-            <div class="risk-card-body">
-              <div id="riskStatusDisplay" class="risk-status-display">
-                <span id="riskMainText" class="risk-main-text">SYSTEM NOT CONNECTED</span>
-              </div>
-              <p id="riskDescText" class="risk-description">
-                Autonomous risk indexing and runaway hazard classification are disabled until backend validation.
-              </p>
-            </div>
-          </section>
-
-          <!-- SECTION 5: EARLY WARNING -->
-          <section class="panel-card warning-panel">
-            <div class="panel-header">
-              <h2 class="panel-title">EARLY WARNING</h2>
-              <span id="warningPill" class="status-pill status-pill-warning">Pre-Hazard Detection</span>
-            </div>
-            <div class="warning-card-body">
-              <div id="warningStatusDisplay" class="warning-status-display">
-                <span id="warningMainText" class="warning-main-text">WAITING FOR MODEL</span>
-              </div>
-              <p id="warningDescText" class="warning-description">
-                "Prediction and safety assessment will become available after model integration."
-              </p>
-            </div>
-          </section>
-
-          <!-- SECTION 3: BATTERY HEALTH -->
-          <section class="panel-card health-panel">
-            <div class="panel-header">
-              <h2 class="panel-title">BATTERY HEALTH</h2>
-              <span class="panel-tag">State Analytics</span>
-            </div>
-            <div class="health-grid">
-              <div class="health-stat-box">
-                <span class="stat-label">SOC</span>
-                <div id="healthSoc" class="stat-value">--</div>
-                <span class="stat-unit-sub">% Available</span>
-              </div>
-              <div class="health-stat-box">
-                <span class="stat-label">SOH</span>
-                <div id="healthSoh" class="stat-value">--</div>
-                <span class="stat-unit-sub">% Capacity Retention</span>
-              </div>
-            </div>
-            <div class="battery-state-row">
-              <span class="state-label">Battery State:</span>
-              <span id="healthBatteryState" class="state-badge">WAITING FOR DATA</span>
-            </div>
-          </section>
-
-          <!-- SECTION 7: MODEL STATUS -->
-          <section class="panel-card model-status-panel">
-            <div class="panel-header">
-              <h2 class="panel-title">MODEL STATUS</h2>
-              <span class="panel-tag">Inference Environment</span>
-            </div>
-            <div class="model-status-list">
-              <div class="status-row">
-                <span class="status-property">Model:</span>
-                <span id="modelNameTag" class="status-value-tag muted">battery_intelligence.pkl</span>
-              </div>
-              <div class="status-row">
-                <span class="status-property">Model Type:</span>
-                <span id="modelTypeTag" class="status-value-tag muted">Multi-Model Ensemble</span>
-              </div>
-              <div class="status-row">
-                <span class="status-property">Verification:</span>
-                <span id="modelVerifyTag" class="status-value-tag pending">VERIFYING...</span>
-              </div>
-              <div class="status-row">
-                <span class="status-property">Prediction:</span>
-                <span id="modelPredTag" class="status-value-tag muted">UNAVAILABLE</span>
-              </div>
-              <div class="status-row">
-                <span class="status-property">Status:</span>
-                <span id="modelStatusTag" class="status-value-tag pending">INITIALIZING</span>
-              </div>
-            </div>
-          </section>
-
-          <!-- SECTION 8: SYSTEM LOG -->
-          <section class="panel-card system-log-panel">
-            <div class="panel-header">
-              <h2 class="panel-title">SYSTEM LOG</h2>
-              <span class="log-indicator-dot"></span>
-            </div>
-            <div id="systemLogTerminal" class="system-log-terminal">
-              <div class="log-entry"><span class="log-prefix">[SYS]</span> System initialized.</div>
-              <div class="log-entry"><span class="log-prefix">[APP]</span> BRAIN dashboard loaded.</div>
-              <div class="log-entry log-entry-waiting"><span class="log-prefix">[NET]</span> Waiting for battery data...</div>
-            </div>
-          </section>
-
+        <!-- Live System Log Terminal (Section 15) -->
+        <div class="log-panel">
+          <div class="section-header">
+            <h2 class="section-title">🖥️ System Log Terminal</h2>
+            <span class="status-dot online"></span>
+          </div>
+          <div id="systemLogTerminal" class="system-log-terminal">
+            <div class="log-entry"><span class="log-prefix sys">[SYS]</span> BRAIN initialized</div>
+            <div class="log-entry"><span class="log-prefix sys">[SYS]</span> Flask backend connected</div>
+            <div class="log-entry"><span class="log-prefix data">[DATA]</span> Demo mode enabled</div>
+            <div class="log-entry"><span class="log-prefix model">[MODEL]</span> Prediction unavailable (Model not connected)</div>
+            <div class="log-entry"><span class="log-prefix pinn">[PINN]</span> Thermal model not connected</div>
+          </div>
         </div>
-
-      </div>
+      </section>
 
     </div>
   </main>
@@ -1851,861 +1498,695 @@ body {
   <footer class="dashboard-footer">
     <div class="footer-container">
       <div class="footer-left">
-        <span class="footer-brand">BRAIN</span> &mdash; Battery Risk & Analytics Intelligence Network
+        <span class="footer-brand">BRAIN</span> &mdash; Battery Risk & Analytics Intelligence Network &bull; Phase 3.5 BMS Demonstration Platform
       </div>
       <div class="footer-right">
-        <span>Phase 4: Model & Dataset Pipeline Active</span> &bull; <span>Physics-Informed Safety Architecture</span>
+        <span>Flask Backend Active</span> &bull; <span>Controlled Telemetry Simulation Mode</span>
       </div>
     </div>
   </footer>
 
-  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+  <script src="/static/js/script.js"></script>
   <script id="brain-script">
 /**
  * BRAIN — Battery Risk & Analytics Intelligence Network
- * Phase 4: Model & Dataset Integration Engine
- * 
- * Pipeline flow:
- * 1. Telemetry Ingestion (Live JSON or Dataset Demo Sample)
- * 2. Client-Side Validation
- * 3. Server-Side Pipeline (`POST /api/battery-data`)
- * 4. Multi-Model Inference (`POST /api/predict`)
- * 5. Dynamic UI Updates (SOC, SOH, Isolation Forest Anomaly, Physics Rules, Risk & Early Warning)
+ * Phase 3.5: Advanced BMS Demonstration Dashboard Engine
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-  // --- DOM Elements ---
-  const jsonTextarea = document.getElementById('batteryJsonInput');
-  const loadJsonBtn = document.getElementById('loadJsonBtn');
-  const validateJsonBtn = document.getElementById('validateJsonBtn');
-  const runPredictBtn = document.getElementById('runPredictBtn');
-  const sampleJsonBtn = document.getElementById('sampleJsonBtn');
-  const clearBtn = document.getElementById('clearBtn');
+  // --------------------------------------------------------------------------
+  // DOM Elements Selection
+  // --------------------------------------------------------------------------
 
-  // Mode Switcher Elements
-  const modeJsonBtn = document.getElementById('modeJsonBtn');
-  const modeDemoBtn = document.getElementById('modeDemoBtn');
-  const demoControlsContainer = document.getElementById('demoControlsContainer');
-  const demoSampleBadge = document.getElementById('demoSampleBadge');
-  const demoSampleId = document.getElementById('demoSampleId');
-  const demoSampleDesc = document.getElementById('demoSampleDesc');
-  const demoPrevBtn = document.getElementById('demoPrevBtn');
-  const demoNextBtn = document.getElementById('demoNextBtn');
-  const demoLoadBtn = document.getElementById('demoLoadBtn');
-
-  // Header & Source Elements
-  const systemStatusBadge = document.getElementById('systemStatusBadge') || document.querySelector('.status-indicator');
-  const systemStatusText = document.getElementById('systemStatusText') || document.querySelector('.status-text');
+  // Header & System Health Elements
+  const headerSystemStatus = document.getElementById('headerSystemStatus');
+  const headerSystemDot = document.getElementById('headerSystemDot');
+  const headerModeBadge = document.getElementById('headerModeBadge');
+  const headerBackendBadge = document.getElementById('headerBackendBadge');
+  const headerModelBadge = document.getElementById('headerModelBadge');
+  const headerPinnBadge = document.getElementById('headerPinnBadge');
   const dataSourceBadge = document.getElementById('dataSourceBadge');
+  const healthDataSourceVal = document.getElementById('healthDataSourceVal');
+  const healthPipelineVal = document.getElementById('healthPipelineVal');
 
-  // Status & Feedback Elements
-  const dataStatusBadge = document.getElementById('dataStatusBadge');
-  const lastDataUpdate = document.getElementById('lastDataUpdate');
-  const validationFeedback = document.getElementById('validationFeedback');
-  const additionalDataContainer = document.getElementById('additionalDataContainer');
-  const additionalDataContent = document.getElementById('additionalDataContent');
+  // Overview BMS Metric Cards
+  const valVoltage = document.getElementById('valVoltage');
+  const tagVoltage = document.getElementById('tagVoltage');
+  const timeVoltage = document.getElementById('timeVoltage');
 
-  // Section 1: Battery Overview Cards
-  const overviewVoltage = document.getElementById('overviewVoltage');
-  const overviewCurrent = document.getElementById('overviewCurrent');
-  const overviewTemperature = document.getElementById('overviewTemperature');
-  const overviewSoc = document.getElementById('overviewSoc');
-  const overviewSoh = document.getElementById('overviewSoh');
-  const overviewCrate = document.getElementById('overviewCrate');
+  const valCurrent = document.getElementById('valCurrent');
+  const tagCurrent = document.getElementById('tagCurrent');
+  const timeCurrent = document.getElementById('timeCurrent');
 
-  // Section 2: Thermal Monitoring Cards
-  const thermalCurrentTemp = document.getElementById('thermalCurrentTemp');
+  const valTemperature = document.getElementById('valTemperature');
+  const tagTemperature = document.getElementById('tagTemperature');
+  const timeTemperature = document.getElementById('timeTemperature');
+
+  const valSoc = document.getElementById('valSoc');
+  const tagSoc = document.getElementById('tagSoc');
+  const timeSoc = document.getElementById('timeSoc');
+
+  const valSoh = document.getElementById('valSoh');
+  const tagSoh = document.getElementById('tagSoh');
+  const timeSoh = document.getElementById('timeSoh');
+
+  const valCrate = document.getElementById('valCrate');
+  const tagCrate = document.getElementById('tagCrate');
+  const timeCrate = document.getElementById('timeCrate');
+
+  // Circular Gauges
+  const socCircle = document.getElementById('socProgressCircle');
+  const socNumber = document.getElementById('socNumber');
+  const sohCircle = document.getElementById('sohProgressCircle');
+  const sohNumber = document.getElementById('sohNumber');
+
+  // State & Classification Blocks
+  const stateBatteryVal = document.getElementById('stateBatteryVal');
+  const stateBatterySub = document.getElementById('stateBatterySub');
+  const stateSafetyVal = document.getElementById('stateSafetyVal');
+  const stateSafetySub = document.getElementById('stateSafetySub');
+  const stateAlertVal = document.getElementById('stateAlertVal');
+  const stateAlertSub = document.getElementById('stateAlertSub');
+
+  // Thermal Monitoring Panel
+  const thermalCurrentVal = document.getElementById('thermalCurrentVal');
   const thermalCurrentSub = document.getElementById('thermalCurrentSub');
-  const thermalPredictedBadge = document.getElementById('thermalPredictedBadge');
-  const thermalPredictedSub = document.getElementById('thermalPredictedSub');
-  const thermalTrendBadge = document.getElementById('thermalTrendBadge');
+  const thermalPredictedVal = document.getElementById('thermalPredictedVal');
+  const thermalTrendVal = document.getElementById('thermalTrendVal');
 
-  // Section 3: Battery Health Card
-  const healthSoc = document.getElementById('healthSoc');
-  const healthSoh = document.getElementById('healthSoh');
-  const healthBatteryState = document.getElementById('healthBatteryState');
+  // Demo Controls & Scenario Buttons
+  const tabDemoMode = document.getElementById('tabDemoMode');
+  const tabJsonMode = document.getElementById('tabJsonMode');
+  const demoControlsContainer = document.getElementById('demoControlsContainer');
+  const jsonControlsContainer = document.getElementById('jsonControlsContainer');
 
-  // Section 4 & 5: Risk Assessment & Early Warning
-  const riskPill = document.getElementById('riskPill');
-  const riskStatusDisplay = document.getElementById('riskStatusDisplay');
-  const riskMainText = document.getElementById('riskMainText');
-  const riskDescText = document.getElementById('riskDescText');
+  const btnNormal = document.getElementById('btnScenarioNormal');
+  const btnFastCharge = document.getElementById('btnScenarioFastCharge');
+  const btnThermalStress = document.getElementById('btnScenarioThermalStress');
+  const btnAging = document.getElementById('btnScenarioAging');
+  const btnAbnormal = document.getElementById('btnScenarioAbnormal');
+  const btnRandom = document.getElementById('btnScenarioRandom');
+  const btnReset = document.getElementById('btnScenarioReset');
 
-  const warningPill = document.getElementById('warningPill');
-  const warningStatusDisplay = document.getElementById('warningStatusDisplay');
-  const warningMainText = document.getElementById('warningMainText');
-  const warningDescText = document.getElementById('warningDescText');
+  const scenarioBannerTitle = document.getElementById('scenarioBannerTitle');
+  const scenarioBannerDesc = document.getElementById('scenarioBannerDesc');
+  const scenarioMetaAmbient = document.getElementById('scenarioMetaAmbient');
+  const scenarioMetaCrate = document.getElementById('scenarioMetaCrate');
 
-  // Section 7: Model Status Panel
-  const modelNameTag = document.getElementById('modelNameTag');
-  const modelTypeTag = document.getElementById('modelTypeTag');
-  const modelVerifyTag = document.getElementById('modelVerifyTag');
-  const modelPredTag = document.getElementById('modelPredTag');
-  const modelStatusTag = document.getElementById('modelStatusTag');
+  // JSON Input Section Elements
+  const jsonTextarea = document.getElementById('batteryJsonInput');
+  const btnValidateJson = document.getElementById('btnValidateJson');
+  const btnLoadJson = document.getElementById('btnLoadJson');
+  const btnSampleJson = document.getElementById('btnSampleJson');
+  const btnClearJson = document.getElementById('btnClearJson');
+  const jsonFeedback = document.getElementById('jsonFeedback');
 
-  // Section 15: Received Data Preview Card
+  // Received Data Panel Elements
   const recvVoltage = document.getElementById('recvVoltage');
   const recvCurrent = document.getElementById('recvCurrent');
   const recvTemperature = document.getElementById('recvTemperature');
   const recvSoc = document.getElementById('recvSoc');
   const recvSoh = document.getElementById('recvSoh');
   const recvCrate = document.getElementById('recvCrate');
-  const recvCycle = document.getElementById('recvCycle');
-  const recvTime = document.getElementById('recvTime');
+  const recvAmbient = document.getElementById('recvAmbient');
   const recvSource = document.getElementById('recvSource');
   const recvServerTime = document.getElementById('recvServerTime');
 
-  // Section 17: Model Prediction Panel
-  const predModelName = document.getElementById('predModelName');
-  const predStatusBadge = document.getElementById('predStatusBadge');
-  const predLatency = document.getElementById('predLatency');
-  const predSocVal = document.getElementById('predSocVal');
-  const predSocSub = document.getElementById('predSocSub');
-  const predSohVal = document.getElementById('predSohVal');
-  const predSohSub = document.getElementById('predSohSub');
-  const predAnomalyBadge = document.getElementById('predAnomalyBadge');
-  const predAnomalyScore = document.getElementById('predAnomalyScore');
-  const predPhysicsBadge = document.getElementById('predPhysicsBadge');
-  const predPhysicsSub = document.getElementById('predPhysicsSub');
-  const predConfidence = document.getElementById('predConfidence');
-  const predFeaturesList = document.getElementById('predFeaturesList');
-
-  // Section 8: System Log Terminal
+  // System Log Terminal
   const systemLogTerminal = document.getElementById('systemLogTerminal');
 
-  // State Variables
-  let datasetSamples = [];
-  let currentSampleIndex = 0;
-  let currentMode = 'json'; // 'json' or 'demo'
+  // Chart Canvas
+  const canvas = document.getElementById('tempTrendCanvas');
+  let currentTrendData = [];
 
-  // Predefined Demonstration Sample JSON
-  const SAMPLE_JSON = `{
+  // Local State
+  let activeMode = 'demo'; // 'demo' or 'json'
+  let activeScenarioId = null;
+
+  // Predefined Sample JSON
+  const SAMPLE_INPUT_JSON = `{
   "voltage": 3.70,
-  "current": 1.10,
-  "temperature": 25.0,
-  "time_s": 120.0,
-  "cycle_number": 1,
-  "soc": 85.0,
-  "soh": 100.0,
-  "c_rate": 1.0,
-  "ambient_temperature": 25.0,
-  "cycle_stats": {
-    "mean_voltage": 3.75,
-    "min_voltage": 3.00,
-    "max_voltage": 4.20,
-    "voltage_std": 0.28,
-    "mean_current": 1.10,
-    "mean_temperature": 25.8
-  }
+  "current": 4.0,
+  "temperature": 30.0,
+  "soc": 72,
+  "soh": 96,
+  "c_rate": 0.8,
+  "ambient_temperature": 27.0
 }`;
 
   // --------------------------------------------------------------------------
-  // Backend Health & System Status
+  // Utility Functions
   // --------------------------------------------------------------------------
 
-  function setSystemStatus(isOnline) {
-    if (!systemStatusBadge || !systemStatusText) return;
-    if (isOnline) {
-      systemStatusBadge.className = 'status-indicator online';
-      systemStatusText.textContent = 'SYSTEM ONLINE';
+  function getTimestamp() {
+    const now = new Date();
+    return now.toTimeString().split(' ')[0];
+  }
+
+  function appendLog(prefix, message, typeClass = '') {
+    if (!systemLogTerminal) return;
+    const entry = document.createElement('div');
+    entry.className = `log-entry ${typeClass}`;
+    entry.innerHTML = `<span class="log-prefix ${prefix.toLowerCase()}">[${prefix.toUpperCase()}]</span> ${message}`;
+    systemLogTerminal.appendChild(entry);
+    systemLogTerminal.scrollTop = systemLogTerminal.scrollHeight;
+  }
+
+  function updateGauge(circleElement, numberElement, value, maxVal = 100) {
+    if (!circleElement || !numberElement) return;
+    const circumference = 440;
+    const clamped = Math.max(0, Math.min(maxVal, value));
+    const offset = circumference - (circumference * clamped / maxVal);
+    circleElement.style.strokeDashoffset = offset;
+    numberElement.textContent = `${Math.round(clamped)}%`;
+  }
+
+  // --------------------------------------------------------------------------
+  // Canvas Temperature Trend Line Chart
+  // --------------------------------------------------------------------------
+
+  function drawTemperatureChart(dataPoints) {
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const width = canvas.width = canvas.parentElement.clientWidth;
+    const height = canvas.height = canvas.parentElement.clientHeight;
+
+    ctx.clearRect(0, 0, width, height);
+
+    if (!dataPoints || dataPoints.length === 0) {
+      ctx.fillStyle = '#64748b';
+      ctx.font = '12px SFMono-Regular, monospace';
+      ctx.textAlign = 'center';
+      ctx.fillText('Awaiting demonstration time-series telemetry...', width / 2, height / 2);
+      return;
+    }
+
+    const padLeft = 45;
+    const padRight = 25;
+    const padTop = 25;
+    const padBottom = 35;
+    const plotWidth = width - padLeft - padRight;
+    const plotHeight = height - padTop - padBottom;
+
+    // Determine scale limits
+    const temps = dataPoints.map(d => d.temp_c);
+    const minTemp = Math.floor(Math.min(...temps, 20) / 5) * 5;
+    const maxTemp = Math.ceil(Math.max(...temps, 55) / 5) * 5;
+
+    // Draw Grid Lines & Y-Axis Labels
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+    ctx.lineWidth = 1;
+    ctx.fillStyle = '#64748b';
+    ctx.font = '10px SFMono-Regular, monospace';
+    ctx.textAlign = 'right';
+
+    const ySteps = 4;
+    for (let i = 0; i <= ySteps; i++) {
+      const yVal = minTemp + (i / ySteps) * (maxTemp - minTemp);
+      const yPos = padTop + plotHeight - (i / ySteps) * plotHeight;
+      ctx.beginPath();
+      ctx.moveTo(padLeft, yPos);
+      ctx.lineTo(width - padRight, yPos);
+      ctx.stroke();
+      ctx.fillText(`${yVal.toFixed(0)}°C`, padLeft - 8, yPos + 3);
+    }
+
+    // Coordinates mapper
+    const points = dataPoints.map((d, index) => {
+      const x = padLeft + (index / (dataPoints.length - 1)) * plotWidth;
+      const y = padTop + plotHeight - ((d.temp_c - minTemp) / (maxTemp - minTemp)) * plotHeight;
+      return { x, y, temp: d.temp_c, offset: d.time_offset_s };
+    });
+
+    // Draw Gradient Area Under Line
+    const grad = ctx.createLinearGradient(0, padTop, 0, padTop + plotHeight);
+    grad.addColorStop(0, 'rgba(56, 189, 248, 0.35)');
+    grad.addColorStop(1, 'rgba(56, 189, 248, 0.0)');
+
+    ctx.beginPath();
+    ctx.moveTo(points[0].x, padTop + plotHeight);
+    points.forEach(p => ctx.lineTo(p.x, p.y));
+    ctx.lineTo(points[points.length - 1].x, padTop + plotHeight);
+    ctx.closePath();
+    ctx.fillStyle = grad;
+    ctx.fill();
+
+    // Draw Line
+    ctx.beginPath();
+    ctx.strokeStyle = '#38bdf8';
+    ctx.lineWidth = 3;
+    ctx.lineJoin = 'round';
+    ctx.lineCap = 'round';
+    points.forEach((p, index) => {
+      if (index === 0) ctx.moveTo(p.x, p.y);
+      else ctx.lineTo(p.x, p.y);
+    });
+    ctx.stroke();
+
+    // Draw Points & Labels
+    points.forEach((p, index) => {
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, 4, 0, Math.PI * 2);
+      ctx.fillStyle = '#0a0e17';
+      ctx.fill();
+      ctx.strokeStyle = '#38bdf8';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      // Time X labels
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = '10px SFMono-Regular, monospace';
+      ctx.textAlign = 'center';
+      const timeLabel = p.offset === 0 ? 'Now' : `${p.offset / 60}m`;
+      ctx.fillText(timeLabel, p.x, height - 12);
+    });
+  }
+
+  // Handle window resize for chart responsiveness
+  window.addEventListener('resize', () => {
+    if (currentTrendData && currentTrendData.length > 0) {
+      drawTemperatureChart(currentTrendData);
+    }
+  });
+
+  // --------------------------------------------------------------------------
+  // Apply Telemetry Scenario to UI
+  // --------------------------------------------------------------------------
+
+  function applyScenario(scenario, isDemo = true) {
+    if (!scenario || !scenario.telemetry) return;
+
+    const t = scenario.telemetry;
+    const c = scenario.classification || {
+      battery_state: 'TELEMETRY INGESTED',
+      safety_rule_status: 'NORMAL',
+      demo_alert: 'Custom JSON Ingestion',
+      alert_level: 'NOMINAL',
+      description: 'Live payload ingested via client/server pipeline.'
+    };
+
+    const timeStr = getTimestamp();
+
+    // 1. Update Battery Overview Cards
+    if (valVoltage) valVoltage.textContent = `${t.voltage.toFixed(2)} V`;
+    if (timeVoltage) timeVoltage.textContent = `Updated: ${timeStr}`;
+
+    if (valCurrent) valCurrent.textContent = `${t.current.toFixed(1)} A`;
+    if (tagCurrent) tagCurrent.textContent = `${t.c_rate.toFixed(1)} C`;
+    if (timeCurrent) timeCurrent.textContent = `Updated: ${timeStr}`;
+
+    if (valTemperature) valTemperature.textContent = `${t.temperature.toFixed(1)} °C`;
+    if (tagTemperature) {
+      tagTemperature.textContent = t.temperature >= 45.0 ? 'HIGH TEMP' : 'NORMAL';
+      tagTemperature.className = t.temperature >= 45.0 ? 'bms-card-tag critical' : 'bms-card-tag normal';
+    }
+    if (timeTemperature) timeTemperature.textContent = `Updated: ${timeStr}`;
+
+    if (valSoc) valSoc.textContent = `${Math.round(t.soc)} %`;
+    if (timeSoc) timeSoc.textContent = `Updated: ${timeStr}`;
+
+    if (valSoh) valSoh.textContent = `${Math.round(t.soh)} %`;
+    if (tagSoh) {
+      tagSoh.textContent = t.soh >= 90 ? 'EXCELLENT' : (t.soh >= 80 ? 'GOOD' : 'AGED CELL');
+      tagSoh.className = t.soh >= 90 ? 'bms-card-tag normal' : (t.soh >= 80 ? 'bms-card-tag warning' : 'bms-card-tag critical');
+    }
+    if (timeSoh) timeSoh.textContent = `Updated: ${timeStr}`;
+
+    if (valCrate) valCrate.textContent = `${t.c_rate.toFixed(1)} C`;
+    if (tagCrate) {
+      tagCrate.textContent = t.c_rate >= 2.0 ? 'HIGH RATE' : 'CONTINUOUS';
+      tagCrate.className = t.c_rate >= 2.0 ? 'bms-card-tag warning' : 'bms-card-tag normal';
+    }
+    if (timeCrate) timeCrate.textContent = `Updated: ${timeStr}`;
+
+    // 2. Update Circular Gauges
+    updateGauge(socCircle, socNumber, t.soc);
+    updateGauge(sohCircle, sohNumber, t.soh);
+
+    // 3. Update Battery State & Safety Blocks
+    if (stateBatteryVal) stateBatteryVal.textContent = c.battery_state;
+    if (stateBatterySub) stateBatterySub.textContent = isDemo ? 'PREDEFINED DEMO SCENARIO STATE' : 'CLIENT INGESTION STATE';
+
+    if (stateSafetyVal) {
+      stateSafetyVal.textContent = c.safety_rule_status;
+      stateSafetyVal.style.color = c.safety_rule_status === 'HIGH TEMPERATURE' ? '#f87171' : (c.safety_rule_status === 'ATTENTION' ? '#fbbf24' : '#4ade80');
+    }
+
+    if (stateAlertVal) {
+      stateAlertVal.textContent = c.demo_alert;
+      stateAlertVal.style.color = c.alert_level === 'CRITICAL' || c.alert_level === 'WARNING' ? '#f87171' : (c.alert_level === 'ATTENTION' ? '#fbbf24' : '#4ade80');
+    }
+
+    // 4. Update Thermal Monitoring
+    if (thermalCurrentVal) thermalCurrentVal.textContent = `${t.temperature.toFixed(1)} °C`;
+    if (thermalCurrentSub) thermalCurrentSub.textContent = isDemo ? 'Demo Thermocouple Reading' : 'Ingested Sensor Reading';
+    if (thermalPredictedVal) thermalPredictedVal.textContent = 'MODEL NOT CONNECTED';
+    if (thermalTrendVal) thermalTrendVal.textContent = isDemo ? 'DEMO TREND' : 'TELEMETRY TREND';
+
+    // 5. Update Received Data Panel
+    if (recvVoltage) recvVoltage.textContent = `${t.voltage.toFixed(2)} V`;
+    if (recvCurrent) recvCurrent.textContent = `${t.current.toFixed(1)} A`;
+    if (recvTemperature) recvTemperature.textContent = `${t.temperature.toFixed(1)} °C`;
+    if (recvSoc) recvSoc.textContent = `${Math.round(t.soc)} %`;
+    if (recvSoh) recvSoh.textContent = `${Math.round(t.soh)} %`;
+    if (recvCrate) recvCrate.textContent = `${t.c_rate.toFixed(1)} C`;
+    if (recvAmbient) recvAmbient.textContent = t.ambient_temperature !== undefined ? `${t.ambient_temperature.toFixed(1)} °C` : '--';
+    if (recvSource) recvSource.textContent = isDemo ? 'DEMO / SIMULATED' : 'JSON INPUT';
+    if (recvServerTime) recvServerTime.textContent = timeStr;
+
+    // 6. Update Temperature Trend Chart
+    if (scenario.temperature_trend) {
+      currentTrendData = scenario.temperature_trend;
+      drawTemperatureChart(currentTrendData);
     } else {
-      systemStatusBadge.className = 'status-indicator offline';
-      systemStatusText.textContent = 'SYSTEM OFFLINE';
+      // Create synthetic 6-point trend for custom JSON
+      currentTrendData = [
+        { time_offset_s: -300, temp_c: Math.max(20, t.temperature - 3.2) },
+        { time_offset_s: -240, temp_c: Math.max(20, t.temperature - 2.4) },
+        { time_offset_s: -180, temp_c: Math.max(20, t.temperature - 1.8) },
+        { time_offset_s: -120, temp_c: Math.max(20, t.temperature - 1.0) },
+        { time_offset_s: -60, temp_c: Math.max(20, t.temperature - 0.4) },
+        { time_offset_s: 0, temp_c: t.temperature }
+      ];
+      drawTemperatureChart(currentTrendData);
+    }
+
+    // 7. Update Banner Meta
+    if (scenarioBannerTitle) scenarioBannerTitle.textContent = scenario.name || 'DEMO SCENARIO';
+    if (scenarioBannerDesc) scenarioBannerDesc.textContent = c.description || '';
+    if (scenarioMetaAmbient) scenarioMetaAmbient.textContent = `Ambient: ${t.ambient_temperature || 27}°C`;
+    if (scenarioMetaCrate) scenarioMetaCrate.textContent = `Rate: ${t.c_rate}C`;
+
+    // 8. System Log Records
+    if (isDemo) {
+      appendLog('DEMO', `Scenario loaded: ${scenario.name || 'DEMO SCENARIO'}`);
+      appendLog('DATA', `Voltage: ${t.voltage.toFixed(2)} V | Current: ${t.current.toFixed(1)} A | Temp: ${t.temperature.toFixed(1)} °C`);
+      appendLog('DATA', `SOC: ${t.soc}% | SOH: ${t.soh}% | C-Rate: ${t.c_rate}C`);
+      appendLog('DEMO', `Safety rule status: ${c.safety_rule_status}`);
+    } else {
+      appendLog('DATA', `Custom JSON ingested. Voltage: ${t.voltage}V, Temp: ${t.temperature}°C, SOC: ${t.soc}%`);
     }
   }
+
+  // --------------------------------------------------------------------------
+  // Demo Scenario Loading Buttons Handlers
+  // --------------------------------------------------------------------------
+
+  const scenarioButtons = [
+    { btn: btnNormal, id: 'normal' },
+    { btn: btnFastCharge, id: 'fast_charging' },
+    { btn: btnThermalStress, id: 'thermal_stress' },
+    { btn: btnAging, id: 'aging' },
+    { btn: btnAbnormal, id: 'abnormal' }
+  ];
+
+  function setActiveButton(activeBtn) {
+    scenarioButtons.forEach(item => {
+      if (item.btn) item.btn.classList.remove('active');
+    });
+    if (btnRandom) btnRandom.classList.remove('active');
+    if (activeBtn) activeBtn.classList.add('active');
+  }
+
+  async function loadScenarioFromServer(scenarioId, buttonElement) {
+    try {
+      const response = await fetch(`/api/demo/scenario/${scenarioId}`);
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success && data.scenario) {
+          activeScenarioId = scenarioId;
+          setActiveButton(buttonElement);
+          setDataSourceMode('demo');
+          applyScenario(data.scenario, true);
+        }
+      } else {
+        appendLog('ERR', `Failed to load demo scenario: ${scenarioId}`);
+      }
+    } catch (err) {
+      appendLog('ERR', `Demo API connection error: ${err.message}`);
+    }
+  }
+
+  scenarioButtons.forEach(item => {
+    if (item.btn) {
+      item.btn.addEventListener('click', () => {
+        loadScenarioFromServer(item.id, item.btn);
+      });
+    }
+  });
+
+  if (btnRandom) {
+    btnRandom.addEventListener('click', () => {
+      loadScenarioFromServer('random', btnRandom);
+    });
+  }
+
+  if (btnReset) {
+    btnReset.addEventListener('click', () => {
+      resetDashboard();
+    });
+  }
+
+  function resetDashboard() {
+    activeScenarioId = null;
+    setActiveButton(null);
+
+    // Reset metric values
+    if (valVoltage) valVoltage.textContent = '-- V';
+    if (valCurrent) valCurrent.textContent = '-- A';
+    if (valTemperature) valTemperature.textContent = '-- °C';
+    if (valSoc) valSoc.textContent = '-- %';
+    if (valSoh) valSoh.textContent = '-- %';
+    if (valCrate) valCrate.textContent = '-- C';
+
+    if (tagVoltage) tagVoltage.textContent = 'AWAITING DATA';
+    if (tagCurrent) tagCurrent.textContent = '--';
+    if (tagTemperature) { tagTemperature.textContent = '--'; tagTemperature.className = 'bms-card-tag'; }
+    if (tagSoc) tagSoc.textContent = '--';
+    if (tagSoh) { tagSoh.textContent = '--'; tagSoh.className = 'bms-card-tag'; }
+    if (tagCrate) { tagCrate.textContent = '--'; tagCrate.className = 'bms-card-tag'; }
+
+    // Reset gauges
+    updateGauge(socCircle, socNumber, 0);
+    updateGauge(sohCircle, sohNumber, 0);
+
+    // Reset states
+    if (stateBatteryVal) stateBatteryVal.textContent = 'STANDBY';
+    if (stateBatterySub) stateBatterySub.textContent = 'Select a demo scenario or load JSON';
+    if (stateSafetyVal) { stateSafetyVal.textContent = 'STANDBY'; stateSafetyVal.style.color = '#94a3b8'; }
+    if (stateAlertVal) { stateAlertVal.textContent = 'No active demo scenario'; stateAlertVal.style.color = '#94a3b8'; }
+
+    // Reset thermal
+    if (thermalCurrentVal) thermalCurrentVal.textContent = '-- °C';
+    if (thermalPredictedVal) thermalPredictedVal.textContent = 'MODEL NOT CONNECTED';
+    if (thermalTrendVal) thermalTrendVal.textContent = 'WAITING FOR DATA';
+
+    // Reset received
+    if (recvVoltage) recvVoltage.textContent = '--';
+    if (recvCurrent) recvCurrent.textContent = '--';
+    if (recvTemperature) recvTemperature.textContent = '--';
+    if (recvSoc) recvSoc.textContent = '--';
+    if (recvSoh) recvSoh.textContent = '--';
+    if (recvCrate) recvCrate.textContent = '--';
+    if (recvAmbient) recvAmbient.textContent = '--';
+    if (recvServerTime) recvServerTime.textContent = '--';
+
+    // Clear chart
+    currentTrendData = [];
+    drawTemperatureChart([]);
+
+    if (scenarioBannerTitle) scenarioBannerTitle.textContent = 'DEMO STANDBY — NO ACTIVE SCENARIO';
+    if (scenarioBannerDesc) scenarioBannerDesc.textContent = 'Select one of the controlled demonstration scenarios above to simulate real-time battery behavior.';
+
+    appendLog('SYS', 'Dashboard reset to standby state.');
+  }
+
+  // --------------------------------------------------------------------------
+  // Mode Switcher (Demo Scenarios vs Custom JSON)
+  // --------------------------------------------------------------------------
+
+  function setDataSourceMode(mode) {
+    activeMode = mode;
+    if (mode === 'demo') {
+      if (tabDemoMode) tabDemoMode.classList.add('active');
+      if (tabJsonMode) tabJsonMode.classList.remove('active');
+      if (demoControlsContainer) demoControlsContainer.style.display = 'block';
+      if (jsonControlsContainer) jsonControlsContainer.style.display = 'none';
+      if (dataSourceBadge) {
+        dataSourceBadge.textContent = 'DATA SOURCE: DEMO / SIMULATED';
+        dataSourceBadge.classList.remove('json-mode');
+      }
+      if (healthDataSourceVal) healthDataSourceVal.textContent = 'DEMO';
+      if (headerModeBadge) headerModeBadge.textContent = 'MODE: DEMO';
+    } else {
+      if (tabJsonMode) tabJsonMode.classList.add('active');
+      if (tabDemoMode) tabDemoMode.classList.remove('active');
+      if (demoControlsContainer) demoControlsContainer.style.display = 'none';
+      if (jsonControlsContainer) jsonControlsContainer.style.display = 'block';
+      if (dataSourceBadge) {
+        dataSourceBadge.textContent = 'DATA SOURCE: JSON INPUT';
+        dataSourceBadge.classList.add('json-mode');
+      }
+      if (healthDataSourceVal) healthDataSourceVal.textContent = 'JSON INPUT';
+      if (headerModeBadge) headerModeBadge.textContent = 'MODE: JSON';
+    }
+  }
+
+  if (tabDemoMode) {
+    tabDemoMode.addEventListener('click', () => {
+      setDataSourceMode('demo');
+      appendLog('SYS', 'Switched to DEMO / SIMULATION mode.');
+    });
+  }
+
+  if (tabJsonMode) {
+    tabJsonMode.addEventListener('click', () => {
+      setDataSourceMode('json');
+      appendLog('SYS', 'Switched to CUSTOM JSON INPUT mode.');
+    });
+  }
+
+  // --------------------------------------------------------------------------
+  // Custom JSON Input Actions
+  // --------------------------------------------------------------------------
+
+  if (btnSampleJson) {
+    btnSampleJson.addEventListener('click', () => {
+      if (jsonTextarea) jsonTextarea.value = SAMPLE_INPUT_JSON;
+      if (jsonFeedback) {
+        jsonFeedback.textContent = 'Demonstration sample JSON loaded. Click VALIDATE or LOAD JSON.';
+        jsonFeedback.className = 'disclaimer-box';
+        jsonFeedback.style.color = '#4ade80';
+      }
+    });
+  }
+
+  if (btnClearJson) {
+    btnClearJson.addEventListener('click', () => {
+      if (jsonTextarea) jsonTextarea.value = '';
+      if (jsonFeedback) jsonFeedback.textContent = '';
+    });
+  }
+
+  if (btnValidateJson) {
+    btnValidateJson.addEventListener('click', () => {
+      const raw = jsonTextarea ? jsonTextarea.value.trim() : '';
+      if (!raw) {
+        showJsonFeedback('Please provide JSON payload to validate.', false);
+        return;
+      }
+      try {
+        const parsed = JSON.parse(raw);
+        if (!parsed.voltage || !parsed.current || !parsed.temperature) {
+          showJsonFeedback('Validation error: Required fields missing (voltage, current, temperature).', false);
+          return;
+        }
+        showJsonFeedback('JSON schema valid! Ready for backend ingestion.', true);
+        appendLog('VAL', 'Client-side JSON schema validation passed.');
+      } catch (err) {
+        showJsonFeedback(`Syntax error: ${err.message}`, false);
+      }
+    });
+  }
+
+  if (btnLoadJson) {
+    btnLoadJson.addEventListener('click', async () => {
+      const raw = jsonTextarea ? jsonTextarea.value.trim() : '';
+      if (!raw) {
+        showJsonFeedback('Please provide JSON payload to load.', false);
+        return;
+      }
+      try {
+        const parsed = JSON.parse(raw);
+        const response = await fetch('/api/battery-data', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(parsed)
+        });
+        const result = await response.json();
+        if (response.ok && result.success) {
+          showJsonFeedback('Telemetry successfully ingested into backend pipeline!', true);
+          setDataSourceMode('json');
+          applyScenario({
+            name: 'CUSTOM TELEMETRY PAYLOAD',
+            telemetry: result.data.structured,
+            classification: {
+              battery_state: 'TELEMETRY INGESTED',
+              safety_rule_status: result.data.structured.temperature >= 45 ? 'HIGH TEMPERATURE' : 'NORMAL',
+              demo_alert: 'Custom JSON Received',
+              alert_level: 'NOMINAL',
+              description: 'Standard JSON telemetry structured through Flask backend validator.'
+            }
+          }, false);
+        } else {
+          showJsonFeedback(`Backend validation error: ${result.message}`, false);
+        }
+      } catch (err) {
+        showJsonFeedback(`Ingestion error: ${err.message}`, false);
+      }
+    });
+  }
+
+  function showJsonFeedback(msg, isSuccess) {
+    if (!jsonFeedback) return;
+    jsonFeedback.textContent = msg;
+    jsonFeedback.style.color = isSuccess ? '#4ade80' : '#f87171';
+  }
+
+  // --------------------------------------------------------------------------
+  // Health & Liveness Check
+  // --------------------------------------------------------------------------
 
   async function checkHealth() {
     try {
       const response = await fetch('/health');
       if (response.ok) {
         const data = await response.json();
-        if (data && data.status === 'ok') {
-          setSystemStatus(true);
-          return true;
+        if (headerSystemStatus) headerSystemStatus.textContent = 'SYSTEM: ONLINE';
+        if (headerSystemDot) headerSystemDot.className = 'status-dot online';
+        if (headerBackendBadge) {
+          headerBackendBadge.textContent = 'BACKEND: CONNECTED';
+          headerBackendBadge.className = 'badge badge-online';
         }
-      }
-      setSystemStatus(false);
-      return false;
-    } catch (err) {
-      setSystemStatus(false);
-      return false;
-    }
-  }
-
-  // --------------------------------------------------------------------------
-  // Model Status & Dataset Status Fetching
-  // --------------------------------------------------------------------------
-
-  async function fetchModelStatus() {
-    try {
-      const response = await fetch('/api/model-status');
-      if (response.ok) {
-        const res = await response.json();
-        if (res.success && res.data) {
-          const m = res.data;
-          if (modelNameTag) modelNameTag.textContent = m.model_file;
-          if (modelTypeTag) modelTypeTag.textContent = 'Multi-Model Ensemble';
-          if (modelVerifyTag) {
-            modelVerifyTag.textContent = m.verified ? 'VERIFIED' : 'NOT VERIFIED';
-            modelVerifyTag.className = m.verified ? 'status-value-tag valid' : 'status-value-tag pending';
-          }
-          if (modelPredTag) {
-            modelPredTag.textContent = m.prediction_available ? 'AVAILABLE' : 'UNAVAILABLE';
-            modelPredTag.className = m.prediction_available ? 'status-value-tag valid' : 'status-value-tag muted';
-          }
-          if (modelStatusTag) {
-            modelStatusTag.textContent = m.status;
-            modelStatusTag.className = m.status === 'MODEL_READY' ? 'status-value-tag valid' : 'status-value-tag pending';
-          }
-
-          if (predModelName) predModelName.textContent = m.model_file;
-          if (m.status === 'MODEL_READY') {
-            appendLog('MODEL', `Model ensemble verified: ${m.model_file} (SOC, SOH, Anomaly, Physics Rules)`);
-          }
+        if (healthPipelineVal) {
+          healthPipelineVal.textContent = 'READY';
+          healthPipelineVal.style.color = '#4ade80';
         }
+        return true;
       }
     } catch (err) {
-      console.warn('[BRAIN Phase 4] Could not fetch model status:', err);
-    }
-  }
-
-  async function fetchDatasetStatus() {
-    try {
-      const response = await fetch('/api/dataset-status');
-      if (response.ok) {
-        const res = await response.json();
-        if (res.success && res.samples && res.samples.length > 0) {
-          datasetSamples = res.samples;
-          appendLog('DATA', `Dataset profile loaded: ${datasetSamples.length} CALCE sequential demonstration samples available.`);
-        }
+      if (headerSystemStatus) headerSystemStatus.textContent = 'SYSTEM: OFFLINE';
+      if (headerSystemDot) headerSystemDot.className = 'status-dot offline';
+      if (headerBackendBadge) {
+        headerBackendBadge.textContent = 'BACKEND: OFFLINE';
+        headerBackendBadge.className = 'badge badge-offline';
       }
-    } catch (err) {
-      console.warn('[BRAIN Phase 4] Could not fetch dataset status:', err);
+      if (healthPipelineVal) {
+        healthPipelineVal.textContent = 'ERROR';
+        healthPipelineVal.style.color = '#f87171';
+      }
     }
+    return false;
   }
 
   // --------------------------------------------------------------------------
-  // UI Helper Functions
+  // System Initialization Sequence
   // --------------------------------------------------------------------------
 
-  function setDataStatus(statusText, stateClass) {
-    if (!dataStatusBadge) return;
-    dataStatusBadge.textContent = statusText;
-    dataStatusBadge.className = `data-status-badge ${stateClass}`;
-  }
+  appendLog('SYS', 'BRAIN initialized');
+  appendLog('SYS', 'Flask backend connected');
+  appendLog('DATA', 'Demo mode enabled');
+  appendLog('MODEL', 'Prediction unavailable (Model not connected)');
+  appendLog('PINN', 'Thermal model not connected');
 
-  function showFeedback(message, isSuccess = false) {
-    if (!validationFeedback) return;
-    validationFeedback.textContent = message;
-    validationFeedback.className = isSuccess 
-      ? 'validation-feedback success' 
-      : 'validation-feedback error';
-    validationFeedback.style.display = 'block';
-  }
-
-  function hideFeedback() {
-    if (!validationFeedback) return;
-    validationFeedback.style.display = 'none';
-    validationFeedback.textContent = '';
-  }
-
-  function appendLog(prefix, message, isWaiting = false) {
-    if (!systemLogTerminal) return;
-    const entry = document.createElement('div');
-    entry.className = isWaiting ? 'log-entry log-entry-waiting' : 'log-entry';
-    entry.innerHTML = `<span class="log-prefix">[${prefix}]</span> ${message}`;
-    systemLogTerminal.appendChild(entry);
-    systemLogTerminal.scrollTop = systemLogTerminal.scrollHeight;
-  }
-
-  function formatVoltage(val) {
-    if (val === undefined || val === null) return '--';
-    const s = val.toString();
-    const decimals = s.includes('.') ? s.split('.')[1].length : 0;
-    return (decimals > 2 ? val.toFixed(decimals) : val.toFixed(2)) + ' V';
-  }
-
-  function formatCurrent(val) {
-    if (val === undefined || val === null) return '--';
-    const s = val.toString();
-    const decimals = s.includes('.') ? s.split('.')[1].length : 0;
-    return (decimals > 2 ? val.toFixed(decimals) : val.toFixed(2)) + ' A';
-  }
-
-  function formatTemperature(val) {
-    if (val === undefined || val === null) return '--';
-    const s = val.toString();
-    const decimals = s.includes('.') ? s.split('.')[1].length : 0;
-    return (decimals > 1 ? val.toFixed(decimals) : val.toFixed(1)) + ' °C';
-  }
-
-  function formatPercentage(val) {
-    if (val === undefined || val === null) return 'N/A';
-    return `${val} %`;
-  }
-
-  function formatCrate(val) {
-    if (val === undefined || val === null) return 'N/A';
-    const s = val.toString();
-    const decimals = s.includes('.') ? s.split('.')[1].length : 0;
-    return (decimals > 1 ? val.toFixed(decimals) : val.toFixed(1)) + ' C';
-  }
-
-  function formatServerTimestamp(isoStr) {
-    if (!isoStr) return '--';
-    try {
-      const d = new Date(isoStr);
-      const day = String(d.getDate()).padStart(2, '0');
-      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-      const month = months[d.getMonth()];
-      const year = d.getFullYear();
-      const hours = String(d.getHours()).padStart(2, '0');
-      const minutes = String(d.getMinutes()).padStart(2, '0');
-      const seconds = String(d.getSeconds()).padStart(2, '0');
-      return `${day} ${month} ${year}, ${hours}:${minutes}:${seconds}`;
-    } catch {
-      return isoStr;
-    }
-  }
-
-  // --------------------------------------------------------------------------
-  // Dataset Demo Controls
-  // --------------------------------------------------------------------------
-
-  function renderDemoSample(index) {
-    if (!datasetSamples || datasetSamples.length === 0) return;
-    const sample = datasetSamples[index];
-    if (!sample) return;
-
-    if (demoSampleBadge) demoSampleBadge.textContent = `SAMPLE ${index + 1} OF ${datasetSamples.length}`;
-    if (demoSampleId) demoSampleId.textContent = sample.sample_id || `Sample_${index + 1}`;
-    if (demoSampleDesc) demoSampleDesc.textContent = sample.description || 'CALCE telemetry demonstration sample.';
-
-    if (jsonTextarea) {
-      jsonTextarea.value = JSON.stringify(sample, null, 2);
-    }
-    setDataStatus('SAMPLE LOADED', 'pending');
-    showFeedback(`Dataset sample ${index + 1} (${sample.sample_id}) loaded into editor. Ready for pipeline ingestion or model inference.`, true);
-    appendLog('DATA', `Selected dataset sample ${index + 1}: ${sample.sample_id}`);
-  }
-
-  if (modeJsonBtn && modeDemoBtn) {
-    modeJsonBtn.addEventListener('click', () => {
-      currentMode = 'json';
-      modeJsonBtn.classList.add('active');
-      modeDemoBtn.classList.remove('active');
-      if (demoControlsContainer) demoControlsContainer.style.display = 'none';
-      if (dataSourceBadge) {
-        dataSourceBadge.textContent = 'DATA SOURCE: JSON INPUT';
-      }
-      appendLog('APP', 'Switched to LIVE JSON INPUT mode.');
-    });
-
-    modeDemoBtn.addEventListener('click', () => {
-      currentMode = 'demo';
-      modeDemoBtn.classList.add('active');
-      modeJsonBtn.classList.remove('active');
-      if (demoControlsContainer) demoControlsContainer.style.display = 'flex';
-      if (dataSourceBadge) {
-        dataSourceBadge.textContent = 'DATA SOURCE: DATASET DEMO (CALCE)';
-      }
-      appendLog('APP', 'Switched to DATASET DEMO mode.');
-      if (datasetSamples.length > 0) {
-        renderDemoSample(currentSampleIndex);
-      }
-    });
-  }
-
-  if (demoPrevBtn) {
-    demoPrevBtn.addEventListener('click', () => {
-      if (datasetSamples.length === 0) return;
-      currentSampleIndex = (currentSampleIndex - 1 + datasetSamples.length) % datasetSamples.length;
-      renderDemoSample(currentSampleIndex);
-    });
-  }
-
-  if (demoNextBtn) {
-    demoNextBtn.addEventListener('click', () => {
-      if (datasetSamples.length === 0) return;
-      currentSampleIndex = (currentSampleIndex + 1) % datasetSamples.length;
-      renderDemoSample(currentSampleIndex);
-    });
-  }
-
-  if (demoLoadBtn) {
-    demoLoadBtn.addEventListener('click', () => {
-      renderDemoSample(currentSampleIndex);
-    });
-  }
-
-  // --------------------------------------------------------------------------
-  // Client-Side Pre-validation
-  // --------------------------------------------------------------------------
-  function prevalidateClientJson(rawText) {
-    if (!rawText || rawText.trim() === '') {
-      return { isValid: false, status: 'JSON INVALID', message: 'Please enter battery JSON data.', parsed: null };
-    }
-
-    let parsed;
-    try {
-      parsed = JSON.parse(rawText);
-    } catch (err) {
-      return { isValid: false, status: 'JSON INVALID', message: 'Invalid JSON syntax formatting.', parsed: null };
-    }
-
-    if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed)) {
-      return { isValid: false, status: 'JSON INVALID', message: 'JSON root must be an object.', parsed: null };
-    }
-
-    const requiredFields = ['voltage', 'current', 'temperature'];
-    for (const f of requiredFields) {
-      if (parsed[f] === undefined && parsed[`${f}_V`] === undefined && parsed[`${f}_A`] === undefined && parsed[`${f}_C`] === undefined) {
-        return { isValid: false, status: 'INVALID_DATA', message: `Missing required telemetry field: ${f}.`, parsed: null };
-      }
-    }
-
-    return { isValid: true, status: 'VALID', message: 'JSON VALID', parsed };
-  }
-
-  // --------------------------------------------------------------------------
-  // Event Listeners
-  // --------------------------------------------------------------------------
-
-  // 1. VALIDATE JSON BUTTON
-  if (validateJsonBtn) {
-    validateJsonBtn.addEventListener('click', () => {
-      const rawText = jsonTextarea ? jsonTextarea.value : '';
-      const check = prevalidateClientJson(rawText);
-
-      if (check.isValid) {
-        setDataStatus('JSON VALID', 'valid');
-        showFeedback('JSON VALID — Schema verified. Ready for backend submission or model inference.', true);
-        appendLog('VAL', 'Client-side JSON validation successful.');
-      } else {
-        setDataStatus(check.status, 'invalid');
-        showFeedback(check.message, false);
-        appendLog('VAL', `Validation failed: ${check.message}`);
-        appendLog('NET', 'Waiting for valid battery data.', true);
-      }
-    });
-  }
-
-  // 2. LOAD JSON BUTTON (Sends to Flask Backend: POST /api/battery-data)
-  if (loadJsonBtn) {
-    loadJsonBtn.addEventListener('click', async () => {
-      const rawText = jsonTextarea ? jsonTextarea.value : '';
-      const check = prevalidateClientJson(rawText);
-
-      if (!check.isValid) {
-        setDataStatus(check.status, 'invalid');
-        showFeedback(check.message, false);
-        appendLog('VAL', `JSON validation failed: ${check.message}`);
-        return;
-      }
-
-      try {
-        const response = await fetch('/api/battery-data', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(check.parsed)
-        });
-
-        const result = await response.json();
-
-        if (!response.ok || !result.success) {
-          setDataStatus(result.status || 'INVALID_DATA', 'invalid');
-          showFeedback(result.message || 'Backend validation rejected payload.', false);
-          appendLog('VAL', `Backend validation failed: ${result.message}`);
-          return;
-        }
-
-        // Successful Ingestion
-        const processed = result.data;
-        const structured = processed.structured;
-
-        setDataStatus('DATA INGESTED', 'received');
-        showFeedback('Battery telemetry successfully ingested into backend pipeline.', true);
-
-        // Update Overview Cards
-        if (overviewVoltage) overviewVoltage.textContent = formatVoltage(structured.voltage);
-        if (overviewCurrent) overviewCurrent.textContent = formatCurrent(structured.current);
-        if (overviewTemperature) overviewTemperature.textContent = formatTemperature(structured.temperature);
-        if (overviewSoc) overviewSoc.textContent = formatPercentage(structured.soc);
-        if (overviewSoh) overviewSoh.textContent = formatPercentage(structured.soh);
-        if (overviewCrate) overviewCrate.textContent = formatCrate(structured.c_rate);
-
-        // Update Thermal Monitoring
-        if (thermalCurrentTemp) thermalCurrentTemp.textContent = formatTemperature(structured.temperature);
-        if (thermalCurrentSub) thermalCurrentSub.textContent = 'Backend Data Ingested';
-
-        // Update Battery Health
-        if (healthSoc) healthSoc.textContent = formatPercentage(structured.soc);
-        if (healthSoh) healthSoh.textContent = formatPercentage(structured.soh);
-
-        // Update Received Data Preview
-        if (recvVoltage) recvVoltage.textContent = formatVoltage(structured.voltage);
-        if (recvCurrent) recvCurrent.textContent = formatCurrent(structured.current);
-        if (recvTemperature) recvTemperature.textContent = formatTemperature(structured.temperature);
-        if (recvSoc) recvSoc.textContent = formatPercentage(structured.soc);
-        if (recvSoh) recvSoh.textContent = formatPercentage(structured.soh);
-        if (recvCrate) recvCrate.textContent = formatCrate(structured.c_rate);
-        if (recvCycle) recvCycle.textContent = check.parsed.cycle_number !== undefined ? check.parsed.cycle_number : 'N/A';
-        if (recvTime) recvTime.textContent = check.parsed.time_s !== undefined ? check.parsed.time_s : 'N/A';
-        if (recvSource) recvSource.textContent = currentMode === 'demo' ? 'DATASET DEMO' : 'JSON INPUT';
-        if (recvServerTime) recvServerTime.textContent = `SERVER TIME: ${formatServerTimestamp(processed.received_at)}`;
-
-        if (lastDataUpdate) lastDataUpdate.textContent = formatServerTimestamp(processed.received_at);
-
-        // Display unmodeled/unexpected fields if present
-        if (processed.additional_fields && additionalDataContainer && additionalDataContent) {
-          additionalDataContent.textContent = JSON.stringify(processed.additional_fields, null, 2);
-          additionalDataContainer.style.display = 'block';
-        } else if (additionalDataContainer) {
-          additionalDataContainer.style.display = 'none';
-        }
-
-        appendLog('SYS', 'Battery telemetry accepted by backend.');
-        setSystemStatus(true);
-
-      } catch (netErr) {
-        console.error('[BRAIN Phase 4] Pipeline network error:', netErr);
-        setSystemStatus(false);
-        setDataStatus('SERVER_ERROR', 'invalid');
-        showFeedback('Unable to reach backend API endpoint. Ensure Flask server is running.', false);
-        appendLog('NET', 'Backend connection error: Server unreachable.', true);
-      }
-    });
-  }
-
-  // 3. RUN MODEL INFERENCE BUTTON (Sends to: POST /api/predict)
-  if (runPredictBtn) {
-    runPredictBtn.addEventListener('click', async () => {
-      const rawText = jsonTextarea ? jsonTextarea.value : '';
-      const check = prevalidateClientJson(rawText);
-
-      if (!check.isValid) {
-        setDataStatus(check.status, 'invalid');
-        showFeedback(check.message, false);
-        appendLog('VAL', `Inference request rejected: ${check.message}`);
-        return;
-      }
-
-      setDataStatus('RUNNING MODEL...', 'pending');
-      if (predStatusBadge) {
-        predStatusBadge.textContent = 'COMPUTING INFERENCE...';
-        predStatusBadge.className = 'pred-badge pending';
-      }
-
-      try {
-        const response = await fetch('/api/predict', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(check.parsed)
-        });
-
-        const result = await response.json();
-
-        if (!response.ok || !result.success) {
-          setDataStatus('MODEL_ERROR', 'invalid');
-          showFeedback(result.message || 'Model prediction failed.', false);
-          if (predStatusBadge) {
-            predStatusBadge.textContent = 'INFERENCE FAILED';
-            predStatusBadge.className = 'pred-badge anomaly';
-          }
-          appendLog('ERR', `Inference error: ${result.message}`);
-          return;
-        }
-
-        const preds = result.prediction;
-        const latency = result.inference_time_ms;
-
-        // 1. Update Data Status Badge
-        setDataStatus('PREDICTION SUCCESS', 'received');
-        showFeedback(`Multi-model inference successfully executed in ${latency} ms.`, true);
-
-        // 2. Update Prediction Panel
-        if (predStatusBadge) {
-          predStatusBadge.textContent = 'PREDICTION SUCCESS';
-          predStatusBadge.className = 'pred-badge valid';
-        }
-        if (predLatency) {
-          predLatency.textContent = `Latency: ${latency} ms`;
-        }
-
-        // SOC Prediction (Random Forest)
-        if (preds.soc && preds.soc.status === 'PREDICTION_SUCCESS') {
-          if (predSocVal) predSocVal.textContent = `${preds.soc.value} %`;
-          if (predSocSub) predSocSub.textContent = `RandomForestRegressor (${preds.soc.features_used.length} features)`;
-          if (overviewSoc) overviewSoc.textContent = `${preds.soc.value} %`;
-          if (healthSoc) healthSoc.textContent = `${preds.soc.value} %`;
-        } else if (preds.soc && preds.soc.status === 'MODEL_INPUT_INCOMPLETE') {
-          if (predSocVal) predSocVal.textContent = 'N/A (Incomplete)';
-          if (predSocSub) predSocSub.textContent = `Missing: ${preds.soc.missing_features.join(', ')}`;
-        }
-
-        // SOH Prediction (Gradient Boosting)
-        if (preds.soh && preds.soh.status === 'PREDICTION_SUCCESS') {
-          if (predSohVal) predSohVal.textContent = `${preds.soh.value} %`;
-          if (predSohSub) predSohSub.textContent = `GradientBoostingRegressor (${preds.soh.features_used.length} features)`;
-          if (overviewSoh) overviewSoh.textContent = `${preds.soh.value} %`;
-          if (healthSoh) healthSoh.textContent = `${preds.soh.value} %`;
-        } else if (preds.soh && preds.soh.status === 'MODEL_INPUT_INCOMPLETE') {
-          if (predSohVal) predSohVal.textContent = 'N/A (Incomplete)';
-          if (predSohSub) predSohSub.textContent = `Missing: ${preds.soh.missing_features.join(', ')}`;
-        }
-
-        // Anomaly Model (Isolation Forest)
-        if (preds.anomaly && preds.anomaly.status === 'PREDICTION_SUCCESS') {
-          const isAnomaly = preds.anomaly.is_anomaly;
-          if (predAnomalyBadge) {
-            predAnomalyBadge.textContent = isAnomaly ? 'ANOMALOUS' : 'NORMAL';
-            predAnomalyBadge.className = isAnomaly ? 'pred-badge anomaly' : 'pred-badge valid';
-          }
-          if (predAnomalyScore) {
-            predAnomalyScore.textContent = `IsolationForest Score: ${preds.anomaly.score}`;
-          }
-        } else if (preds.anomaly && preds.anomaly.status === 'MODEL_INPUT_INCOMPLETE') {
-          if (predAnomalyBadge) {
-            predAnomalyBadge.textContent = 'N/A (Incomplete)';
-            predAnomalyBadge.className = 'pred-badge muted';
-          }
-          if (predAnomalyScore) {
-            predAnomalyScore.textContent = `Missing: ${preds.anomaly.missing_features.join(', ')}`;
-          }
-        }
-
-        // Physics Boundary Rules
-        if (preds.physics_rules) {
-          const pStatus = preds.physics_rules.status;
-          if (predPhysicsBadge) {
-            predPhysicsBadge.textContent = pStatus;
-            predPhysicsBadge.className = pStatus === 'NORMAL' ? 'pred-badge valid' : 'pred-badge violation';
-          }
-          if (predPhysicsSub) {
-            if (preds.physics_rules.violations.length > 0) {
-              predPhysicsSub.textContent = preds.physics_rules.violations[0];
-            } else if (preds.physics_rules.warnings.length > 0) {
-              predPhysicsSub.textContent = preds.physics_rules.warnings[0];
-            } else {
-              predPhysicsSub.textContent = 'All physical boundaries respected';
-            }
-          }
-        }
-
-        // Features Utilized List
-        if (predFeaturesList && result.input && result.input.features_used) {
-          predFeaturesList.textContent = result.input.features_used.join(', ') || 'None';
-        }
-
-        // 3. Update Thermal Monitoring
-        const rawTemp = check.parsed.temperature !== undefined ? check.parsed.temperature : check.parsed.temperature_C;
-        if (thermalCurrentTemp && rawTemp !== undefined) {
-          thermalCurrentTemp.textContent = formatTemperature(rawTemp);
-        }
-        if (thermalCurrentSub) {
-          thermalCurrentSub.textContent = 'Model Telemetry Ingested';
-        }
-        if (thermalTrendBadge) {
-          thermalTrendBadge.textContent = 'CALCE DYNAMICS ACTIVE';
-          thermalTrendBadge.className = 'stat-status-badge';
-        }
-
-        // 4. Update Battery Overview
-        const rawVolt = check.parsed.voltage !== undefined ? check.parsed.voltage : check.parsed.voltage_V;
-        const rawCurr = check.parsed.current !== undefined ? check.parsed.current : check.parsed.current_A;
-        if (overviewVoltage && rawVolt !== undefined) overviewVoltage.textContent = formatVoltage(rawVolt);
-        if (overviewCurrent && rawCurr !== undefined) overviewCurrent.textContent = formatCurrent(rawCurr);
-        if (overviewTemperature && rawTemp !== undefined) overviewTemperature.textContent = formatTemperature(rawTemp);
-        if (overviewCrate && check.parsed.c_rate !== undefined) overviewCrate.textContent = formatCrate(check.parsed.c_rate);
-
-        // 5. Update Risk Assessment Card
-        if (preds.risk_assessment) {
-          const risk = preds.risk_assessment;
-          if (riskMainText) riskMainText.textContent = risk.status.replace(/_/g, ' ');
-          if (riskDescText) riskDescText.textContent = risk.summary;
-          if (riskStatusDisplay) {
-            riskStatusDisplay.className = risk.risk_level === 'CRITICAL' 
-              ? 'risk-status-display critical'
-              : (risk.risk_level === 'HIGH' || risk.risk_level === 'MEDIUM' ? 'risk-status-display warning' : 'risk-status-display normal');
-          }
-          if (riskPill) {
-            riskPill.className = risk.risk_level === 'CRITICAL'
-              ? 'status-pill status-pill-critical'
-              : (risk.risk_level === 'HIGH' || risk.risk_level === 'MEDIUM' ? 'status-pill status-pill-warning' : 'status-pill status-pill-success');
-            riskPill.textContent = `${risk.risk_level} RISK`;
-          }
-        }
-
-        // 6. Update Early Warning Card
-        if (preds.early_warning) {
-          const warn = preds.early_warning;
-          if (warningMainText) {
-            warningMainText.textContent = warn.source === 'RULE_BASED' 
-              ? 'RULE-BASED ALARM' 
-              : (warn.source === 'MODEL_BASED' ? 'MODEL-BASED WARNING' : 'NO ACTIVE HAZARD');
-          }
-          if (warningDescText) warningDescText.textContent = warn.message;
-          if (warningStatusDisplay) {
-            warningStatusDisplay.className = warn.level === 'CRITICAL'
-              ? 'warning-status-display critical'
-              : (warn.level === 'WARNING' || warn.level === 'ADVISORY' ? 'warning-status-display warning' : 'warning-status-display normal');
-          }
-          if (warningPill) {
-            warningPill.className = warn.level === 'CRITICAL'
-              ? 'status-pill status-pill-critical'
-              : (warn.level === 'WARNING' || warn.level === 'ADVISORY' ? 'status-pill status-pill-warning' : 'status-pill status-pill-success');
-            warningPill.textContent = warn.level;
-          }
-        }
-
-        // 7. Update Battery State
-        if (healthBatteryState) {
-          if (preds.risk_assessment.risk_level === 'CRITICAL') {
-            healthBatteryState.textContent = 'CRITICAL LIMIT EXCEEDED';
-          } else if (preds.anomaly && preds.anomaly.is_anomaly) {
-            healthBatteryState.textContent = 'ANOMALY DETECTED';
-          } else if (preds.soh && preds.soh.value < 85.0) {
-            healthBatteryState.textContent = 'DEGRADED (AGED CELL)';
-          } else {
-            healthBatteryState.textContent = 'NOMINAL HEALTH';
-          }
-        }
-
-        // 8. Update Received Data Panel
-        if (recvVoltage && rawVolt !== undefined) recvVoltage.textContent = formatVoltage(rawVolt);
-        if (recvCurrent && rawCurr !== undefined) recvCurrent.textContent = formatCurrent(rawCurr);
-        if (recvTemperature && rawTemp !== undefined) recvTemperature.textContent = formatTemperature(rawTemp);
-        if (recvSoc) recvSoc.textContent = preds.soc && preds.soc.value ? `${preds.soc.value} %` : (check.parsed.soc ? `${check.parsed.soc} %` : 'N/A');
-        if (recvSoh) recvSoh.textContent = preds.soh && preds.soh.value ? `${preds.soh.value} %` : (check.parsed.soh ? `${check.parsed.soh} %` : 'N/A');
-        if (recvCrate) recvCrate.textContent = check.parsed.c_rate ? formatCrate(check.parsed.c_rate) : 'N/A';
-        if (recvCycle) recvCycle.textContent = check.parsed.cycle_number !== undefined ? check.parsed.cycle_number : 'N/A';
-        if (recvTime) recvTime.textContent = check.parsed.time_s !== undefined ? check.parsed.time_s : 'N/A';
-        if (recvSource) recvSource.textContent = currentMode === 'demo' ? 'DATASET DEMO' : 'JSON INPUT';
-        if (recvServerTime) recvServerTime.textContent = `SERVER TIME: ${formatServerTimestamp(result.timestamp)}`;
-
-        // Log to terminal
-        appendLog('INFER', `Multi-model prediction completed in ${latency} ms.`);
-        if (preds.soc && preds.soc.value) appendLog('SOC', `Estimated SOC: ${preds.soc.value}% (Random Forest)`);
-        if (preds.soh && preds.soh.value) appendLog('SOH', `Estimated SOH: ${preds.soh.value}% (Gradient Boosting)`);
-        if (preds.anomaly && preds.anomaly.classification) appendLog('ANOM', `Anomaly status: ${preds.anomaly.classification} (Isolation Forest score: ${preds.anomaly.score})`);
-
-        setSystemStatus(true);
-
-      } catch (inferErr) {
-        console.error('[BRAIN Phase 4] Inference network error:', inferErr);
-        setDataStatus('SERVER_ERROR', 'invalid');
-        showFeedback('Unable to reach prediction endpoint. Ensure Flask server is running.', false);
-        appendLog('NET', 'Prediction connection error: Server unreachable.', true);
-      }
-    });
-  }
-
-  // 4. LOAD SAMPLE JSON BUTTON
-  if (sampleJsonBtn) {
-    sampleJsonBtn.addEventListener('click', () => {
-      if (jsonTextarea) {
-        jsonTextarea.value = SAMPLE_JSON;
-      }
-      setDataStatus('SAMPLE LOADED', 'pending');
-      showFeedback('Demonstration sample JSON loaded. Click RUN MODEL INFERENCE or LOAD JSON.', true);
-      appendLog('SYS', 'Demonstration sample JSON loaded into editor.');
-    });
-  }
-
-  // 5. CLEAR BUTTON
-  if (clearBtn) {
-    clearBtn.addEventListener('click', () => {
-      if (jsonTextarea) jsonTextarea.value = '';
-
-      // Reset Battery Overview
-      if (overviewVoltage) overviewVoltage.textContent = '--';
-      if (overviewCurrent) overviewCurrent.textContent = '--';
-      if (overviewTemperature) overviewTemperature.textContent = '--';
-      if (overviewSoc) overviewSoc.textContent = '--';
-      if (overviewSoh) overviewSoh.textContent = '--';
-      if (overviewCrate) overviewCrate.textContent = '--';
-
-      // Reset Thermal Monitoring
-      if (thermalCurrentTemp) thermalCurrentTemp.textContent = '--';
-      if (thermalCurrentSub) thermalCurrentSub.textContent = 'Sensor Ingestion Pending';
-      if (thermalTrendBadge) {
-        thermalTrendBadge.textContent = 'WAITING FOR MODEL/DATA';
-        thermalTrendBadge.className = 'stat-status-badge neutral';
-      }
-
-      // Reset Battery Health
-      if (healthSoc) healthSoc.textContent = '--';
-      if (healthSoh) healthSoh.textContent = '--';
-      if (healthBatteryState) healthBatteryState.textContent = 'WAITING FOR DATA';
-
-      // Reset Prediction Panel
-      if (predStatusBadge) {
-        predStatusBadge.textContent = 'AWAITING INFERENCE';
-        predStatusBadge.className = 'pred-badge pending';
-      }
-      if (predLatency) predLatency.textContent = 'Latency: -- ms';
-      if (predSocVal) predSocVal.textContent = '--';
-      if (predSocSub) predSocSub.textContent = 'RandomForestRegressor (5 features)';
-      if (predSohVal) predSohVal.textContent = '--';
-      if (predSohSub) predSohSub.textContent = 'GradientBoostingRegressor (7 features)';
-      if (predAnomalyBadge) {
-        predAnomalyBadge.textContent = 'NOT RUN';
-        predAnomalyBadge.className = 'pred-badge muted';
-      }
-      if (predAnomalyScore) predAnomalyScore.textContent = 'IsolationForest Score: --';
-      if (predPhysicsBadge) {
-        predPhysicsBadge.textContent = 'NOT EVALUATED';
-        predPhysicsBadge.className = 'pred-badge muted';
-      }
-      if (predPhysicsSub) predPhysicsSub.textContent = 'Deterministic Rules';
-      if (predFeaturesList) predFeaturesList.textContent = 'None (Execute inference to inspect feature vectors)';
-
-      // Reset Risk & Early Warning
-      if (riskMainText) riskMainText.textContent = 'SYSTEM NOT CONNECTED';
-      if (riskDescText) riskDescText.textContent = 'Autonomous risk indexing and runaway hazard classification are disabled until backend validation.';
-      if (riskStatusDisplay) riskStatusDisplay.className = 'risk-status-display';
-      if (riskPill) {
-        riskPill.className = 'status-pill status-pill-inactive';
-        riskPill.textContent = 'Safety Logic';
-      }
-
-      if (warningMainText) warningMainText.textContent = 'WAITING FOR MODEL';
-      if (warningDescText) warningDescText.textContent = '"Prediction and safety assessment will become available after model integration."';
-      if (warningStatusDisplay) warningStatusDisplay.className = 'warning-status-display';
-      if (warningPill) {
-        warningPill.className = 'status-pill status-pill-warning';
-        warningPill.textContent = 'Pre-Hazard Detection';
-      }
-
-      // Reset RECEIVED DATA Inspection Preview
-      if (recvVoltage) recvVoltage.textContent = '--';
-      if (recvCurrent) recvCurrent.textContent = '--';
-      if (recvTemperature) recvTemperature.textContent = '--';
-      if (recvSoc) recvSoc.textContent = '--';
-      if (recvSoh) recvSoh.textContent = '--';
-      if (recvCrate) recvCrate.textContent = '--';
-      if (recvCycle) recvCycle.textContent = '--';
-      if (recvTime) recvTime.textContent = '--';
-      if (recvServerTime) recvServerTime.textContent = 'SERVER TIME: --';
-
-      setDataStatus('WAITING FOR INPUT', 'pending');
-      if (lastDataUpdate) lastDataUpdate.textContent = '--';
-      hideFeedback();
-      if (additionalDataContainer) additionalDataContainer.style.display = 'none';
-
-      appendLog('APP', 'Dashboard inputs and model prediction states cleared.');
-    });
-  }
-
-  // --- Initial System Boot Sequence ---
   checkHealth();
-  fetchModelStatus();
-  fetchDatasetStatus();
   setInterval(checkHealth, 5000);
 
-  console.log('[BRAIN Phase 4] Model & Dataset Integration active.');
+  // Load Scenario 1 (Normal Operation) by default on initial startup
+  loadScenarioFromServer('normal', btnNormal);
 });
 
 </script>
+  <script src="js/script.js"></script>
 </body>
 </html>
