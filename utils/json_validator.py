@@ -68,4 +68,21 @@ def validate_incoming_battery_data(payload: Any) -> Tuple[bool, str, Optional[Di
             if math.isnan(val) or math.isinf(val):
                 return False, f"{field_label} must be a finite numeric value.", None
 
+    # 5. Physical boundary constraints validation
+    voltage_val = payload.get("voltage")
+    if voltage_val is not None and voltage_val <= 0:
+        return False, "Voltage must be a positive numeric value greater than 0.", None
+
+    soc_val = payload.get("soc")
+    if soc_val is not None and (soc_val < 0 or soc_val > 100):
+        return False, "SOC must be between 0 and 100.", None
+
+    soh_val = payload.get("soh")
+    if soh_val is not None and (soh_val < 0 or soh_val > 100):
+        return False, "SOH must be between 0 and 100.", None
+
+    crate_val = payload.get("c_rate")
+    if crate_val is not None and crate_val < 0:
+        return False, "C-rate must be greater than or equal to 0.", None
+
     return True, "VALID", payload

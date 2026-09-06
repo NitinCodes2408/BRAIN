@@ -1,6 +1,6 @@
 /* ==========================================================================
    BRAIN — Battery Risk & Analytics Intelligence Network
-   Phase 3.5: Advanced BMS Demonstration Dashboard Stylesheet
+   Phase 3.6: Manual Battery Telemetry & BMS Test Dashboard Stylesheet
    Theme: Professional Research & Engineering Dark Mode
    ========================================================================== */
 
@@ -345,10 +345,10 @@ body {
   letter-spacing: 0.05em;
 }
 
-.data-source-badge.json-mode {
-  background-color: var(--status-purple-bg);
-  border-color: var(--status-purple-border);
-  color: var(--status-purple);
+.data-source-badge.manual-mode {
+  background-color: rgba(168, 85, 247, 0.15);
+  border-color: rgba(168, 85, 247, 0.4);
+  color: #c084fc;
 }
 
 .overview-grid {
@@ -441,7 +441,193 @@ body {
 }
 
 /* --------------------------------------------------------------------------
-   7. Gauges & Visual Telemetry Section (Section 6 & 7 & 9)
+   7. Section: MANUAL BATTERY TELEMETRY CONTROL PANEL (Phase 3.6 - Section 1, 2, 15)
+   -------------------------------------------------------------------------- */
+.manual-telemetry-panel {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-highlight);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem 1.5rem;
+  background: linear-gradient(180deg, var(--bg-surface) 0%, rgba(22, 32, 50, 0.65) 100%);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+.manual-form-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.75rem;
+  margin-bottom: 1.125rem;
+}
+
+.manual-input-card {
+  background-color: var(--bg-terminal);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-md);
+  padding: 0.65rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  transition: all var(--transition-fast);
+}
+
+.manual-input-card:focus-within {
+  border-color: var(--status-accent-blue);
+  box-shadow: 0 0 8px rgba(56, 189, 248, 0.25);
+  background-color: rgba(7, 10, 16, 0.95);
+}
+
+.manual-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.manual-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  letter-spacing: 0.04em;
+}
+
+.manual-unit {
+  font-size: 0.68rem;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  color: var(--status-accent-blue);
+}
+
+.manual-input-field {
+  width: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.manual-input-field::-webkit-inner-spin-button,
+.manual-input-field::-webkit-outer-spin-button {
+  opacity: 0.3;
+}
+
+.manual-actions-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 1rem;
+}
+
+.main-actions-group {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.btn-submit-telemetry {
+  padding: 0.65rem 1.5rem;
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+  border: 1px solid rgba(56, 189, 248, 0.5);
+  color: #ffffff;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(2, 132, 199, 0.35);
+  transition: all var(--transition-fast);
+}
+
+.btn-submit-telemetry:hover {
+  background: linear-gradient(135deg, #0369a1 0%, #0284c7 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(56, 189, 248, 0.45);
+}
+
+.btn-reset-telemetry {
+  padding: 0.65rem 1.25rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  background-color: transparent;
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  color: #f87171;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.btn-reset-telemetry:hover {
+  background-color: var(--status-offline-bg);
+}
+
+.quick-scenarios-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.quick-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+  margin-right: 0.25rem;
+}
+
+.btn-quick-preset {
+  padding: 0.4rem 0.75rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  background-color: var(--bg-surface-elevated);
+  border: 1px solid var(--border-medium);
+  color: var(--text-secondary);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.btn-quick-preset:hover {
+  background-color: var(--bg-surface-hover);
+  color: var(--text-primary);
+  border-color: var(--status-accent-blue);
+}
+
+.manual-feedback-banner {
+  margin-top: 0.875rem;
+  padding: 0.65rem 1rem;
+  border-radius: var(--radius-md);
+  font-size: 0.78rem;
+  font-family: var(--font-mono);
+  display: none;
+}
+
+.manual-feedback-banner.success {
+  background-color: rgba(34, 197, 94, 0.1);
+  border: 1px solid rgba(34, 197, 94, 0.35);
+  color: #4ade80;
+}
+
+.manual-feedback-banner.error {
+  background-color: var(--status-offline-bg);
+  border: 1px solid var(--status-offline-border);
+  color: var(--status-offline-text);
+}
+
+/* --------------------------------------------------------------------------
+   8. Gauges & Visual Telemetry Section (Section 6 & 7 & 9 & 11 & 12)
    -------------------------------------------------------------------------- */
 .visual-telemetry-grid {
   display: grid;
@@ -594,7 +780,7 @@ body {
 }
 
 /* --------------------------------------------------------------------------
-   8. Temperature Analytics & Trend Chart (Section 8 & 10)
+   9. Temperature Analytics & Trend Chart (Section 8 & 10)
    -------------------------------------------------------------------------- */
 .temp-analytics-grid {
   display: grid;
@@ -679,209 +865,7 @@ body {
 }
 
 /* --------------------------------------------------------------------------
-   9. Demo Controls Station (Section 2 & 18)
-   -------------------------------------------------------------------------- */
-.controls-panel {
-  background-color: var(--bg-surface);
-  border: 1px solid var(--border-highlight);
-  border-radius: var(--radius-lg);
-  padding: 1.25rem 1.5rem;
-  background: linear-gradient(180deg, var(--bg-surface) 0%, rgba(22, 32, 50, 0.5) 100%);
-}
-
-.mode-toggle-tabs {
-  display: flex;
-  gap: 0.5rem;
-  background-color: var(--bg-terminal);
-  padding: 0.35rem;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--border-subtle);
-  margin-bottom: 1.125rem;
-}
-
-.tab-btn {
-  flex: 1;
-  padding: 0.55rem 1rem;
-  font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  background-color: transparent;
-  color: var(--text-muted);
-  border: 1px solid transparent;
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  transition: all var(--transition-fast);
-}
-
-.tab-btn.active {
-  background-color: var(--bg-surface-elevated);
-  color: var(--status-accent-blue);
-  border-color: var(--border-medium);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-}
-
-.scenario-buttons-grid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr) 1.2fr 0.8fr;
-  gap: 0.65rem;
-  margin-bottom: 1rem;
-}
-
-.btn-scenario {
-  padding: 0.65rem 0.75rem;
-  border-radius: var(--radius-sm);
-  font-size: 0.75rem;
-  font-weight: 700;
-  font-family: var(--font-sans);
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  cursor: pointer;
-  border: 1px solid var(--border-subtle);
-  background-color: var(--bg-surface-elevated);
-  color: var(--text-primary);
-  transition: all var(--transition-fast);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0.2rem;
-  min-height: 52px;
-}
-
-.btn-scenario:hover {
-  background-color: var(--bg-surface-hover);
-  border-color: var(--border-highlight);
-  transform: translateY(-1px);
-}
-
-.btn-scenario.active {
-  background-color: rgba(56, 189, 248, 0.15);
-  border-color: var(--status-accent-blue);
-  color: var(--status-accent-blue);
-}
-
-.btn-scenario.btn-random {
-  border-color: rgba(168, 85, 247, 0.4);
-  background-color: rgba(168, 85, 247, 0.08);
-  color: #c084fc;
-}
-
-.btn-scenario.btn-random:hover {
-  background-color: rgba(168, 85, 247, 0.2);
-}
-
-.btn-scenario.btn-reset {
-  border-color: rgba(239, 68, 68, 0.3);
-  background-color: rgba(239, 68, 68, 0.06);
-  color: #f87171;
-}
-
-.btn-scenario.btn-reset:hover {
-  background-color: rgba(239, 68, 68, 0.18);
-}
-
-.scenario-info-banner {
-  background-color: var(--bg-terminal);
-  border: 1px solid var(--border-medium);
-  border-radius: var(--radius-md);
-  padding: 0.75rem 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.scenario-info-text {
-  font-size: 0.75rem;
-  color: var(--text-secondary);
-}
-
-.scenario-meta-tag {
-  font-size: 0.7rem;
-  font-family: var(--font-mono);
-  font-weight: 700;
-  color: var(--status-accent-blue);
-}
-
-/* Custom JSON Input Section */
-.json-input-section {
-  display: flex;
-  flex-direction: column;
-  gap: 0.875rem;
-}
-
-.json-textarea {
-  width: 100%;
-  height: 140px;
-  background-color: var(--bg-terminal);
-  border: 1px solid var(--border-medium);
-  border-radius: var(--radius-md);
-  padding: 0.875rem 1rem;
-  color: var(--text-primary);
-  font-family: var(--font-mono);
-  font-size: 0.82rem;
-  line-height: 1.5;
-  resize: vertical;
-  outline: none;
-}
-
-.json-textarea:focus {
-  border-color: var(--border-highlight);
-}
-
-.json-actions-row {
-  display: flex;
-  gap: 0.65rem;
-  flex-wrap: wrap;
-}
-
-.btn {
-  padding: 0.55rem 1.15rem;
-  border-radius: var(--radius-sm);
-  font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  cursor: pointer;
-  border: 1px solid transparent;
-  transition: all var(--transition-fast);
-}
-
-.btn-primary {
-  background-color: var(--bg-surface-hover);
-  border-color: var(--border-medium);
-  color: var(--text-primary);
-}
-
-.btn-primary:hover {
-  background-color: var(--border-highlight);
-  border-color: var(--status-accent-blue);
-}
-
-.btn-secondary {
-  background-color: transparent;
-  border-color: var(--border-subtle);
-  color: var(--text-secondary);
-}
-
-.btn-secondary:hover {
-  background-color: var(--bg-surface-elevated);
-  color: var(--text-primary);
-}
-
-.btn-danger {
-  background-color: transparent;
-  border-color: rgba(239, 68, 68, 0.3);
-  color: #f87171;
-}
-
-.btn-danger:hover {
-  background-color: var(--status-offline-bg);
-}
-
-/* --------------------------------------------------------------------------
-   10. Inspection & System Logs Section
+   10. Inspection & System Logs Section (Section 7 & 13)
    -------------------------------------------------------------------------- */
 .bottom-workspace-grid {
   display: grid;
@@ -1007,10 +991,10 @@ body {
   .overview-grid {
     grid-template-columns: repeat(3, 1fr);
   }
-  .system-health-bar {
+  .manual-form-grid {
     grid-template-columns: repeat(4, 1fr);
   }
-  .scenario-buttons-grid {
+  .system-health-bar {
     grid-template-columns: repeat(4, 1fr);
   }
   .visual-telemetry-grid {
@@ -1023,6 +1007,9 @@ body {
 
 @media (max-width: 900px) {
   .overview-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .manual-form-grid {
     grid-template-columns: repeat(2, 1fr);
   }
   .system-health-bar {
@@ -1040,16 +1027,13 @@ body {
   .state-panel {
     grid-column: span 1;
   }
-  .scenario-buttons-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
 }
 
 @media (max-width: 600px) {
   .overview-grid {
     grid-template-columns: 1fr;
   }
-  .scenario-buttons-grid {
+  .manual-form-grid {
     grid-template-columns: 1fr;
   }
   .header-container {

@@ -8,7 +8,7 @@
   <style id="brain-styles">
 /* ==========================================================================
    BRAIN — Battery Risk & Analytics Intelligence Network
-   Phase 3.5: Advanced BMS Demonstration Dashboard Stylesheet
+   Phase 3.6: Manual Battery Telemetry & BMS Test Dashboard Stylesheet
    Theme: Professional Research & Engineering Dark Mode
    ========================================================================== */
 
@@ -353,10 +353,10 @@ body {
   letter-spacing: 0.05em;
 }
 
-.data-source-badge.json-mode {
-  background-color: var(--status-purple-bg);
-  border-color: var(--status-purple-border);
-  color: var(--status-purple);
+.data-source-badge.manual-mode {
+  background-color: rgba(168, 85, 247, 0.15);
+  border-color: rgba(168, 85, 247, 0.4);
+  color: #c084fc;
 }
 
 .overview-grid {
@@ -449,7 +449,193 @@ body {
 }
 
 /* --------------------------------------------------------------------------
-   7. Gauges & Visual Telemetry Section (Section 6 & 7 & 9)
+   7. Section: MANUAL BATTERY TELEMETRY CONTROL PANEL (Phase 3.6 - Section 1, 2, 15)
+   -------------------------------------------------------------------------- */
+.manual-telemetry-panel {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-highlight);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem 1.5rem;
+  background: linear-gradient(180deg, var(--bg-surface) 0%, rgba(22, 32, 50, 0.65) 100%);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+.manual-form-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.75rem;
+  margin-bottom: 1.125rem;
+}
+
+.manual-input-card {
+  background-color: var(--bg-terminal);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-md);
+  padding: 0.65rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  transition: all var(--transition-fast);
+}
+
+.manual-input-card:focus-within {
+  border-color: var(--status-accent-blue);
+  box-shadow: 0 0 8px rgba(56, 189, 248, 0.25);
+  background-color: rgba(7, 10, 16, 0.95);
+}
+
+.manual-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.manual-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  letter-spacing: 0.04em;
+}
+
+.manual-unit {
+  font-size: 0.68rem;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  color: var(--status-accent-blue);
+}
+
+.manual-input-field {
+  width: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.manual-input-field::-webkit-inner-spin-button,
+.manual-input-field::-webkit-outer-spin-button {
+  opacity: 0.3;
+}
+
+.manual-actions-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 1rem;
+}
+
+.main-actions-group {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.btn-submit-telemetry {
+  padding: 0.65rem 1.5rem;
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+  border: 1px solid rgba(56, 189, 248, 0.5);
+  color: #ffffff;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(2, 132, 199, 0.35);
+  transition: all var(--transition-fast);
+}
+
+.btn-submit-telemetry:hover {
+  background: linear-gradient(135deg, #0369a1 0%, #0284c7 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(56, 189, 248, 0.45);
+}
+
+.btn-reset-telemetry {
+  padding: 0.65rem 1.25rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  background-color: transparent;
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  color: #f87171;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.btn-reset-telemetry:hover {
+  background-color: var(--status-offline-bg);
+}
+
+.quick-scenarios-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.quick-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+  margin-right: 0.25rem;
+}
+
+.btn-quick-preset {
+  padding: 0.4rem 0.75rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  background-color: var(--bg-surface-elevated);
+  border: 1px solid var(--border-medium);
+  color: var(--text-secondary);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.btn-quick-preset:hover {
+  background-color: var(--bg-surface-hover);
+  color: var(--text-primary);
+  border-color: var(--status-accent-blue);
+}
+
+.manual-feedback-banner {
+  margin-top: 0.875rem;
+  padding: 0.65rem 1rem;
+  border-radius: var(--radius-md);
+  font-size: 0.78rem;
+  font-family: var(--font-mono);
+  display: none;
+}
+
+.manual-feedback-banner.success {
+  background-color: rgba(34, 197, 94, 0.1);
+  border: 1px solid rgba(34, 197, 94, 0.35);
+  color: #4ade80;
+}
+
+.manual-feedback-banner.error {
+  background-color: var(--status-offline-bg);
+  border: 1px solid var(--status-offline-border);
+  color: var(--status-offline-text);
+}
+
+/* --------------------------------------------------------------------------
+   8. Gauges & Visual Telemetry Section (Section 6 & 7 & 9 & 11 & 12)
    -------------------------------------------------------------------------- */
 .visual-telemetry-grid {
   display: grid;
@@ -602,7 +788,7 @@ body {
 }
 
 /* --------------------------------------------------------------------------
-   8. Temperature Analytics & Trend Chart (Section 8 & 10)
+   9. Temperature Analytics & Trend Chart (Section 8 & 10)
    -------------------------------------------------------------------------- */
 .temp-analytics-grid {
   display: grid;
@@ -687,209 +873,7 @@ body {
 }
 
 /* --------------------------------------------------------------------------
-   9. Demo Controls Station (Section 2 & 18)
-   -------------------------------------------------------------------------- */
-.controls-panel {
-  background-color: var(--bg-surface);
-  border: 1px solid var(--border-highlight);
-  border-radius: var(--radius-lg);
-  padding: 1.25rem 1.5rem;
-  background: linear-gradient(180deg, var(--bg-surface) 0%, rgba(22, 32, 50, 0.5) 100%);
-}
-
-.mode-toggle-tabs {
-  display: flex;
-  gap: 0.5rem;
-  background-color: var(--bg-terminal);
-  padding: 0.35rem;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--border-subtle);
-  margin-bottom: 1.125rem;
-}
-
-.tab-btn {
-  flex: 1;
-  padding: 0.55rem 1rem;
-  font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  background-color: transparent;
-  color: var(--text-muted);
-  border: 1px solid transparent;
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  transition: all var(--transition-fast);
-}
-
-.tab-btn.active {
-  background-color: var(--bg-surface-elevated);
-  color: var(--status-accent-blue);
-  border-color: var(--border-medium);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-}
-
-.scenario-buttons-grid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr) 1.2fr 0.8fr;
-  gap: 0.65rem;
-  margin-bottom: 1rem;
-}
-
-.btn-scenario {
-  padding: 0.65rem 0.75rem;
-  border-radius: var(--radius-sm);
-  font-size: 0.75rem;
-  font-weight: 700;
-  font-family: var(--font-sans);
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  cursor: pointer;
-  border: 1px solid var(--border-subtle);
-  background-color: var(--bg-surface-elevated);
-  color: var(--text-primary);
-  transition: all var(--transition-fast);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0.2rem;
-  min-height: 52px;
-}
-
-.btn-scenario:hover {
-  background-color: var(--bg-surface-hover);
-  border-color: var(--border-highlight);
-  transform: translateY(-1px);
-}
-
-.btn-scenario.active {
-  background-color: rgba(56, 189, 248, 0.15);
-  border-color: var(--status-accent-blue);
-  color: var(--status-accent-blue);
-}
-
-.btn-scenario.btn-random {
-  border-color: rgba(168, 85, 247, 0.4);
-  background-color: rgba(168, 85, 247, 0.08);
-  color: #c084fc;
-}
-
-.btn-scenario.btn-random:hover {
-  background-color: rgba(168, 85, 247, 0.2);
-}
-
-.btn-scenario.btn-reset {
-  border-color: rgba(239, 68, 68, 0.3);
-  background-color: rgba(239, 68, 68, 0.06);
-  color: #f87171;
-}
-
-.btn-scenario.btn-reset:hover {
-  background-color: rgba(239, 68, 68, 0.18);
-}
-
-.scenario-info-banner {
-  background-color: var(--bg-terminal);
-  border: 1px solid var(--border-medium);
-  border-radius: var(--radius-md);
-  padding: 0.75rem 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.scenario-info-text {
-  font-size: 0.75rem;
-  color: var(--text-secondary);
-}
-
-.scenario-meta-tag {
-  font-size: 0.7rem;
-  font-family: var(--font-mono);
-  font-weight: 700;
-  color: var(--status-accent-blue);
-}
-
-/* Custom JSON Input Section */
-.json-input-section {
-  display: flex;
-  flex-direction: column;
-  gap: 0.875rem;
-}
-
-.json-textarea {
-  width: 100%;
-  height: 140px;
-  background-color: var(--bg-terminal);
-  border: 1px solid var(--border-medium);
-  border-radius: var(--radius-md);
-  padding: 0.875rem 1rem;
-  color: var(--text-primary);
-  font-family: var(--font-mono);
-  font-size: 0.82rem;
-  line-height: 1.5;
-  resize: vertical;
-  outline: none;
-}
-
-.json-textarea:focus {
-  border-color: var(--border-highlight);
-}
-
-.json-actions-row {
-  display: flex;
-  gap: 0.65rem;
-  flex-wrap: wrap;
-}
-
-.btn {
-  padding: 0.55rem 1.15rem;
-  border-radius: var(--radius-sm);
-  font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  cursor: pointer;
-  border: 1px solid transparent;
-  transition: all var(--transition-fast);
-}
-
-.btn-primary {
-  background-color: var(--bg-surface-hover);
-  border-color: var(--border-medium);
-  color: var(--text-primary);
-}
-
-.btn-primary:hover {
-  background-color: var(--border-highlight);
-  border-color: var(--status-accent-blue);
-}
-
-.btn-secondary {
-  background-color: transparent;
-  border-color: var(--border-subtle);
-  color: var(--text-secondary);
-}
-
-.btn-secondary:hover {
-  background-color: var(--bg-surface-elevated);
-  color: var(--text-primary);
-}
-
-.btn-danger {
-  background-color: transparent;
-  border-color: rgba(239, 68, 68, 0.3);
-  color: #f87171;
-}
-
-.btn-danger:hover {
-  background-color: var(--status-offline-bg);
-}
-
-/* --------------------------------------------------------------------------
-   10. Inspection & System Logs Section
+   10. Inspection & System Logs Section (Section 7 & 13)
    -------------------------------------------------------------------------- */
 .bottom-workspace-grid {
   display: grid;
@@ -1015,10 +999,10 @@ body {
   .overview-grid {
     grid-template-columns: repeat(3, 1fr);
   }
-  .system-health-bar {
+  .manual-form-grid {
     grid-template-columns: repeat(4, 1fr);
   }
-  .scenario-buttons-grid {
+  .system-health-bar {
     grid-template-columns: repeat(4, 1fr);
   }
   .visual-telemetry-grid {
@@ -1031,6 +1015,9 @@ body {
 
 @media (max-width: 900px) {
   .overview-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .manual-form-grid {
     grid-template-columns: repeat(2, 1fr);
   }
   .system-health-bar {
@@ -1048,16 +1035,13 @@ body {
   .state-panel {
     grid-column: span 1;
   }
-  .scenario-buttons-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
 }
 
 @media (max-width: 600px) {
   .overview-grid {
     grid-template-columns: 1fr;
   }
-  .scenario-buttons-grid {
+  .manual-form-grid {
     grid-template-columns: 1fr;
   }
   .header-container {
@@ -1066,13 +1050,13 @@ body {
   }
 }
 
-</style>
+  </style>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
   <!-- ====================================================================
-       1. HEADER (Section 17)
+       1. HEADER (Phase 3.6)
        ==================================================================== -->
   <header class="dashboard-header">
     <div class="header-container">
@@ -1081,9 +1065,9 @@ body {
         <div class="brand-titles">
           <h1 class="main-title">
             BRAIN
-            <span class="phase-tag">PHASE 3.5 BMS DEMO</span>
+            <span class="phase-tag">PHASE 3.6 BMS MANUAL TEST</span>
           </h1>
-          <p class="sub-title">Battery Risk & Analytics Intelligence Network</p>
+          <p class="sub-title">Battery Risk &amp; Analytics Intelligence Network</p>
         </div>
       </div>
 
@@ -1092,7 +1076,7 @@ body {
           <span id="headerSystemDot" class="status-dot online"></span>
           <span id="headerSystemStatus">SYSTEM: ONLINE</span>
         </span>
-        <span id="headerModeBadge" class="badge badge-demo">MODE: DEMO</span>
+        <span id="headerModeBadge" class="badge badge-demo">MODE: MANUAL DEMO</span>
         <span id="headerBackendBadge" class="badge badge-online">BACKEND: CONNECTED</span>
         <span id="headerModelBadge" class="badge badge-pending">MODEL: NOT CONNECTED</span>
         <span id="headerPinnBadge" class="badge badge-pending">PINN: NOT CONNECTED</span>
@@ -1106,7 +1090,7 @@ body {
   <main class="dashboard-main">
     <div class="dashboard-container">
 
-      <!-- SYSTEM HEALTH BAR (Section 13) -->
+      <!-- SYSTEM HEALTH BAR -->
       <section class="system-health-bar">
         <div class="health-item">
           <span class="health-item-label">System Status</span>
@@ -1118,7 +1102,7 @@ body {
         </div>
         <div class="health-item">
           <span class="health-item-label">Data Source</span>
-          <span id="healthDataSourceVal" class="health-item-val" style="color: #38bdf8;">DEMO / SIMULATED</span>
+          <span id="healthDataSourceVal" class="health-item-val" style="color: #38bdf8;">MANUAL DEMO</span>
         </div>
         <div class="health-item">
           <span class="health-item-label">Model Engine</span>
@@ -1138,11 +1122,11 @@ body {
         </div>
       </section>
 
-      <!-- SECTION 1: ADVANCED BATTERY OVERVIEW CARDS (Section 5) -->
+      <!-- SECTION 1: ADVANCED BATTERY OVERVIEW CARDS -->
       <section class="section-overview">
         <div class="section-header">
           <h2 class="section-title">⚡ Advanced Battery Overview</h2>
-          <span id="dataSourceBadge" class="data-source-badge">DATA SOURCE: DEMO / SIMULATED</span>
+          <span id="dataSourceBadge" class="data-source-badge manual-mode">DATA SOURCE: MANUAL DEMO INPUT</span>
         </div>
 
         <div class="overview-grid">
@@ -1165,9 +1149,9 @@ body {
               <span class="bms-card-title">Current</span>
               <span class="bms-card-icon">🔋</span>
             </div>
-            <div id="valCurrent" class="bms-card-val">4.0 A</div>
+            <div id="valCurrent" class="bms-card-val">5.00 A</div>
             <div class="bms-card-bottom">
-              <span id="tagCurrent" class="bms-card-tag normal">0.8 C</span>
+              <span id="tagCurrent" class="bms-card-tag normal">1.0 C</span>
               <span id="timeCurrent">Updated: --:--:--</span>
             </div>
           </div>
@@ -1178,7 +1162,7 @@ body {
               <span class="bms-card-title">Temperature</span>
               <span class="bms-card-icon">🌡️</span>
             </div>
-            <div id="valTemperature" class="bms-card-val">30.0 °C</div>
+            <div id="valTemperature" class="bms-card-val">32.5 °C</div>
             <div class="bms-card-bottom">
               <span id="tagTemperature" class="bms-card-tag normal">NORMAL</span>
               <span id="timeTemperature">Updated: --:--:--</span>
@@ -1191,7 +1175,7 @@ body {
               <span class="bms-card-title">State of Charge</span>
               <span class="bms-card-icon">⚡</span>
             </div>
-            <div id="valSoc" class="bms-card-val">72 %</div>
+            <div id="valSoc" class="bms-card-val">70 %</div>
             <div class="bms-card-bottom">
               <span id="tagSoc" class="bms-card-tag normal">HEALTHY</span>
               <span id="timeSoc">Updated: --:--:--</span>
@@ -1204,7 +1188,7 @@ body {
               <span class="bms-card-title">State of Health</span>
               <span class="bms-card-icon">🩺</span>
             </div>
-            <div id="valSoh" class="bms-card-val">96 %</div>
+            <div id="valSoh" class="bms-card-val">95 %</div>
             <div class="bms-card-bottom">
               <span id="tagSoh" class="bms-card-tag normal">EXCELLENT</span>
               <span id="timeSoh">Updated: --:--:--</span>
@@ -1217,7 +1201,7 @@ body {
               <span class="bms-card-title">C-Rate</span>
               <span class="bms-card-icon">📈</span>
             </div>
-            <div id="valCrate" class="bms-card-val">0.8 C</div>
+            <div id="valCrate" class="bms-card-val">1.0 C</div>
             <div class="bms-card-bottom">
               <span id="tagCrate" class="bms-card-tag normal">CONTINUOUS</span>
               <span id="timeCrate">Updated: --:--:--</span>
@@ -1226,13 +1210,13 @@ body {
         </div>
       </section>
 
-      <!-- SECTION 2: CIRCULAR GAUGES & VISUAL TELEMETRY (Section 6 & 7 & 9 & 11 & 12) -->
+      <!-- SECTION 2: CIRCULAR GAUGES & VISUAL TELEMETRY -->
       <section class="visual-telemetry-grid">
         <!-- Circular SOC Gauge -->
         <div class="gauge-panel">
           <div class="gauge-title-bar">
             <span class="gauge-title">State of Charge (SOC)</span>
-            <span class="badge badge-demo">GAUGE</span>
+            <span class="badge badge-demo">MANUAL GAUGE</span>
           </div>
           <div class="gauge-container">
             <svg class="gauge-svg" viewBox="0 0 160 160">
@@ -1240,18 +1224,18 @@ body {
               <circle id="socProgressCircle" class="gauge-progress-circle" cx="80" cy="80" r="70" />
             </svg>
             <div class="gauge-center-text">
-              <span id="socNumber" class="gauge-number">72%</span>
+              <span id="socNumber" class="gauge-number">70%</span>
               <span class="gauge-unit">SOC</span>
             </div>
           </div>
-          <span class="gauge-footer-note">State of Charge (Remaining Capacity)</span>
+          <span class="gauge-footer-note">State of Charge (Current Capacity Retention)</span>
         </div>
 
         <!-- Circular SOH Gauge -->
         <div class="gauge-panel">
           <div class="gauge-title-bar">
             <span class="gauge-title">State of Health (SOH)</span>
-            <span class="badge badge-demo">DEMO VALUE</span>
+            <span class="badge badge-demo">MANUAL GAUGE</span>
           </div>
           <div class="gauge-container">
             <svg class="gauge-svg" viewBox="0 0 160 160">
@@ -1259,11 +1243,11 @@ body {
               <circle id="sohProgressCircle" class="gauge-progress-circle soh-gauge" cx="80" cy="80" r="70" />
             </svg>
             <div class="gauge-center-text">
-              <span id="sohNumber" class="gauge-number">96%</span>
+              <span id="sohNumber" class="gauge-number">95%</span>
               <span class="gauge-unit">SOH</span>
             </div>
           </div>
-          <span class="gauge-footer-note">Capacity Retention (Predefined Demo Value)</span>
+          <span class="gauge-footer-note">Cell State of Health (Degradation Level)</span>
         </div>
 
         <!-- Battery State & Demo Safety Indicators -->
@@ -1272,10 +1256,10 @@ body {
           <div class="state-block">
             <div class="state-block-header">
               <span class="state-block-label">Battery State</span>
-              <span class="badge badge-demo">DEMO CLASSIFICATION</span>
+              <span class="badge badge-demo">DEMO STATUS</span>
             </div>
             <div id="stateBatteryVal" class="state-block-value">NORMAL</div>
-            <div id="stateBatterySub" class="state-block-sub">Standard discharge operation at nominal ambient temperature.</div>
+            <div id="stateBatterySub" class="state-block-sub">Operational state dynamically determined from manual input.</div>
           </div>
 
           <!-- Demo Safety Indicator -->
@@ -1285,7 +1269,7 @@ body {
               <span class="badge badge-muted">DEMO RULE STATUS</span>
             </div>
             <div id="stateSafetyVal" class="state-block-value" style="color: #4ade80;">NORMAL</div>
-            <div id="stateSafetySub" class="state-block-sub">Rule-based demo status. Not a trained AI model prediction.</div>
+            <div id="stateSafetySub" class="state-block-sub">Rule-based status check. AI thermal prediction model pending.</div>
           </div>
 
           <!-- Demo Alert -->
@@ -1295,17 +1279,17 @@ body {
               <span class="badge badge-muted">DEMO / RULE-BASED</span>
             </div>
             <div id="stateAlertVal" class="state-block-value" style="color: #4ade80;">No demo alert</div>
-            <div id="stateAlertSub" class="state-block-sub">Operational threshold verification. AI thermal runaway model pending.</div>
+            <div id="stateAlertSub" class="state-block-sub">Real-time threshold validation. No runaway detected.</div>
           </div>
         </div>
       </section>
 
-      <!-- SECTION 3: TEMPERATURE ANALYTICS & TIME-SERIES TREND (Section 8 & 10) -->
+      <!-- SECTION 3: TEMPERATURE ANALYTICS & TIME-SERIES TREND -->
       <section class="temp-analytics-grid">
         <!-- Interactive Canvas Line Chart -->
         <div class="chart-panel">
           <div class="section-header">
-            <h2 class="section-title">📈 Demo Temperature Trend</h2>
+            <h2 class="section-title">📈 Manual Demo Temperature Trend</h2>
             <span class="badge badge-demo">DEMO TIME-SERIES — NOT PHYSICAL EXPERIMENT</span>
           </div>
           <div class="chart-wrapper">
@@ -1323,9 +1307,9 @@ body {
           <div class="thermal-stat-row">
             <div class="thermal-stat-info">
               <span class="thermal-stat-title">Current Temperature</span>
-              <span id="thermalCurrentSub" class="thermal-stat-sub">Demo Thermocouple Reading</span>
+              <span id="thermalCurrentSub" class="thermal-stat-sub">Manually Submitted Reading</span>
             </div>
-            <div id="thermalCurrentVal" class="thermal-stat-val">30.0 °C</div>
+            <div id="thermalCurrentVal" class="thermal-stat-val">32.5 °C</div>
           </div>
 
           <div class="thermal-stat-row">
@@ -1339,9 +1323,9 @@ body {
           <div class="thermal-stat-row">
             <div class="thermal-stat-info">
               <span class="thermal-stat-title">Thermal Trend</span>
-              <span class="thermal-stat-sub">Short History Tracking</span>
+              <span class="thermal-stat-sub">Manual History Tracking</span>
             </div>
-            <div id="thermalTrendVal" class="thermal-stat-val" style="font-size: 0.95rem; color: #38bdf8;">DEMO TREND</div>
+            <div id="thermalTrendVal" class="thermal-stat-val" style="font-size: 0.95rem; color: #38bdf8;">MANUAL DEMO TREND</div>
           </div>
 
           <div class="disclaimer-box">
@@ -1350,93 +1334,107 @@ body {
         </div>
       </section>
 
-      <!-- SECTION 4: DEMO CONTROLS STATION (Section 2 & 18) -->
-      <section class="controls-panel">
+      <!-- SECTION 4: MANUAL BATTERY TELEMETRY INPUT PANEL (Phase 3.6) -->
+      <section class="manual-telemetry-panel">
         <div class="section-header">
-          <h2 class="section-title">🎛️ Demo Control & Telemetry Ingestion</h2>
-          <span class="badge badge-demo">CONTROL STATION</span>
+          <h2 class="section-title">⚡ Manual Battery Telemetry</h2>
+          <span class="badge badge-demo">MANUAL TEST MODE</span>
         </div>
 
-        <!-- Mode Toggle Tabs -->
-        <div class="mode-toggle-tabs">
-          <button id="tabDemoMode" class="tab-btn active">DEMO SCENARIOS (5 PREDEFINED)</button>
-          <button id="tabJsonMode" class="tab-btn">CUSTOM JSON INPUT (PIPELINE)</button>
-        </div>
-
-        <!-- Demo Scenarios Container -->
-        <div id="demoControlsContainer">
-          <div class="scenario-buttons-grid">
-            <button id="btnScenarioNormal" class="btn-scenario active">
-              <span>LOAD NORMAL</span>
-              <span style="font-size: 0.65rem; color: #94a3b8;">3.70V | 30.0°C | 0.8C</span>
-            </button>
-            <button id="btnScenarioFastCharge" class="btn-scenario">
-              <span>FAST CHARGING</span>
-              <span style="font-size: 0.65rem; color: #94a3b8;">4.05V | 38.0°C | 2.5C</span>
-            </button>
-            <button id="btnScenarioThermalStress" class="btn-scenario">
-              <span>THERMAL STRESS</span>
-              <span style="font-size: 0.65rem; color: #94a3b8;">3.82V | 45.0°C | 2.0C</span>
-            </button>
-            <button id="btnScenarioAging" class="btn-scenario">
-              <span>AGING BATTERY</span>
-              <span style="font-size: 0.65rem; color: #94a3b8;">3.65V | 41.0°C | 78% SOH</span>
-            </button>
-            <button id="btnScenarioAbnormal" class="btn-scenario">
-              <span>ABNORMAL</span>
-              <span style="font-size: 0.65rem; color: #94a3b8;">3.55V | 52.0°C | 3.0C</span>
-            </button>
-            <button id="btnScenarioRandom" class="btn-scenario btn-random">
-              <span>LOAD RANDOM DEMO</span>
-              <span style="font-size: 0.65rem; opacity: 0.85;">PHYSICAL BOUNDS</span>
-            </button>
-            <button id="btnScenarioReset" class="btn-scenario btn-reset">
-              <span>RESET</span>
-              <span style="font-size: 0.65rem; opacity: 0.85;">CLEAR ALL</span>
-            </button>
-          </div>
-
-          <!-- Active Scenario Banner -->
-          <div class="scenario-info-banner">
-            <div>
-              <strong id="scenarioBannerTitle" style="color: #38bdf8;">NORMAL OPERATION</strong>
-              <div id="scenarioBannerDesc" class="scenario-info-text">Standard nominal discharge operation at moderate C-rate and ambient room temperature.</div>
+        <!-- 7-Field Input Form Grid -->
+        <div class="manual-form-grid">
+          <!-- Voltage -->
+          <div class="manual-input-card">
+            <div class="manual-label-row">
+              <label for="manualVoltage" class="manual-label">Voltage</label>
+              <span class="manual-unit">V</span>
             </div>
-            <div style="display: flex; gap: 0.75rem;">
-              <span id="scenarioMetaAmbient" class="scenario-meta-tag">Ambient: 27.0°C</span>
-              <span id="scenarioMetaCrate" class="scenario-meta-tag">Rate: 0.8C</span>
+            <input id="manualVoltage" type="number" step="0.01" min="0.01" max="100.0" value="3.70" class="manual-input-field" placeholder="3.70">
+          </div>
+
+          <!-- Current -->
+          <div class="manual-input-card">
+            <div class="manual-label-row">
+              <label for="manualCurrent" class="manual-label">Current</label>
+              <span class="manual-unit">A</span>
             </div>
+            <input id="manualCurrent" type="number" step="0.1" value="5.00" class="manual-input-field" placeholder="5.00">
+          </div>
+
+          <!-- Temperature -->
+          <div class="manual-input-card">
+            <div class="manual-label-row">
+              <label for="manualTemperature" class="manual-label">Temperature</label>
+              <span class="manual-unit">°C</span>
+            </div>
+            <input id="manualTemperature" type="number" step="0.1" value="32.5" class="manual-input-field" placeholder="32.5">
+          </div>
+
+          <!-- SOC -->
+          <div class="manual-input-card">
+            <div class="manual-label-row">
+              <label for="manualSoc" class="manual-label">SOC</label>
+              <span class="manual-unit">%</span>
+            </div>
+            <input id="manualSoc" type="number" step="1" min="0" max="100" value="70" class="manual-input-field" placeholder="70">
+          </div>
+
+          <!-- SOH -->
+          <div class="manual-input-card">
+            <div class="manual-label-row">
+              <label for="manualSoh" class="manual-label">SOH</label>
+              <span class="manual-unit">%</span>
+            </div>
+            <input id="manualSoh" type="number" step="1" min="0" max="100" value="95" class="manual-input-field" placeholder="95">
+          </div>
+
+          <!-- C-Rate -->
+          <div class="manual-input-card">
+            <div class="manual-label-row">
+              <label for="manualCrate" class="manual-label">C-Rate</label>
+              <span class="manual-unit">C</span>
+            </div>
+            <input id="manualCrate" type="number" step="0.1" min="0" value="1.0" class="manual-input-field" placeholder="1.0">
+          </div>
+
+          <!-- Ambient Temperature -->
+          <div class="manual-input-card">
+            <div class="manual-label-row">
+              <label for="manualAmbient" class="manual-label">Ambient Temp</label>
+              <span class="manual-unit">°C</span>
+            </div>
+            <input id="manualAmbient" type="number" step="0.1" value="25.0" class="manual-input-field" placeholder="25.0">
           </div>
         </div>
 
-        <!-- Custom JSON Ingestion Container (Hidden by default) -->
-        <div id="jsonControlsContainer" class="json-input-section" style="display: none;">
-          <textarea id="batteryJsonInput" class="json-textarea" placeholder="Paste custom battery telemetry JSON payload here...">{
-  "voltage": 3.70,
-  "current": 4.0,
-  "temperature": 30.0,
-  "soc": 72,
-  "soh": 96,
-  "c_rate": 0.8,
-  "ambient_temperature": 27.0
-}</textarea>
-          <div class="json-actions-row">
-            <button id="btnValidateJson" class="btn btn-primary">VALIDATE JSON</button>
-            <button id="btnLoadJson" class="btn btn-primary">LOAD JSON (POST API)</button>
-            <button id="btnSampleJson" class="btn btn-secondary">LOAD SAMPLE JSON</button>
-            <button id="btnClearJson" class="btn btn-danger">CLEAR</button>
+        <!-- Action Controls & Quick Scenario Presets -->
+        <div class="manual-actions-container">
+          <div class="main-actions-group">
+            <button id="btnSubmitManual" class="btn-submit-telemetry">⚡ SUBMIT TELEMETRY</button>
+            <button id="btnResetManual" class="btn-reset-telemetry">↺ RESET</button>
           </div>
-          <div id="jsonFeedback" class="disclaimer-box" style="display: none;"></div>
+
+          <div class="quick-scenarios-group">
+            <span class="quick-label">QUICK PRESETS:</span>
+            <button id="presetNormal" class="btn-quick-preset">NORMAL</button>
+            <button id="presetFastCharge" class="btn-quick-preset">FAST CHARGING</button>
+            <button id="presetThermalStress" class="btn-quick-preset">THERMAL STRESS</button>
+            <button id="presetAging" class="btn-quick-preset">AGING</button>
+            <button id="presetAbnormal" class="btn-quick-preset">ABNORMAL</button>
+          </div>
         </div>
+
+        <!-- Dynamic Validation & Submission Feedback Banner -->
+        <div id="manualFeedback" class="manual-feedback-banner"></div>
       </section>
 
-      <!-- SECTION 5: RECEIVED DATA PREVIEW & SYSTEM LOG (Section 3 & 15) -->
+      <!-- SECTION 5: RECEIVED DATA PREVIEW & SYSTEM LOG -->
       <section class="bottom-workspace-grid">
         <!-- Received Telemetry Structured Card -->
         <div class="received-data-panel">
           <div class="section-header">
             <h2 class="section-title">📥 Received Data Preview</h2>
-            <span id="recvSource" class="badge badge-demo">DEMO / SIMULATED</span>
+            <span id="recvSource" class="badge badge-demo">MANUAL DEMO INPUT</span>
           </div>
 
           <div class="received-data-grid">
@@ -1446,27 +1444,27 @@ body {
             </div>
             <div class="recv-card">
               <span class="recv-label">Current</span>
-              <span id="recvCurrent" class="recv-val">4.0 A</span>
+              <span id="recvCurrent" class="recv-val">5.00 A</span>
             </div>
             <div class="recv-card">
               <span class="recv-label">Temperature</span>
-              <span id="recvTemperature" class="recv-val">30.0 °C</span>
+              <span id="recvTemperature" class="recv-val">32.5 °C</span>
             </div>
             <div class="recv-card">
               <span class="recv-label">State of Charge</span>
-              <span id="recvSoc" class="recv-val">72 %</span>
+              <span id="recvSoc" class="recv-val">70 %</span>
             </div>
             <div class="recv-card">
               <span class="recv-label">State of Health</span>
-              <span id="recvSoh" class="recv-val">96 %</span>
+              <span id="recvSoh" class="recv-val">95 %</span>
             </div>
             <div class="recv-card">
               <span class="recv-label">C-Rate</span>
-              <span id="recvCrate" class="recv-val">0.8 C</span>
+              <span id="recvCrate" class="recv-val">1.0 C</span>
             </div>
             <div class="recv-card" style="grid-column: span 2;">
               <span class="recv-label">Ambient Temperature</span>
-              <span id="recvAmbient" class="recv-val">27.0 °C</span>
+              <span id="recvAmbient" class="recv-val">25.0 °C</span>
             </div>
             <div class="recv-card">
               <span class="recv-label">Server Time</span>
@@ -1475,7 +1473,7 @@ body {
           </div>
         </div>
 
-        <!-- Live System Log Terminal (Section 15) -->
+        <!-- Live System Log Terminal -->
         <div class="log-panel">
           <div class="section-header">
             <h2 class="section-title">🖥️ System Log Terminal</h2>
@@ -1484,7 +1482,7 @@ body {
           <div id="systemLogTerminal" class="system-log-terminal">
             <div class="log-entry"><span class="log-prefix sys">[SYS]</span> BRAIN initialized</div>
             <div class="log-entry"><span class="log-prefix sys">[SYS]</span> Flask backend connected</div>
-            <div class="log-entry"><span class="log-prefix data">[DATA]</span> Demo mode enabled</div>
+            <div class="log-entry"><span class="log-prefix data">[DATA]</span> Manual telemetry test mode ready</div>
             <div class="log-entry"><span class="log-prefix model">[MODEL]</span> Prediction unavailable (Model not connected)</div>
             <div class="log-entry"><span class="log-prefix pinn">[PINN]</span> Thermal model not connected</div>
           </div>
@@ -1498,10 +1496,10 @@ body {
   <footer class="dashboard-footer">
     <div class="footer-container">
       <div class="footer-left">
-        <span class="footer-brand">BRAIN</span> &mdash; Battery Risk & Analytics Intelligence Network &bull; Phase 3.5 BMS Demonstration Platform
+        <span class="footer-brand">BRAIN</span> &mdash; Battery Risk &amp; Analytics Intelligence Network &bull; Phase 3.6 BMS Manual Telemetry Platform
       </div>
       <div class="footer-right">
-        <span>Flask Backend Active</span> &bull; <span>Controlled Telemetry Simulation Mode</span>
+        <span>Flask Backend Active</span> &bull; <span>Manual Telemetry Simulation Mode</span>
       </div>
     </div>
   </footer>
@@ -1510,15 +1508,15 @@ body {
   <script id="brain-script">
 /**
  * BRAIN — Battery Risk & Analytics Intelligence Network
- * Phase 3.5: Advanced BMS Demonstration Dashboard Engine
+ * Phase 3.6: Manual Battery Telemetry & BMS Test Dashboard Engine
  */
 
 document.addEventListener('DOMContentLoaded', () => {
   // --------------------------------------------------------------------------
-  // DOM Elements Selection
+  // 1. DOM Elements Selection
   // --------------------------------------------------------------------------
 
-  // Header & System Health Elements
+  // Header & Health Badges
   const headerSystemStatus = document.getElementById('headerSystemStatus');
   const headerSystemDot = document.getElementById('headerSystemDot');
   const headerModeBadge = document.getElementById('headerModeBadge');
@@ -1574,32 +1572,26 @@ document.addEventListener('DOMContentLoaded', () => {
   const thermalPredictedVal = document.getElementById('thermalPredictedVal');
   const thermalTrendVal = document.getElementById('thermalTrendVal');
 
-  // Demo Controls & Scenario Buttons
-  const tabDemoMode = document.getElementById('tabDemoMode');
-  const tabJsonMode = document.getElementById('tabJsonMode');
-  const demoControlsContainer = document.getElementById('demoControlsContainer');
-  const jsonControlsContainer = document.getElementById('jsonControlsContainer');
+  // Manual Input Form Fields
+  const inputVoltage = document.getElementById('manualVoltage');
+  const inputCurrent = document.getElementById('manualCurrent');
+  const inputTemperature = document.getElementById('manualTemperature');
+  const inputSoc = document.getElementById('manualSoc');
+  const inputSoh = document.getElementById('manualSoh');
+  const inputCrate = document.getElementById('manualCrate');
+  const inputAmbient = document.getElementById('manualAmbient');
 
-  const btnNormal = document.getElementById('btnScenarioNormal');
-  const btnFastCharge = document.getElementById('btnScenarioFastCharge');
-  const btnThermalStress = document.getElementById('btnScenarioThermalStress');
-  const btnAging = document.getElementById('btnScenarioAging');
-  const btnAbnormal = document.getElementById('btnScenarioAbnormal');
-  const btnRandom = document.getElementById('btnScenarioRandom');
-  const btnReset = document.getElementById('btnScenarioReset');
+  // Manual Controls & Buttons
+  const btnSubmitManual = document.getElementById('btnSubmitManual');
+  const btnResetManual = document.getElementById('btnResetManual');
+  const manualFeedback = document.getElementById('manualFeedback');
 
-  const scenarioBannerTitle = document.getElementById('scenarioBannerTitle');
-  const scenarioBannerDesc = document.getElementById('scenarioBannerDesc');
-  const scenarioMetaAmbient = document.getElementById('scenarioMetaAmbient');
-  const scenarioMetaCrate = document.getElementById('scenarioMetaCrate');
-
-  // JSON Input Section Elements
-  const jsonTextarea = document.getElementById('batteryJsonInput');
-  const btnValidateJson = document.getElementById('btnValidateJson');
-  const btnLoadJson = document.getElementById('btnLoadJson');
-  const btnSampleJson = document.getElementById('btnSampleJson');
-  const btnClearJson = document.getElementById('btnClearJson');
-  const jsonFeedback = document.getElementById('jsonFeedback');
+  // Quick Scenario Preset Buttons
+  const presetNormal = document.getElementById('presetNormal');
+  const presetFastCharge = document.getElementById('presetFastCharge');
+  const presetThermalStress = document.getElementById('presetThermalStress');
+  const presetAging = document.getElementById('presetAging');
+  const presetAbnormal = document.getElementById('presetAbnormal');
 
   // Received Data Panel Elements
   const recvVoltage = document.getElementById('recvVoltage');
@@ -1615,27 +1607,80 @@ document.addEventListener('DOMContentLoaded', () => {
   // System Log Terminal
   const systemLogTerminal = document.getElementById('systemLogTerminal');
 
-  // Chart Canvas
+  // Temperature Trend Canvas
   const canvas = document.getElementById('tempTrendCanvas');
-  let currentTrendData = [];
-
-  // Local State
-  let activeMode = 'demo'; // 'demo' or 'json'
-  let activeScenarioId = null;
-
-  // Predefined Sample JSON
-  const SAMPLE_INPUT_JSON = `{
-  "voltage": 3.70,
-  "current": 4.0,
-  "temperature": 30.0,
-  "soc": 72,
-  "soh": 96,
-  "c_rate": 0.8,
-  "ambient_temperature": 27.0
-}`;
 
   // --------------------------------------------------------------------------
-  // Utility Functions
+  // 2. In-Memory State & History Storage
+  // --------------------------------------------------------------------------
+  let manualReadingsHistory = [];
+  let currentPresetTag = 'MANUAL TELEMETRY RECEIVED';
+
+  const DEFAULT_MANUAL_INPUTS = {
+    voltage: 3.70,
+    current: 5.00,
+    temperature: 32.5,
+    soc: 70,
+    soh: 95,
+    c_rate: 1.0,
+    ambient_temperature: 25.0
+  };
+
+  const PRESETS = {
+    normal: {
+      voltage: 3.70,
+      current: 4.0,
+      temperature: 30.0,
+      soc: 72,
+      soh: 96,
+      c_rate: 0.8,
+      ambient_temperature: 27.0,
+      stateLabel: 'NORMAL'
+    },
+    fast_charge: {
+      voltage: 4.05,
+      current: 15.0,
+      temperature: 38.0,
+      soc: 61,
+      soh: 96,
+      c_rate: 2.5,
+      ambient_temperature: 27.0,
+      stateLabel: 'FAST CHARGING'
+    },
+    thermal_stress: {
+      voltage: 3.82,
+      current: 12.0,
+      temperature: 45.0,
+      soc: 54,
+      soh: 94,
+      c_rate: 2.0,
+      ambient_temperature: 35.0,
+      stateLabel: 'THERMAL STRESS'
+    },
+    aging: {
+      voltage: 3.65,
+      current: 10.0,
+      temperature: 41.0,
+      soc: 48,
+      soh: 78,
+      c_rate: 1.7,
+      ambient_temperature: 32.0,
+      stateLabel: 'AGING'
+    },
+    abnormal: {
+      voltage: 3.55,
+      current: 18.0,
+      temperature: 52.0,
+      soc: 43,
+      soh: 76,
+      c_rate: 3.0,
+      ambient_temperature: 35.0,
+      stateLabel: 'ABNORMAL DEMO'
+    }
+  };
+
+  // --------------------------------------------------------------------------
+  // 3. Helper Functions
   // --------------------------------------------------------------------------
 
   function getTimestamp() {
@@ -1652,6 +1697,21 @@ document.addEventListener('DOMContentLoaded', () => {
     systemLogTerminal.scrollTop = systemLogTerminal.scrollHeight;
   }
 
+  function showFeedback(message, isSuccess = true) {
+    if (!manualFeedback) return;
+    manualFeedback.textContent = message;
+    manualFeedback.className = isSuccess 
+      ? 'manual-feedback-banner success' 
+      : 'manual-feedback-banner error';
+    manualFeedback.style.display = 'block';
+  }
+
+  function hideFeedback() {
+    if (!manualFeedback) return;
+    manualFeedback.style.display = 'none';
+    manualFeedback.textContent = '';
+  }
+
   function updateGauge(circleElement, numberElement, value, maxVal = 100) {
     if (!circleElement || !numberElement) return;
     const circumference = 440;
@@ -1662,10 +1722,10 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // --------------------------------------------------------------------------
-  // Canvas Temperature Trend Line Chart
+  // 4. Interactive Temperature Trend Canvas
   // --------------------------------------------------------------------------
 
-  function drawTemperatureChart(dataPoints) {
+  function drawManualTemperatureChart() {
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     const width = canvas.width = canvas.parentElement.clientWidth;
@@ -1673,23 +1733,36 @@ document.addEventListener('DOMContentLoaded', () => {
 
     ctx.clearRect(0, 0, width, height);
 
-    if (!dataPoints || dataPoints.length === 0) {
+    if (manualReadingsHistory.length === 0) {
       ctx.fillStyle = '#64748b';
       ctx.font = '12px SFMono-Regular, monospace';
       ctx.textAlign = 'center';
-      ctx.fillText('Awaiting demonstration time-series telemetry...', width / 2, height / 2);
+      ctx.fillText('No manual telemetry readings recorded yet.', width / 2, height / 2 - 8);
+      ctx.fillText('Enter values and click SUBMIT TELEMETRY.', width / 2, height / 2 + 12);
       return;
     }
 
+    if (manualReadingsHistory.length === 1) {
+      const r = manualReadingsHistory[0];
+      ctx.fillStyle = '#38bdf8';
+      ctx.font = 'bold 13px SFMono-Regular, monospace';
+      ctx.textAlign = 'center';
+      ctx.fillText(`Reading 1: ${r.temp.toFixed(1)}°C at ${r.time}`, width / 2, height / 2 - 10);
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = '11px SFMono-Regular, monospace';
+      ctx.fillText('Waiting for additional manual readings to plot trend line...', width / 2, height / 2 + 12);
+      return;
+    }
+
+    // Multiple readings: Plot time-series line chart
     const padLeft = 45;
-    const padRight = 25;
+    const padRight = 35;
     const padTop = 25;
     const padBottom = 35;
     const plotWidth = width - padLeft - padRight;
     const plotHeight = height - padTop - padBottom;
 
-    // Determine scale limits
-    const temps = dataPoints.map(d => d.temp_c);
+    const temps = manualReadingsHistory.map(d => d.temp);
     const minTemp = Math.floor(Math.min(...temps, 20) / 5) * 5;
     const maxTemp = Math.ceil(Math.max(...temps, 55) / 5) * 5;
 
@@ -1711,14 +1784,14 @@ document.addEventListener('DOMContentLoaded', () => {
       ctx.fillText(`${yVal.toFixed(0)}°C`, padLeft - 8, yPos + 3);
     }
 
-    // Coordinates mapper
-    const points = dataPoints.map((d, index) => {
-      const x = padLeft + (index / (dataPoints.length - 1)) * plotWidth;
-      const y = padTop + plotHeight - ((d.temp_c - minTemp) / (maxTemp - minTemp)) * plotHeight;
-      return { x, y, temp: d.temp_c, offset: d.time_offset_s };
+    // Map data points
+    const points = manualReadingsHistory.map((d, index) => {
+      const x = padLeft + (index / (manualReadingsHistory.length - 1)) * plotWidth;
+      const y = padTop + plotHeight - ((d.temp - minTemp) / (maxTemp - minTemp)) * plotHeight;
+      return { x, y, temp: d.temp, label: `R${d.index}`, time: d.time };
     });
 
-    // Draw Gradient Area Under Line
+    // Draw Area Gradient Under Line
     const grad = ctx.createLinearGradient(0, padTop, 0, padTop + plotHeight);
     grad.addColorStop(0, 'rgba(56, 189, 248, 0.35)');
     grad.addColorStop(1, 'rgba(56, 189, 248, 0.0)');
@@ -1743,8 +1816,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     ctx.stroke();
 
-    // Draw Points & Labels
-    points.forEach((p, index) => {
+    // Draw Points & Point Labels
+    points.forEach(p => {
       ctx.beginPath();
       ctx.arc(p.x, p.y, 4, 0, Math.PI * 2);
       ctx.fillStyle = '#0a0e17';
@@ -1753,395 +1826,331 @@ document.addEventListener('DOMContentLoaded', () => {
       ctx.lineWidth = 2;
       ctx.stroke();
 
-      // Time X labels
+      // Top Temp Label
+      ctx.fillStyle = '#f1f5f9';
+      ctx.font = 'bold 10px SFMono-Regular, monospace';
+      ctx.textAlign = 'center';
+      ctx.fillText(`${p.temp.toFixed(1)}°`, p.x, p.y - 8);
+
+      // Bottom Reading Label
       ctx.fillStyle = '#94a3b8';
       ctx.font = '10px SFMono-Regular, monospace';
-      ctx.textAlign = 'center';
-      const timeLabel = p.offset === 0 ? 'Now' : `${p.offset / 60}m`;
-      ctx.fillText(timeLabel, p.x, height - 12);
+      ctx.fillText(p.label, p.x, height - 12);
     });
   }
 
-  // Handle window resize for chart responsiveness
-  window.addEventListener('resize', () => {
-    if (currentTrendData && currentTrendData.length > 0) {
-      drawTemperatureChart(currentTrendData);
+  window.addEventListener('resize', drawManualTemperatureChart);
+
+  // --------------------------------------------------------------------------
+  // 5. Input Validation & Form Reading
+  // --------------------------------------------------------------------------
+
+  function validateManualInputs() {
+    const rawV = inputVoltage ? inputVoltage.value.trim() : '';
+    const rawI = inputCurrent ? inputCurrent.value.trim() : '';
+    const rawT = inputTemperature ? inputTemperature.value.trim() : '';
+    const rawSoc = inputSoc ? inputSoc.value.trim() : '';
+    const rawSoh = inputSoh ? inputSoh.value.trim() : '';
+    const rawCrate = inputCrate ? inputCrate.value.trim() : '';
+    const rawAmb = inputAmbient ? inputAmbient.value.trim() : '';
+
+    // Check required presence
+    if (!rawV || !rawI || !rawT) {
+      return { valid: false, message: 'INVALID INPUT: Voltage, Current, and Temperature are required.' };
     }
-  });
 
-  // --------------------------------------------------------------------------
-  // Apply Telemetry Scenario to UI
-  // --------------------------------------------------------------------------
+    const v = parseFloat(rawV);
+    const i = parseFloat(rawI);
+    const t = parseFloat(rawT);
+    const soc = rawSoc !== '' ? parseFloat(rawSoc) : 70.0;
+    const soh = rawSoh !== '' ? parseFloat(rawSoh) : 95.0;
+    const crate = rawCrate !== '' ? parseFloat(rawCrate) : 1.0;
+    const amb = rawAmb !== '' ? parseFloat(rawAmb) : 25.0;
 
-  function applyScenario(scenario, isDemo = true) {
-    if (!scenario || !scenario.telemetry) return;
+    // Check NaN / IsFinite
+    if (isNaN(v) || isNaN(i) || isNaN(t) || isNaN(soc) || isNaN(soh) || isNaN(crate) || isNaN(amb)) {
+      return { valid: false, message: 'INVALID INPUT: All fields must be valid numeric values.' };
+    }
 
-    const t = scenario.telemetry;
-    const c = scenario.classification || {
-      battery_state: 'TELEMETRY INGESTED',
-      safety_rule_status: 'NORMAL',
-      demo_alert: 'Custom JSON Ingestion',
-      alert_level: 'NOMINAL',
-      description: 'Live payload ingested via client/server pipeline.'
+    if (!isFinite(v) || !isFinite(i) || !isFinite(t) || !isFinite(soc) || !isFinite(soh) || !isFinite(crate) || !isFinite(amb)) {
+      return { valid: false, message: 'INVALID INPUT: Infinity or non-finite numbers are rejected.' };
+    }
+
+    // Physical constraints
+    if (v <= 0) {
+      return { valid: false, message: 'INVALID INPUT: Voltage must be a positive number greater than 0.' };
+    }
+
+    if (soc < 0 || soc > 100) {
+      return { valid: false, message: 'INVALID INPUT: SOC must be between 0 and 100.' };
+    }
+
+    if (soh < 0 || soh > 100) {
+      return { valid: false, message: 'INVALID INPUT: SOH must be between 0 and 100.' };
+    }
+
+    if (crate < 0) {
+      return { valid: false, message: 'INVALID INPUT: C-Rate must be greater than or equal to 0.' };
+    }
+
+    return {
+      valid: true,
+      data: {
+        voltage: v,
+        current: i,
+        temperature: t,
+        soc: soc,
+        soh: soh,
+        c_rate: crate,
+        ambient_temperature: amb
+      }
     };
-
-    const timeStr = getTimestamp();
-
-    // 1. Update Battery Overview Cards
-    if (valVoltage) valVoltage.textContent = `${t.voltage.toFixed(2)} V`;
-    if (timeVoltage) timeVoltage.textContent = `Updated: ${timeStr}`;
-
-    if (valCurrent) valCurrent.textContent = `${t.current.toFixed(1)} A`;
-    if (tagCurrent) tagCurrent.textContent = `${t.c_rate.toFixed(1)} C`;
-    if (timeCurrent) timeCurrent.textContent = `Updated: ${timeStr}`;
-
-    if (valTemperature) valTemperature.textContent = `${t.temperature.toFixed(1)} °C`;
-    if (tagTemperature) {
-      tagTemperature.textContent = t.temperature >= 45.0 ? 'HIGH TEMP' : 'NORMAL';
-      tagTemperature.className = t.temperature >= 45.0 ? 'bms-card-tag critical' : 'bms-card-tag normal';
-    }
-    if (timeTemperature) timeTemperature.textContent = `Updated: ${timeStr}`;
-
-    if (valSoc) valSoc.textContent = `${Math.round(t.soc)} %`;
-    if (timeSoc) timeSoc.textContent = `Updated: ${timeStr}`;
-
-    if (valSoh) valSoh.textContent = `${Math.round(t.soh)} %`;
-    if (tagSoh) {
-      tagSoh.textContent = t.soh >= 90 ? 'EXCELLENT' : (t.soh >= 80 ? 'GOOD' : 'AGED CELL');
-      tagSoh.className = t.soh >= 90 ? 'bms-card-tag normal' : (t.soh >= 80 ? 'bms-card-tag warning' : 'bms-card-tag critical');
-    }
-    if (timeSoh) timeSoh.textContent = `Updated: ${timeStr}`;
-
-    if (valCrate) valCrate.textContent = `${t.c_rate.toFixed(1)} C`;
-    if (tagCrate) {
-      tagCrate.textContent = t.c_rate >= 2.0 ? 'HIGH RATE' : 'CONTINUOUS';
-      tagCrate.className = t.c_rate >= 2.0 ? 'bms-card-tag warning' : 'bms-card-tag normal';
-    }
-    if (timeCrate) timeCrate.textContent = `Updated: ${timeStr}`;
-
-    // 2. Update Circular Gauges
-    updateGauge(socCircle, socNumber, t.soc);
-    updateGauge(sohCircle, sohNumber, t.soh);
-
-    // 3. Update Battery State & Safety Blocks
-    if (stateBatteryVal) stateBatteryVal.textContent = c.battery_state;
-    if (stateBatterySub) stateBatterySub.textContent = isDemo ? 'PREDEFINED DEMO SCENARIO STATE' : 'CLIENT INGESTION STATE';
-
-    if (stateSafetyVal) {
-      stateSafetyVal.textContent = c.safety_rule_status;
-      stateSafetyVal.style.color = c.safety_rule_status === 'HIGH TEMPERATURE' ? '#f87171' : (c.safety_rule_status === 'ATTENTION' ? '#fbbf24' : '#4ade80');
-    }
-
-    if (stateAlertVal) {
-      stateAlertVal.textContent = c.demo_alert;
-      stateAlertVal.style.color = c.alert_level === 'CRITICAL' || c.alert_level === 'WARNING' ? '#f87171' : (c.alert_level === 'ATTENTION' ? '#fbbf24' : '#4ade80');
-    }
-
-    // 4. Update Thermal Monitoring
-    if (thermalCurrentVal) thermalCurrentVal.textContent = `${t.temperature.toFixed(1)} °C`;
-    if (thermalCurrentSub) thermalCurrentSub.textContent = isDemo ? 'Demo Thermocouple Reading' : 'Ingested Sensor Reading';
-    if (thermalPredictedVal) thermalPredictedVal.textContent = 'MODEL NOT CONNECTED';
-    if (thermalTrendVal) thermalTrendVal.textContent = isDemo ? 'DEMO TREND' : 'TELEMETRY TREND';
-
-    // 5. Update Received Data Panel
-    if (recvVoltage) recvVoltage.textContent = `${t.voltage.toFixed(2)} V`;
-    if (recvCurrent) recvCurrent.textContent = `${t.current.toFixed(1)} A`;
-    if (recvTemperature) recvTemperature.textContent = `${t.temperature.toFixed(1)} °C`;
-    if (recvSoc) recvSoc.textContent = `${Math.round(t.soc)} %`;
-    if (recvSoh) recvSoh.textContent = `${Math.round(t.soh)} %`;
-    if (recvCrate) recvCrate.textContent = `${t.c_rate.toFixed(1)} C`;
-    if (recvAmbient) recvAmbient.textContent = t.ambient_temperature !== undefined ? `${t.ambient_temperature.toFixed(1)} °C` : '--';
-    if (recvSource) recvSource.textContent = isDemo ? 'DEMO / SIMULATED' : 'JSON INPUT';
-    if (recvServerTime) recvServerTime.textContent = timeStr;
-
-    // 6. Update Temperature Trend Chart
-    if (scenario.temperature_trend) {
-      currentTrendData = scenario.temperature_trend;
-      drawTemperatureChart(currentTrendData);
-    } else {
-      // Create synthetic 6-point trend for custom JSON
-      currentTrendData = [
-        { time_offset_s: -300, temp_c: Math.max(20, t.temperature - 3.2) },
-        { time_offset_s: -240, temp_c: Math.max(20, t.temperature - 2.4) },
-        { time_offset_s: -180, temp_c: Math.max(20, t.temperature - 1.8) },
-        { time_offset_s: -120, temp_c: Math.max(20, t.temperature - 1.0) },
-        { time_offset_s: -60, temp_c: Math.max(20, t.temperature - 0.4) },
-        { time_offset_s: 0, temp_c: t.temperature }
-      ];
-      drawTemperatureChart(currentTrendData);
-    }
-
-    // 7. Update Banner Meta
-    if (scenarioBannerTitle) scenarioBannerTitle.textContent = scenario.name || 'DEMO SCENARIO';
-    if (scenarioBannerDesc) scenarioBannerDesc.textContent = c.description || '';
-    if (scenarioMetaAmbient) scenarioMetaAmbient.textContent = `Ambient: ${t.ambient_temperature || 27}°C`;
-    if (scenarioMetaCrate) scenarioMetaCrate.textContent = `Rate: ${t.c_rate}C`;
-
-    // 8. System Log Records
-    if (isDemo) {
-      appendLog('DEMO', `Scenario loaded: ${scenario.name || 'DEMO SCENARIO'}`);
-      appendLog('DATA', `Voltage: ${t.voltage.toFixed(2)} V | Current: ${t.current.toFixed(1)} A | Temp: ${t.temperature.toFixed(1)} °C`);
-      appendLog('DATA', `SOC: ${t.soc}% | SOH: ${t.soh}% | C-Rate: ${t.c_rate}C`);
-      appendLog('DEMO', `Safety rule status: ${c.safety_rule_status}`);
-    } else {
-      appendLog('DATA', `Custom JSON ingested. Voltage: ${t.voltage}V, Temp: ${t.temperature}°C, SOC: ${t.soc}%`);
-    }
   }
 
   // --------------------------------------------------------------------------
-  // Demo Scenario Loading Buttons Handlers
+  // 6. Submit Telemetry to Backend (POST /api/battery-data)
   // --------------------------------------------------------------------------
 
-  const scenarioButtons = [
-    { btn: btnNormal, id: 'normal' },
-    { btn: btnFastCharge, id: 'fast_charging' },
-    { btn: btnThermalStress, id: 'thermal_stress' },
-    { btn: btnAging, id: 'aging' },
-    { btn: btnAbnormal, id: 'abnormal' }
-  ];
+  async function submitManualTelemetry() {
+    const check = validateManualInputs();
+    if (!check.valid) {
+      showFeedback(check.message, false);
+      appendLog('VAL', check.message);
+      return;
+    }
 
-  function setActiveButton(activeBtn) {
-    scenarioButtons.forEach(item => {
-      if (item.btn) item.btn.classList.remove('active');
-    });
-    if (btnRandom) btnRandom.classList.remove('active');
-    if (activeBtn) activeBtn.classList.add('active');
-  }
+    hideFeedback();
+    const payload = check.data;
 
-  async function loadScenarioFromServer(scenarioId, buttonElement) {
     try {
-      const response = await fetch(`/api/demo/scenario/${scenarioId}`);
-      if (response.ok) {
-        const data = await response.json();
-        if (data.success && data.scenario) {
-          activeScenarioId = scenarioId;
-          setActiveButton(buttonElement);
-          setDataSourceMode('demo');
-          applyScenario(data.scenario, true);
-        }
-      } else {
-        appendLog('ERR', `Failed to load demo scenario: ${scenarioId}`);
-      }
-    } catch (err) {
-      appendLog('ERR', `Demo API connection error: ${err.message}`);
-    }
-  }
-
-  scenarioButtons.forEach(item => {
-    if (item.btn) {
-      item.btn.addEventListener('click', () => {
-        loadScenarioFromServer(item.id, item.btn);
+      const response = await fetch('/api/battery-data', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
       });
-    }
-  });
 
-  if (btnRandom) {
-    btnRandom.addEventListener('click', () => {
-      loadScenarioFromServer('random', btnRandom);
-    });
-  }
+      const result = await response.json();
 
-  if (btnReset) {
-    btnReset.addEventListener('click', () => {
-      resetDashboard();
-    });
-  }
-
-  function resetDashboard() {
-    activeScenarioId = null;
-    setActiveButton(null);
-
-    // Reset metric values
-    if (valVoltage) valVoltage.textContent = '-- V';
-    if (valCurrent) valCurrent.textContent = '-- A';
-    if (valTemperature) valTemperature.textContent = '-- °C';
-    if (valSoc) valSoc.textContent = '-- %';
-    if (valSoh) valSoh.textContent = '-- %';
-    if (valCrate) valCrate.textContent = '-- C';
-
-    if (tagVoltage) tagVoltage.textContent = 'AWAITING DATA';
-    if (tagCurrent) tagCurrent.textContent = '--';
-    if (tagTemperature) { tagTemperature.textContent = '--'; tagTemperature.className = 'bms-card-tag'; }
-    if (tagSoc) tagSoc.textContent = '--';
-    if (tagSoh) { tagSoh.textContent = '--'; tagSoh.className = 'bms-card-tag'; }
-    if (tagCrate) { tagCrate.textContent = '--'; tagCrate.className = 'bms-card-tag'; }
-
-    // Reset gauges
-    updateGauge(socCircle, socNumber, 0);
-    updateGauge(sohCircle, sohNumber, 0);
-
-    // Reset states
-    if (stateBatteryVal) stateBatteryVal.textContent = 'STANDBY';
-    if (stateBatterySub) stateBatterySub.textContent = 'Select a demo scenario or load JSON';
-    if (stateSafetyVal) { stateSafetyVal.textContent = 'STANDBY'; stateSafetyVal.style.color = '#94a3b8'; }
-    if (stateAlertVal) { stateAlertVal.textContent = 'No active demo scenario'; stateAlertVal.style.color = '#94a3b8'; }
-
-    // Reset thermal
-    if (thermalCurrentVal) thermalCurrentVal.textContent = '-- °C';
-    if (thermalPredictedVal) thermalPredictedVal.textContent = 'MODEL NOT CONNECTED';
-    if (thermalTrendVal) thermalTrendVal.textContent = 'WAITING FOR DATA';
-
-    // Reset received
-    if (recvVoltage) recvVoltage.textContent = '--';
-    if (recvCurrent) recvCurrent.textContent = '--';
-    if (recvTemperature) recvTemperature.textContent = '--';
-    if (recvSoc) recvSoc.textContent = '--';
-    if (recvSoh) recvSoh.textContent = '--';
-    if (recvCrate) recvCrate.textContent = '--';
-    if (recvAmbient) recvAmbient.textContent = '--';
-    if (recvServerTime) recvServerTime.textContent = '--';
-
-    // Clear chart
-    currentTrendData = [];
-    drawTemperatureChart([]);
-
-    if (scenarioBannerTitle) scenarioBannerTitle.textContent = 'DEMO STANDBY — NO ACTIVE SCENARIO';
-    if (scenarioBannerDesc) scenarioBannerDesc.textContent = 'Select one of the controlled demonstration scenarios above to simulate real-time battery behavior.';
-
-    appendLog('SYS', 'Dashboard reset to standby state.');
-  }
-
-  // --------------------------------------------------------------------------
-  // Mode Switcher (Demo Scenarios vs Custom JSON)
-  // --------------------------------------------------------------------------
-
-  function setDataSourceMode(mode) {
-    activeMode = mode;
-    if (mode === 'demo') {
-      if (tabDemoMode) tabDemoMode.classList.add('active');
-      if (tabJsonMode) tabJsonMode.classList.remove('active');
-      if (demoControlsContainer) demoControlsContainer.style.display = 'block';
-      if (jsonControlsContainer) jsonControlsContainer.style.display = 'none';
-      if (dataSourceBadge) {
-        dataSourceBadge.textContent = 'DATA SOURCE: DEMO / SIMULATED';
-        dataSourceBadge.classList.remove('json-mode');
-      }
-      if (healthDataSourceVal) healthDataSourceVal.textContent = 'DEMO';
-      if (headerModeBadge) headerModeBadge.textContent = 'MODE: DEMO';
-    } else {
-      if (tabJsonMode) tabJsonMode.classList.add('active');
-      if (tabDemoMode) tabDemoMode.classList.remove('active');
-      if (demoControlsContainer) demoControlsContainer.style.display = 'none';
-      if (jsonControlsContainer) jsonControlsContainer.style.display = 'block';
-      if (dataSourceBadge) {
-        dataSourceBadge.textContent = 'DATA SOURCE: JSON INPUT';
-        dataSourceBadge.classList.add('json-mode');
-      }
-      if (healthDataSourceVal) healthDataSourceVal.textContent = 'JSON INPUT';
-      if (headerModeBadge) headerModeBadge.textContent = 'MODE: JSON';
-    }
-  }
-
-  if (tabDemoMode) {
-    tabDemoMode.addEventListener('click', () => {
-      setDataSourceMode('demo');
-      appendLog('SYS', 'Switched to DEMO / SIMULATION mode.');
-    });
-  }
-
-  if (tabJsonMode) {
-    tabJsonMode.addEventListener('click', () => {
-      setDataSourceMode('json');
-      appendLog('SYS', 'Switched to CUSTOM JSON INPUT mode.');
-    });
-  }
-
-  // --------------------------------------------------------------------------
-  // Custom JSON Input Actions
-  // --------------------------------------------------------------------------
-
-  if (btnSampleJson) {
-    btnSampleJson.addEventListener('click', () => {
-      if (jsonTextarea) jsonTextarea.value = SAMPLE_INPUT_JSON;
-      if (jsonFeedback) {
-        jsonFeedback.textContent = 'Demonstration sample JSON loaded. Click VALIDATE or LOAD JSON.';
-        jsonFeedback.className = 'disclaimer-box';
-        jsonFeedback.style.color = '#4ade80';
-      }
-    });
-  }
-
-  if (btnClearJson) {
-    btnClearJson.addEventListener('click', () => {
-      if (jsonTextarea) jsonTextarea.value = '';
-      if (jsonFeedback) jsonFeedback.textContent = '';
-    });
-  }
-
-  if (btnValidateJson) {
-    btnValidateJson.addEventListener('click', () => {
-      const raw = jsonTextarea ? jsonTextarea.value.trim() : '';
-      if (!raw) {
-        showJsonFeedback('Please provide JSON payload to validate.', false);
+      if (!response.ok || !result.success) {
+        showFeedback(`Backend Error: ${result.message || 'Validation failed.'}`, false);
+        appendLog('ERR', `Submission rejected: ${result.message}`);
         return;
       }
-      try {
-        const parsed = JSON.parse(raw);
-        if (!parsed.voltage || !parsed.current || !parsed.temperature) {
-          showJsonFeedback('Validation error: Required fields missing (voltage, current, temperature).', false);
-          return;
-        }
-        showJsonFeedback('JSON schema valid! Ready for backend ingestion.', true);
-        appendLog('VAL', 'Client-side JSON schema validation passed.');
-      } catch (err) {
-        showJsonFeedback(`Syntax error: ${err.message}`, false);
-      }
-    });
-  }
 
-  if (btnLoadJson) {
-    btnLoadJson.addEventListener('click', async () => {
-      const raw = jsonTextarea ? jsonTextarea.value.trim() : '';
-      if (!raw) {
-        showJsonFeedback('Please provide JSON payload to load.', false);
-        return;
+      // Success Ingestion: Update UI Components
+      showFeedback('Manual telemetry successfully validated and ingested by backend!', true);
+      const timeStr = getTimestamp();
+
+      // 1. Update Battery Overview Cards
+      if (valVoltage) valVoltage.textContent = `${payload.voltage.toFixed(2)} V`;
+      if (timeVoltage) timeVoltage.textContent = `Updated: ${timeStr}`;
+
+      if (valCurrent) valCurrent.textContent = `${payload.current.toFixed(2)} A`;
+      if (tagCurrent) tagCurrent.textContent = `${payload.c_rate.toFixed(1)} C`;
+      if (timeCurrent) timeCurrent.textContent = `Updated: ${timeStr}`;
+
+      if (valTemperature) valTemperature.textContent = `${payload.temperature.toFixed(1)} °C`;
+      if (tagTemperature) {
+        tagTemperature.textContent = payload.temperature >= 45.0 ? 'HIGH TEMP' : 'NORMAL';
+        tagTemperature.className = payload.temperature >= 45.0 ? 'bms-card-tag critical' : 'bms-card-tag normal';
       }
-      try {
-        const parsed = JSON.parse(raw);
-        const response = await fetch('/api/battery-data', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(parsed)
-        });
-        const result = await response.json();
-        if (response.ok && result.success) {
-          showJsonFeedback('Telemetry successfully ingested into backend pipeline!', true);
-          setDataSourceMode('json');
-          applyScenario({
-            name: 'CUSTOM TELEMETRY PAYLOAD',
-            telemetry: result.data.structured,
-            classification: {
-              battery_state: 'TELEMETRY INGESTED',
-              safety_rule_status: result.data.structured.temperature >= 45 ? 'HIGH TEMPERATURE' : 'NORMAL',
-              demo_alert: 'Custom JSON Received',
-              alert_level: 'NOMINAL',
-              description: 'Standard JSON telemetry structured through Flask backend validator.'
-            }
-          }, false);
+      if (timeTemperature) timeTemperature.textContent = `Updated: ${timeStr}`;
+
+      if (valSoc) valSoc.textContent = `${Math.round(payload.soc)} %`;
+      if (timeSoc) timeSoc.textContent = `Updated: ${timeStr}`;
+
+      if (valSoh) valSoh.textContent = `${Math.round(payload.soh)} %`;
+      if (tagSoh) {
+        tagSoh.textContent = payload.soh >= 90 ? 'EXCELLENT' : (payload.soh >= 80 ? 'GOOD' : 'AGED CELL');
+        tagSoh.className = payload.soh >= 90 ? 'bms-card-tag normal' : (payload.soh >= 80 ? 'bms-card-tag warning' : 'bms-card-tag critical');
+      }
+      if (timeSoh) timeSoh.textContent = `Updated: ${timeStr}`;
+
+      if (valCrate) valCrate.textContent = `${payload.c_rate.toFixed(1)} C`;
+      if (tagCrate) {
+        tagCrate.textContent = payload.c_rate >= 2.0 ? 'HIGH RATE' : 'CONTINUOUS';
+        tagCrate.className = payload.c_rate >= 2.0 ? 'bms-card-tag warning' : 'bms-card-tag normal';
+      }
+      if (timeCrate) timeCrate.textContent = `Updated: ${timeStr}`;
+
+      // 2. Animate Circular Gauges
+      updateGauge(socCircle, socNumber, payload.soc);
+      updateGauge(sohCircle, sohNumber, payload.soh);
+
+      // 3. Update Battery State & Safety Status
+      if (stateBatteryVal) stateBatteryVal.textContent = currentPresetTag;
+      if (stateBatterySub) stateBatterySub.textContent = 'MANUAL DEMO STATE';
+
+      if (stateSafetyVal) {
+        const isHighTemp = payload.temperature >= 45.0;
+        stateSafetyVal.textContent = isHighTemp ? 'HIGH TEMPERATURE' : (payload.c_rate >= 2.0 ? 'ATTENTION' : 'NORMAL');
+        stateSafetyVal.style.color = isHighTemp ? '#f87171' : (payload.c_rate >= 2.0 ? '#fbbf24' : '#4ade80');
+      }
+
+      if (stateAlertVal) {
+        if (payload.temperature >= 45.0) {
+          stateAlertVal.textContent = 'HIGH TEMPERATURE DEMO ALERT';
+          stateAlertVal.style.color = '#f87171';
+        } else if (payload.c_rate >= 2.0) {
+          stateAlertVal.textContent = 'HIGH C-RATE LOAD CONDITION';
+          stateAlertVal.style.color = '#fbbf24';
         } else {
-          showJsonFeedback(`Backend validation error: ${result.message}`, false);
+          stateAlertVal.textContent = 'DEMO SCENARIO ACTIVE';
+          stateAlertVal.style.color = '#4ade80';
         }
-      } catch (err) {
-        showJsonFeedback(`Ingestion error: ${err.message}`, false);
       }
-    });
-  }
 
-  function showJsonFeedback(msg, isSuccess) {
-    if (!jsonFeedback) return;
-    jsonFeedback.textContent = msg;
-    jsonFeedback.style.color = isSuccess ? '#4ade80' : '#f87171';
+      // 4. Update Thermal Monitoring
+      if (thermalCurrentVal) thermalCurrentVal.textContent = `${payload.temperature.toFixed(1)} °C`;
+      if (thermalCurrentSub) thermalCurrentSub.textContent = 'Manually Submitted Reading';
+      if (thermalPredictedVal) thermalPredictedVal.textContent = 'MODEL NOT CONNECTED';
+      if (thermalTrendVal) thermalTrendVal.textContent = 'MANUAL DEMO TREND';
+
+      // 5. Update Received Data Panel
+      if (recvVoltage) recvVoltage.textContent = `${payload.voltage.toFixed(2)} V`;
+      if (recvCurrent) recvCurrent.textContent = `${payload.current.toFixed(2)} A`;
+      if (recvTemperature) recvTemperature.textContent = `${payload.temperature.toFixed(1)} °C`;
+      if (recvSoc) recvSoc.textContent = `${Math.round(payload.soc)} %`;
+      if (recvSoh) recvSoh.textContent = `${Math.round(payload.soh)} %`;
+      if (recvCrate) recvCrate.textContent = `${payload.c_rate.toFixed(1)} C`;
+      if (recvAmbient) recvAmbient.textContent = `${payload.ambient_temperature.toFixed(1)} °C`;
+      if (recvSource) recvSource.textContent = 'MANUAL DEMO INPUT';
+      if (recvServerTime) recvServerTime.textContent = timeStr;
+
+      // 6. Append to Manual Temperature History & Redraw Chart
+      manualReadingsHistory.push({
+        index: manualReadingsHistory.length + 1,
+        temp: payload.temperature,
+        time: timeStr
+      });
+      drawManualTemperatureChart();
+
+      // 7. Data Source Badge
+      if (dataSourceBadge) {
+        dataSourceBadge.textContent = 'DATA SOURCE: MANUAL DEMO INPUT';
+        dataSourceBadge.className = 'data-source-badge manual-mode';
+      }
+      if (healthDataSourceVal) healthDataSourceVal.textContent = 'MANUAL DEMO';
+
+      // 8. Log Detailed Real Events
+      appendLog('DATA', 'Manual telemetry received');
+      appendLog('DATA', `Voltage: ${payload.voltage.toFixed(2)} V`);
+      appendLog('DATA', `Current: ${payload.current.toFixed(2)} A`);
+      appendLog('DATA', `Temperature: ${payload.temperature.toFixed(1)} °C`);
+      appendLog('DATA', `SOC: ${Math.round(payload.soc)} %`);
+      appendLog('DATA', `SOH: ${Math.round(payload.soh)} %`);
+      appendLog('DATA', 'Source: MANUAL DEMO INPUT');
+
+    } catch (netErr) {
+      showFeedback(`Network Error: ${netErr.message}`, false);
+      appendLog('ERR', `Pipeline network error: ${netErr.message}`);
+    }
   }
 
   // --------------------------------------------------------------------------
-  // Health & Liveness Check
+  // 7. Preset Button Handlers (Populate Fields Only — Do NOT Auto-Submit)
+  // --------------------------------------------------------------------------
+
+  function populatePreset(presetKey) {
+    const p = PRESETS[presetKey];
+    if (!p) return;
+
+    if (inputVoltage) inputVoltage.value = p.voltage.toFixed(2);
+    if (inputCurrent) inputCurrent.value = p.current.toFixed(1);
+    if (inputTemperature) inputTemperature.value = p.temperature.toFixed(1);
+    if (inputSoc) inputSoc.value = p.soc;
+    if (inputSoh) inputSoh.value = p.soh;
+    if (inputCrate) inputCrate.value = p.c_rate.toFixed(1);
+    if (inputAmbient) inputAmbient.value = p.ambient_temperature.toFixed(1);
+
+    currentPresetTag = p.stateLabel;
+    showFeedback(`Preset '${p.stateLabel}' populated into fields. Click SUBMIT TELEMETRY to send.`, true);
+    appendLog('UI', `Preset values populated: ${p.stateLabel}`);
+  }
+
+  if (presetNormal) presetNormal.addEventListener('click', () => populatePreset('normal'));
+  if (presetFastCharge) presetFastCharge.addEventListener('click', () => populatePreset('fast_charge'));
+  if (presetThermalStress) presetThermalStress.addEventListener('click', () => populatePreset('thermal_stress'));
+  if (presetAging) presetAging.addEventListener('click', () => populatePreset('aging'));
+  if (presetAbnormal) presetAbnormal.addEventListener('click', () => populatePreset('abnormal'));
+
+  // --------------------------------------------------------------------------
+  // 8. Submit & Reset Actions
+  // --------------------------------------------------------------------------
+
+  if (btnSubmitManual) {
+    btnSubmitManual.addEventListener('click', submitManualTelemetry);
+  }
+
+  if (btnResetManual) {
+    btnResetManual.addEventListener('click', () => {
+      // Restore default input values
+      if (inputVoltage) inputVoltage.value = DEFAULT_MANUAL_INPUTS.voltage.toFixed(2);
+      if (inputCurrent) inputCurrent.value = DEFAULT_MANUAL_INPUTS.current.toFixed(2);
+      if (inputTemperature) inputTemperature.value = DEFAULT_MANUAL_INPUTS.temperature.toFixed(1);
+      if (inputSoc) inputSoc.value = DEFAULT_MANUAL_INPUTS.soc;
+      if (inputSoh) inputSoh.value = DEFAULT_MANUAL_INPUTS.soh;
+      if (inputCrate) inputCrate.value = DEFAULT_MANUAL_INPUTS.c_rate.toFixed(1);
+      if (inputAmbient) inputAmbient.value = DEFAULT_MANUAL_INPUTS.ambient_temperature.toFixed(1);
+
+      // Clear manual trend history
+      manualReadingsHistory = [];
+      drawManualTemperatureChart();
+
+      // Reset Overview Cards
+      if (valVoltage) valVoltage.textContent = '-- V';
+      if (valCurrent) valCurrent.textContent = '-- A';
+      if (valTemperature) valTemperature.textContent = '-- °C';
+      if (valSoc) valSoc.textContent = '-- %';
+      if (valSoh) valSoh.textContent = '-- %';
+      if (valCrate) valCrate.textContent = '-- C';
+
+      if (tagVoltage) tagVoltage.textContent = 'STANDBY';
+      if (tagCurrent) tagCurrent.textContent = '--';
+      if (tagTemperature) { tagTemperature.textContent = '--'; tagTemperature.className = 'bms-card-tag'; }
+      if (tagSoc) tagSoc.textContent = '--';
+      if (tagSoh) { tagSoh.textContent = '--'; tagSoh.className = 'bms-card-tag'; }
+      if (tagCrate) { tagCrate.textContent = '--'; tagCrate.className = 'bms-card-tag'; }
+
+      // Reset Gauges
+      updateGauge(socCircle, socNumber, 0);
+      updateGauge(sohCircle, sohNumber, 0);
+
+      // Reset States
+      if (stateBatteryVal) stateBatteryVal.textContent = 'STANDBY';
+      if (stateBatterySub) stateBatterySub.textContent = 'Enter values & click SUBMIT TELEMETRY';
+      if (stateSafetyVal) { stateSafetyVal.textContent = 'STANDBY'; stateSafetyVal.style.color = '#94a3b8'; }
+      if (stateAlertVal) { stateAlertVal.textContent = 'No active demo telemetry'; stateAlertVal.style.color = '#94a3b8'; }
+
+      // Reset Thermal
+      if (thermalCurrentVal) thermalCurrentVal.textContent = '-- °C';
+      if (thermalPredictedVal) thermalPredictedVal.textContent = 'MODEL NOT CONNECTED';
+      if (thermalTrendVal) thermalTrendVal.textContent = 'WAITING FOR DATA';
+
+      // Reset Received Data Panel
+      if (recvVoltage) recvVoltage.textContent = '--';
+      if (recvCurrent) recvCurrent.textContent = '--';
+      if (recvTemperature) recvTemperature.textContent = '--';
+      if (recvSoc) recvSoc.textContent = '--';
+      if (recvSoh) recvSoh.textContent = '--';
+      if (recvCrate) recvCrate.textContent = '--';
+      if (recvAmbient) recvAmbient.textContent = '--';
+      if (recvServerTime) recvServerTime.textContent = '--';
+
+      currentPresetTag = 'MANUAL TELEMETRY RECEIVED';
+      showFeedback('Dashboard and manual input fields reset to default.', true);
+      appendLog('SYS', 'Manual telemetry reset to default standby values.');
+    });
+  }
+
+  // --------------------------------------------------------------------------
+  // 9. Health Liveness Polling
   // --------------------------------------------------------------------------
 
   async function checkHealth() {
     try {
       const response = await fetch('/health');
       if (response.ok) {
-        const data = await response.json();
         if (headerSystemStatus) headerSystemStatus.textContent = 'SYSTEM: ONLINE';
         if (headerSystemDot) headerSystemDot.className = 'status-dot online';
         if (headerBackendBadge) {
@@ -2170,23 +2179,23 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // --------------------------------------------------------------------------
-  // System Initialization Sequence
+  // 10. Initial Boot Sequence
   // --------------------------------------------------------------------------
 
   appendLog('SYS', 'BRAIN initialized');
   appendLog('SYS', 'Flask backend connected');
-  appendLog('DATA', 'Demo mode enabled');
+  appendLog('DATA', 'Manual telemetry test mode ready');
   appendLog('MODEL', 'Prediction unavailable (Model not connected)');
   appendLog('PINN', 'Thermal model not connected');
 
   checkHealth();
   setInterval(checkHealth, 5000);
 
-  // Load Scenario 1 (Normal Operation) by default on initial startup
-  loadScenarioFromServer('normal', btnNormal);
+  // Automatically submit the default manual values on boot for instant demonstration
+  submitManualTelemetry();
 });
 
-</script>
+  </script>
   <script src="js/script.js"></script>
 </body>
 </html>
