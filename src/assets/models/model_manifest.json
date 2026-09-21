@@ -1,0 +1,38 @@
+{
+  "modelId": "bms-ai-core-v2.1",
+  "modelName": "EV Battery RUL & SOH Estimator",
+  "version": "2.1.0",
+  "format": ".pkl",
+  "sourceFile": "battery_intelligence_model.pkl",
+  "algorithm": "GradientBoostedTrees + BayesianDegradationFilter",
+  "trainedDate": "2026-08-15T10:00:00Z",
+  "modelSizeKb": 4250,
+  "accuracyMetrics": {
+    "r2Score": 0.984,
+    "rmseSoh": 0.012,
+    "rulErrorCycles": 18
+  },
+  "inputFeatureCount": 13,
+  "inputFeatures": [
+    "pack_voltage_v",
+    "pack_current_a",
+    "soc_percent",
+    "soh_percent",
+    "avg_cell_voltage_v",
+    "min_cell_voltage_v",
+    "max_cell_voltage_v",
+    "delta_cell_voltage_v",
+    "avg_temp_c",
+    "max_temp_c",
+    "temp_variance",
+    "cycle_count",
+    "insulation_resistance_kohm"
+  ],
+  "targetOutputs": [
+    "remaining_useful_life_cycles",
+    "remaining_useful_life_days",
+    "projected_soh_trajectory",
+    "thermal_runaway_risk_index",
+    "anomaly_anomaly_score"
+  ]
+}

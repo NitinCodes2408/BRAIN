@@ -1,0 +1,64 @@
+[
+  {
+    "timestamp": 1725642000000,
+    "packVoltage": 59.80,
+    "packCurrent": -162.4,
+    "packPower": -9.71,
+    "soc": 38.2,
+    "soh": 91.5,
+    "cycleCount": 389,
+    "avgCellVoltage": 3.737,
+    "minCellVoltage": { "cellId": 11, "voltage": 3.662 },
+    "maxCellVoltage": { "cellId": 4, "voltage": 3.785 },
+    "deltaCellVoltage": 0.123,
+    "cells": [
+      { "id": 1, "voltage": 3.742, "balanceActive": false, "status": "normal" },
+      { "id": 2, "voltage": 3.750, "balanceActive": false, "status": "normal" },
+      { "id": 3, "voltage": 3.765, "balanceActive": true, "status": "normal" },
+      { "id": 4, "voltage": 3.785, "balanceActive": true, "status": "high" },
+      { "id": 5, "voltage": 3.740, "balanceActive": false, "status": "normal" },
+      { "id": 6, "voltage": 3.712, "balanceActive": false, "status": "normal" },
+      { "id": 7, "voltage": 3.725, "balanceActive": false, "status": "normal" },
+      { "id": 8, "voltage": 3.738, "balanceActive": false, "status": "normal" },
+      { "id": 9, "voltage": 3.745, "balanceActive": false, "status": "normal" },
+      { "id": 10, "voltage": 3.710, "balanceActive": false, "status": "normal" },
+      { "id": 11, "voltage": 3.662, "balanceActive": false, "status": "low" },
+      { "id": 12, "voltage": 3.728, "balanceActive": false, "status": "normal" },
+      { "id": 13, "voltage": 3.748, "balanceActive": false, "status": "normal" },
+      { "id": 14, "voltage": 3.755, "balanceActive": false, "status": "normal" },
+      { "id": 15, "voltage": 3.740, "balanceActive": false, "status": "normal" },
+      { "id": 16, "voltage": 3.745, "balanceActive": false, "status": "normal" }
+    ],
+    "avgTemperature": 47.8,
+    "minTemperature": 41.2,
+    "maxTemperature": 52.4,
+    "temperatures": [
+      { "id": 1, "location": "Module A (Front)", "temperature": 41.2, "status": "normal" },
+      { "id": 2, "location": "Module B (Center)", "temperature": 52.4, "status": "warm" },
+      { "id": 3, "location": "Module C (Center-Rear)", "temperature": 50.1, "status": "warm" },
+      { "id": 4, "location": "Module D (Rear/BMS)", "temperature": 47.5, "status": "warm" }
+    ],
+    "insulationResistance": 1850,
+    "mosfetState": { "chargeEnabled": true, "dischargeEnabled": true, "prechargeActive": false },
+    "faults": [
+      {
+        "id": "f-101",
+        "code": "WARN_DELTA_V_HIGH",
+        "severity": "warning",
+        "title": "Cell Imbalance Detected",
+        "message": "Delta cell voltage exceeds 100mV (123mV). Active balancing engaged on Cell 3 & 4.",
+        "timestamp": 1725642000000
+      },
+      {
+        "id": "f-102",
+        "code": "WARN_TEMP_ELEVATED",
+        "severity": "warning",
+        "title": "Elevated Module Temperature",
+        "message": "Module B (Center) reached 52.4°C under high discharge load.",
+        "timestamp": 1725642000000
+      }
+    ],
+    "estimatedRangeKm": 118,
+    "batteryStatus": "alert"
+  }
+]
